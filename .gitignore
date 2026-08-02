@@ -399,3 +399,13 @@ LEEME-BLOQUE-*.txt
 
 LEEME-*.txt
 **/LEEME-*.txt
+
+# Configuración real de producción
+**/appsettings.Production.json
+
+# Artefactos de publicación
+**/artifacts/
+
+# Modelos locales en cualquier ubicación
+**/OcrData/
+**/WhisperModels/
