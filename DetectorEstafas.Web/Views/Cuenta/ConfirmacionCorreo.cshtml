@@ -1,0 +1,32 @@
+@model bool
+
+@{
+    ViewData["Title"] = "Confirmación de correo";
+}
+
+<section class="container py-5" style="max-width: 620px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5 text-center">
+            @if (Model)
+            {
+                <h1 class="h3 mb-3">Correo confirmado</h1>
+                <div class="alert alert-success" role="status">
+                    El registro quedó confirmado correctamente.
+                </div>
+            }
+            else
+            {
+                <h1 class="h3 mb-3">No se pudo confirmar el correo</h1>
+                <div class="alert alert-danger" role="alert">
+                    El enlace es inválido, está incompleto o ya no puede utilizarse.
+                </div>
+            }
+
+            <a asp-controller="Analisis"
+               asp-action="Index"
+               class="btn btn-primary">
+                Volver al analizador
+            </a>
+        </div>
+    </div>
+</section>

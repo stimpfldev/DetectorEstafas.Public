@@ -1,0 +1,12 @@
+BLOQUE 2D.2 - CONFIRMACION DE CORREO SIN INICIO DE SESION
+
+1. Copiar el contenido sobre la raiz de DetectorEstafas.
+2. Reemplazar los archivos existentes.
+3. No crear migracion: Identity ya contiene EmailConfirmed.
+4. Compilar y ejecutar pruebas.
+5. Registrar un correo nuevo.
+6. En desarrollo aparecera un enlace amarillo de confirmacion.
+7. Abrir el enlace y verificar el mensaje Correo confirmado.
+8. Verificar en AspNetUsers que EmailConfirmed sea 1.
+
+Para produccion, configurar Correo:ModoDesarrollo=false y los datos SMTP mediante secretos o variables de entorno. Nunca guardar la contraseña SMTP en appsettings.json.

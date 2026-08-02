@@ -1,0 +1,33 @@
+BLOQUE 2H.2 - CLIENTES API, CLAVES, CUOTAS Y CONSUMO EN SQL SERVER
+
+1. Copiar los archivos sobre la raíz de DetectorEstafas y reemplazar.
+2. Compilar toda la solución.
+3. Crear la migración desde la Consola del Administrador de paquetes:
+
+Add-Migration AddApiClientsAndUsage -Project DetectorEstafas.Web -StartupProject DetectorEstafas.Web
+
+4. Aplicarla:
+
+Update-Database -Project DetectorEstafas.Web -StartupProject DetectorEstafas.Web
+
+5. Mantener los user-secrets ya configurados. En la primera solicitud válida, la clave configurada se importa a SQL Server almacenando solamente SHA-256, nunca la clave en texto plano.
+6. Ejecutar una solicitud válida a POST /api/v1/analisis.
+7. Verificar:
+
+SELECT ApiClienteId, Nombre, Plan, CuotaDiaria, Habilitado, FechaCreacionUtc
+FROM dbo.ApiClientes;
+
+SELECT ApiClaveId, ApiClienteId, Prefijo, DATALENGTH(Hash) AS HashBytes, Habilitada, FechaCreacionUtc, FechaRevocacionUtc
+FROM dbo.ApiClaves;
+
+SELECT ApiClienteId, FechaUtc, CantidadSolicitudes, UltimaSolicitudUtc
+FROM dbo.ApiConsumosDiarios;
+
+Resultado esperado:
+- un cliente importado con Plan = Prueba;
+- una clave con HashBytes = 32 y sin texto plano;
+- un consumo diario incrementado;
+- headers X-RateLimit-Limit y X-RateLimit-Remaining;
+- 429 cuota_diaria_agotada al superar la cuota.
+
+No eliminar todavía las claves de user-secrets hasta validar la importación inicial.

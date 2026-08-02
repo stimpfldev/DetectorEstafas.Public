@@ -1,0 +1,27 @@
+BLOQUE 2C.1 - BASE PARA IA GENERATIVA CONTROLADA
+
+Este bloque agrega la infraestructura, todavía sin conectar un proveedor externo.
+
+Incluye:
+- interfaz del proveedor;
+- solicitud y respuesta estructuradas;
+- separación entre resultado local y evaluación de IA;
+- límite de caracteres enviados;
+- timeout configurable;
+- validación de respuesta;
+- fallback al motor local;
+- proveedor deshabilitado por defecto;
+- pruebas con proveedor simulado.
+
+Configuración inicial:
+InteligenciaArtificial:Enabled = false
+
+Con esta configuración, la aplicación mantiene exactamente el comportamiento actual y no envía información a ningún servicio externo.
+
+Prueba:
+1. Copiar los archivos sobre la solución.
+2. Reemplazar los existentes.
+3. Compilar en Release.
+4. Ejecutar todas las pruebas.
+5. Verificar que mensaje, captura y audio continúan funcionando.
+6. No habilitar Enabled hasta incorporar y revisar un proveedor real en el bloque siguiente.

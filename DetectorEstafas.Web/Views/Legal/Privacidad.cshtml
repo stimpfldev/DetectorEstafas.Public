@@ -1,0 +1,182 @@
+@{
+    ViewData["Title"] = "Política de privacidad";
+}
+
+<section class="legal-page">
+    <div class="container">
+        <article class="legal-card">
+            <header class="legal-header">
+                <span class="legal-label">Información legal</span>
+                <h1>Política de privacidad</h1>
+                <p>Última actualización: 1 de agosto de 2026.</p>
+            </header>
+
+            <div class="legal-content">
+                <section>
+                    <h2>1. Finalidad del servicio</h2>
+                    <p>
+                        Detector de Estafas permite analizar mensajes, enlaces, teléfonos,
+                        descripciones de llamadas, capturas y audios para identificar señales
+                        habituales de fraude.
+                    </p>
+                    <p>
+                        El resultado es automático y orientativo. No confirma por sí solo que
+                        una comunicación sea legítima o fraudulenta.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>2. Contenido analizado</h2>
+                    <p>
+                        El contenido se procesa para generar el resultado solicitado. Por
+                        defecto, la aplicación no guarda en su base de datos mensajes, enlaces
+                        completos, números telefónicos, capturas, audios ni transcripciones.
+                    </p>
+                    <div class="legal-warning">
+                        No ingreses contraseñas, códigos de autenticación, datos bancarios,
+                        documentos ni información personal innecesaria.
+                    </div>
+                </section>
+
+                <section>
+                    <h2>3. Capturas, OCR y audio</h2>
+                    <p>
+                        Las capturas y audios aceptados se almacenan temporalmente fuera del
+                        contenido público de la aplicación, se procesan y se eliminan al finalizar.
+                        También existe una limpieza de archivos temporales abandonados.
+                    </p>
+                    <p>
+                        El texto obtenido por OCR o transcripción no se guarda por defecto en la
+                        base de datos. Puede permanecer brevemente en memoria durante el análisis
+                        y mostrarse en la respuesta al usuario.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>4. Evaluación opcional mediante IA externa</h2>
+                    <p>
+                        La evaluación de IA es complementaria, se muestra separada del resultado
+                        local y solo se ejecuta cuando el usuario presta consentimiento explícito.
+                    </p>
+                    <p>
+                        En ese caso puede enviarse al proveedor configurado una versión limitada
+                        del texto necesario para la evaluación. No se envían archivos binarios,
+                        imágenes ni audios cuando no sean necesarios para el flujo configurado.
+                    </p>
+                    <p>
+                        El proveedor externo aplica sus propios términos, políticas de retención,
+                        seguridad y tratamiento. Esas condiciones deben verificarse antes de cada
+                        publicación o cambio de proveedor.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>5. Registro de cuentas y correo</h2>
+                    <p>
+                        El registro de cuenta puede conservar correo electrónico, hash de
+                        contraseña, estado de confirmación, fecha de registro y datos técnicos
+                        propios de ASP.NET Core Identity.
+                    </p>
+                    <p>
+                        Las contraseñas no se guardan en texto plano. El inicio de sesión y el
+                        historial personal no se encuentran habilitados en esta versión.
+                    </p>
+                    <p>
+                        El correo de confirmación puede enviarse mediante un proveedor SMTP
+                        configurado por el responsable del servicio. Ese proveedor puede procesar
+                        los datos técnicos necesarios para entregar el mensaje.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>6. Métricas, feedback y reportes</h2>
+                    <p>Para evaluar y proteger el servicio pueden conservarse:</p>
+                    <ul>
+                        <li>fecha y hora del análisis;</li>
+                        <li>tipo de contenido;</li>
+                        <li>nivel y puntaje de riesgo;</li>
+                        <li>cantidad de señales;</li>
+                        <li>origen general del análisis;</li>
+                        <li>respuesta de utilidad;</li>
+                        <li>categoría cerrada de reporte comunitario.</li>
+                    </ul>
+                    <p>Estas métricas no incluyen el contenido completo analizado.</p>
+                </section>
+
+                <section>
+                    <h2>7. API comercial y administración</h2>
+                    <p>
+                        Para clientes API se conservan datos de la cuenta técnica, plan, cuota,
+                        estado, prefijo de clave, hash de la clave, consumo diario y fechas de uso.
+                        La clave completa no se almacena en SQL Server.
+                    </p>
+                    <p>
+                        El dashboard administrativo utiliza una sesión técnica temporal protegida.
+                        No debe mostrar claves completas ni contenido analizado.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>8. Dirección IP, límites y logs</h2>
+                    <p>
+                        La dirección IP puede utilizarse temporalmente en memoria para limitar
+                        solicitudes abusivas. La aplicación no la guarda deliberadamente en sus
+                        tablas funcionales actuales.
+                    </p>
+                    <p>
+                        El proveedor de alojamiento, proxy o infraestructura puede generar logs
+                        técnicos propios conforme a su configuración y política.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>9. Servicios y fuentes externas</h2>
+                    <p>
+                        Para dominios .ar puede enviarse únicamente el dominio normalizado al
+                        servicio RDAP de NIC Argentina. Las referencias telefónicas pueden enlazar
+                        fuentes públicas oficiales u organizacionales.
+                    </p>
+                    <p>
+                        No se afirma que un número pertenezca legalmente a una persona particular.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>10. Cookies y almacenamiento local</h2>
+                    <p>
+                        Se utilizan cookies técnicas para antiforgery, Identity cuando corresponde
+                        y sesión administrativa. La PWA puede almacenar archivos estáticos para
+                        instalación y funcionamiento sin conexión.
+                    </p>
+                    <p>No se incluyen cookies publicitarias en esta versión.</p>
+                </section>
+
+                <section>
+                    <h2>11. Conservación y eliminación</h2>
+                    <p>
+                        Los archivos temporales se eliminan tras el procesamiento y por tareas de
+                        limpieza. Los registros técnicos, cuentas y consumos se conservan durante
+                        el tiempo necesario para operar, asegurar, auditar y mejorar el servicio.
+                    </p>
+                    <p>
+                        Antes de explotación comercial debe aprobarse una política operativa con
+                        períodos concretos de conservación, eliminación y respaldo.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>12. Derechos y contacto</h2>
+                    <p>
+                        Las consultas sobre acceso, corrección, eliminación o privacidad deben
+                        dirigirse mediante el canal publicado en:
+                        <strong>www.federicostimpfl.com.ar</strong>.
+                    </p>
+                    <div class="legal-pending">
+                        Este documento debe recibir revisión jurídica profesional antes de una
+                        explotación comercial o tratamiento de datos a escala.
+                    </div>
+                </section>
+            </div>
+        </article>
+    </div>
+</section>

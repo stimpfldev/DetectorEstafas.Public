@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Límite temporal";
+}
+
+<section class="error-page">
+    <div class="container">
+        <div class="error-card">
+            <div class="limit-icon">
+                !
+            </div>
+
+            <h1>Demasiadas solicitudes</h1>
+
+            <p>
+                Se realizaron varios análisis en poco tiempo.
+                Esperá un minuto antes de intentarlo nuevamente.
+            </p>
+
+            <a asp-controller="Analisis"
+               asp-action="Index"
+               class="btn btn-analyze mt-4">
+
+                Volver al analizador
+            </a>
+        </div>
+    </div>
+</section>

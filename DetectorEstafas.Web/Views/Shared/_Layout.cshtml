@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <meta name="description"
+          content="Analizá mensajes, enlaces, teléfonos y llamadas sospechosas antes de actuar." />
+
+    <meta name="theme-color"
+          content="#0f172a" />
+
+    <meta name="mobile-web-app-capable"
+          content="yes" />
+
+    <meta name="apple-mobile-web-app-capable"
+          content="yes" />
+
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent" />
+
+    <meta name="apple-mobile-web-app-title"
+          content="Detector" />
+
+    <title>@ViewData["Title"] - Detector de Estafas</title>
+
+    <link rel="manifest"
+          href="~/manifest.webmanifest" />
+
+    <link rel="apple-touch-icon"
+          href="~/icons/apple-touch-icon.png" />
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand"
+                   asp-controller="Analisis"
+                   asp-action="Index">
+
+                    <span class="brand-icon">
+                        <svg viewBox="0 0 24 24"
+                             aria-hidden="true">
+                            <path d="M12 2 20 5v6c0 5.1-3.4 9.8-8 11-4.6-1.2-8-5.9-8-11V5l8-3Z" />
+                            <path d="m9 12 2 2 4-5" />
+                        </svg>
+                    </span>
+
+                    <span class="brand-text">
+                        Detector de Estafas
+                    </span>
+                </a>
+
+                <div class="header-actions">
+                    <button id="installAppButton"
+                            type="button"
+                            class="btn btn-install-app"
+                            hidden>
+                        Instalar aplicación
+                    </button>
+
+                    <a class="btn btn-outline-secondary header-create-account"
+                       asp-controller="Cuenta"
+                       asp-action="Registrarse">
+                        Crear cuenta
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <strong>Detector de Estafas</strong>
+
+                    <p>
+                        Herramienta preventiva para identificar señales de riesgo
+                        antes de responder, abrir un enlace o transferir dinero.
+                    </p>
+                </div>
+
+                <div class="footer-disclaimer">
+                    El resultado es orientativo y no garantiza que una comunicación
+                    sea segura o fraudulenta.
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                © @DateTime.Now.Year Detector de Estafas
+            </div>
+        </div>
+        <nav class="footer-legal-links"
+     aria-label="Información legal">
+
+    <a asp-controller="Legal"
+       asp-action="Privacidad">
+        Privacidad
+    </a>
+
+    <a asp-controller="Legal"
+       asp-action="Condiciones">
+        Condiciones de uso
+    </a>
+
+    <a asp-controller="Legal"
+       asp-action="Terceros">
+        Licencias y terceros
+    </a>
+</nav>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/pwa.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

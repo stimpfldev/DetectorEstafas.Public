@@ -1,0 +1,15 @@
+Detector de Estafas - Etapa 2 - Bloque 2E.2
+
+1. Copiar el contenido del ZIP sobre la raíz de la solución.
+2. Reemplazar los archivos existentes.
+3. No ejecutar migraciones.
+4. Compilar la solución y ejecutar todas las pruebas.
+
+Pruebas manuales sugeridas:
+- 130: ANSES, entidad oficial verificada.
+- 0810-666-4444: Banco Nación, entidad oficial verificada.
+- +54 11 4348-3500: BCRA, entidad oficial verificada.
+- 0800-888-5465: Red Link, organización encontrada en fuente pública oficial.
+- 11 5555-1234: número sin información pública verificada.
+
+El bloque no identifica personas particulares, no consulta APIs externas y no almacena teléfonos.

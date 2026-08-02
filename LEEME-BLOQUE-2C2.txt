@@ -1,0 +1,17 @@
+BLOQUE 2C.2 - PROVEEDOR REAL DE IA CON CONSENTIMIENTO Y COSTO CONTROLADO
+
+1. Copiar esta estructura sobre la raíz de DetectorEstafas y reemplazar archivos.
+2. No guardar la clave en appsettings.json.
+3. Desde DetectorEstafas.Web ejecutar:
+
+   dotnet user-secrets init
+   dotnet user-secrets set "InteligenciaArtificial:ApiKey" "TU_CLAVE"
+   dotnet user-secrets set "InteligenciaArtificial:Enabled" "true"
+
+4. Compilar Release y ejecutar pruebas.
+5. Marcar la casilla de IA solamente en una prueba controlada.
+6. Confirmar que sin marcarla se muestra únicamente el motor local.
+7. Confirmar que con proveedor caído o sin clave el resultado local permanece disponible.
+
+La clave no se incluye en el ZIP, no se registra y no debe incorporarse al repositorio.
+El contenido solo se envía al proveedor cuando el usuario marca la casilla explícita.

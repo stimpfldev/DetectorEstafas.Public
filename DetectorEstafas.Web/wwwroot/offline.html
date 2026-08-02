@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <meta name="theme-color"
+          content="#0f172a">
+
+    <title>Sin conexión - Detector de Estafas</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+            background: #f4f7fb;
+            color: #1e293b;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .offline-card {
+            width: 100%;
+            max-width: 520px;
+            padding: 38px 28px;
+            border: 1px solid #dbe3ef;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+            text-align: center;
+        }
+
+        .offline-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 74px;
+            height: 74px;
+            margin: 0 auto 24px;
+            border-radius: 22px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        h1 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 28px;
+        }
+
+        p {
+            margin: 15px 0 28px;
+            color: #64748b;
+            line-height: 1.65;
+        }
+
+        button {
+            width: 100%;
+            min-height: 52px;
+            border: 0;
+            border-radius: 13px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="offline-card">
+        <div class="offline-icon">!</div>
+
+        <h1>No hay conexión</h1>
+
+        <p>
+            El análisis necesita conexión para comprobar información
+            y entregar un resultado actualizado.
+        </p>
+
+        <button type="button"
+                onclick="window.location.reload()">
+            Intentar nuevamente
+        </button>
+    </main>
+</body>
+</html>

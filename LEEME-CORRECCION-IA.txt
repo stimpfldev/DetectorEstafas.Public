@@ -1,0 +1,2 @@
+Corrección: restaura los archivos base de IA y el proveedor OpenAI.
+No reemplaza Program.cs, DbContext, controladores, vistas ni archivos de registro.

@@ -1,0 +1,31 @@
+Producto: Detector de Estafas
+Versión: 2.0.0
+Etapa: Segunda etapa funcional cerrada
+Fecha de cierre: 2026-08-02
+
+Alcance implementado:
+- análisis de mensajes, enlaces, teléfonos y llamadas;
+- motor local determinista de reglas;
+- análisis técnico de enlaces y RDAP para dominios .ar;
+- capturas con validación segura, OCR local y eliminación temporal;
+- carga y grabación de audio con transcripción local;
+- evaluación opcional y separada mediante IA externa;
+- registro de cuentas y confirmación de correo sin login público;
+- identificación de líneas oficiales mediante fuentes públicas;
+- PWA responsive y recepción de contenido compartido;
+- API comercial v1 con API keys, cuotas y consumo diario;
+- dashboard interno para clientes API;
+- métricas, feedback y reportes sin almacenar contenido analizado;
+- seguridad, rate limiting y 37 pruebas automatizadas validadas.
+
+Fuera del alcance de 2.0.0:
+- extensión de navegador;
+- aplicación móvil nativa;
+- inicio de sesión público e historial personal;
+- arquitectura multiempresa completa y facturación automática.
+
+Estado:
+- compilación Release validada;
+- 37 de 37 pruebas aprobadas;
+- validación de seguridad y repositorio público aprobada;
+- revisión jurídica profesional recomendada antes de explotación comercial.

@@ -1,0 +1,14 @@
+BLOQUE 2I.3 — CIERRE DEFINITIVO DE ETAPA 2
+
+1. Copiar este bloque sobre la raíz de la solución y reemplazar archivos.
+2. Restaurar los modelos locales si se desea generar el paquete ejecutable:
+   powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-OCR.ps1
+   powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-Whisper.ps1
+3. Ejecutar:
+   powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Validar-Seguridad-Etapa2.ps1
+4. Completar CHECKLIST-VALIDACION-FINAL.txt.
+5. Generar release:
+   powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Crear-Release-2.0.0.ps1
+6. Revisar artifacts, ZIP y SHA-256.
+7. Ejecutar Preparar-Repositorio-Publico.ps1 antes de publicar el código fuente.
+8. Crear commit final y tag v2.0.0 solo después de la validación.

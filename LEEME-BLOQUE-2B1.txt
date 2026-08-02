@@ -1,0 +1,19 @@
+Detector de Estafas - Etapa 2 - Bloque 2B.1
+
+Incluye:
+- carga segura de audios MP3 y WAV;
+- límite de 10 MB;
+- validación de extensión, MIME y firma binaria;
+- nombre interno generado por el servidor;
+- almacenamiento temporal fuera de wwwroot;
+- eliminación automática en el mismo procesamiento;
+- limpieza de temporales abandonados;
+- mensajes visuales de aceptación y rechazo;
+- rate limit específico;
+- pruebas automáticas del servicio y controlador.
+
+No incluye todavía:
+- transcripción;
+- grabación desde el navegador;
+- análisis del contenido del audio;
+- persistencia del archivo.
