@@ -393,3 +393,6 @@ DetectorEstafas.Web/wwwroot/**/*.rar
 *.p12
 *.pfx
 *.pubxml.user
+
+LEEME-BLOQUE-*.txt
+**/LEEME-BLOQUE-*.txt

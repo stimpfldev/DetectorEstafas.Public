@@ -1,5 +1,0 @@
-1. Copiar sobre la raíz de DetectorEstafas y reemplazar.
-2. Desde DetectorEstafas.Web ejecutar:
-   powershell -ExecutionPolicy Bypass -File .\Scripts\Preparar-Whisper.ps1
-3. Restaurar NuGet, compilar Release y ejecutar pruebas.
-4. Probar MP3 y WAV con voz en español.

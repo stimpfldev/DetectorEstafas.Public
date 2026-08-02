@@ -1,9 +1,0 @@
-BLOQUE 2E.1 - Identificación telefónica pública inicial
-
-- Catálogo local de líneas oficiales argentinas verificadas.
-- No consulta ni atribuye personas particulares.
-- No usa API externa ni agrega costos.
-- No requiere migración.
-- Incluye el ajuste visual pendiente del botón Crear cuenta en el header.
-
-Pruebas: analizar 911 como Teléfono y luego un número desconocido.
