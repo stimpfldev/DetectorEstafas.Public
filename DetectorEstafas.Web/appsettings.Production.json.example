@@ -1,0 +1,24 @@
+{
+  "ConnectionStrings": {
+    "DetectorEstafas": ""
+  },
+  "Correo": {
+    "ModoDesarrollo": false,
+    "SmtpHost": "",
+    "SmtpPort": 587,
+    "UsarSsl": true,
+    "Usuario": "",
+    "Password": "",
+    "RemitenteEmail": "",
+    "RemitenteNombre": "Detector de Estafas"
+  },
+  "InteligenciaArtificial": {
+    "Enabled": false,
+    "ApiKey": ""
+  },
+  "ApiAdministracion": {
+    "Enabled": true,
+    "Secret": "",
+    "SessionMinutes": 20
+  }
+}
