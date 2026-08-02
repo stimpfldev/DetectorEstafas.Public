@@ -325,9 +325,12 @@ WebApplication app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Analisis/Error");
-    app.UseHsts();
+    app.UseHttpsRedirection();
 }
+
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.Use(async (context, next) =>
 {
