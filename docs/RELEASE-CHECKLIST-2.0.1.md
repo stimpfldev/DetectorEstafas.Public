@@ -49,4 +49,3 @@ La prueba definitiva de instalación en dispositivos reales se realiza sobre des
 - [x] SHA-256 generado.
 - [x] Release GitHub `v2.0.1` publicado.
 - [x] ZIP y SHA-256 adjuntos al release.
-

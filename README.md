@@ -2,7 +2,7 @@
 
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
-**Versión estable actual: 2.1.0.** La versión web/PWA comercial está cerrada, validada localmente y publicada.
+**Versión estable actual: 2.1.0.** 
 
 El repositorio publica código fuente para revisión técnica bajo una licencia propietaria de código visible. La ejecución productiva, explotación comercial, redistribución y publicación de derivados requieren autorización escrita.
 
@@ -170,7 +170,7 @@ powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Verificar-Repositorio-Publico.ps1
 ```
 
-También deben completarse [docs/PUBLICATION-CHECKLIST.md](docs/PUBLICATION-CHECKLIST.md) y [docs/RELEASE-CHECKLIST-2.1.0.md](docs/RELEASE-CHECKLIST-2.1.0.md).
+También debe completarse [docs/RELEASE-CHECKLIST-2.1.0.md](docs/RELEASE-CHECKLIST-2.1.0.md).
 
 
 ## Licencia
