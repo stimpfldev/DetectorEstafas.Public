@@ -1,3 +1,4 @@
+@using DetectorEstafas.Web.Models.ApiComercial
 @model DetectorEstafas.Web.ViewModels.ApiAdministracion.ApiDashboardViewModel
 
 @{
@@ -8,12 +9,13 @@
     <div class="admin-api-heading">
         <div>
             <h1>Dashboard de API</h1>
-            <p>Consumo del @Model.FechaUtc.ToString("dd/MM/yyyy") en UTC.</p>
+            <p>Consumo al @Model.FechaUtc.ToString("dd/MM/yyyy") en UTC.</p>
         </div>
 
         <form asp-action="Salir" method="post">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-outline-secondary">
+            <button type="submit"
+                    class="btn btn-outline-secondary">
                 Cerrar administración
             </button>
         </form>
@@ -75,12 +77,40 @@
                         </form>
                     </div>
 
+                    @if (!cliente.ConfiguracionCuotaValida)
+                    {
+                        <div class="alert alert-warning">
+                            La configuración de cuota de este cliente no es válida.
+                        </div>
+                    }
+
                     <dl class="admin-api-metrics">
-                        <div><dt>Plan</dt><dd>@cliente.Plan</dd></div>
-                        <div><dt>Cuota diaria</dt><dd>@cliente.CuotaDiaria</dd></div>
-                        <div><dt>Consumidas</dt><dd>@cliente.ConsumidasHoy</dd></div>
-                        <div><dt>Restantes</dt><dd>@cliente.RestantesHoy</dd></div>
+                        <div>
+                            <dt>Plan</dt>
+                            <dd>@cliente.Plan</dd>
+                        </div>
+                        <div>
+                            <dt>Límite</dt>
+                            <dd>@cliente.LimitePeriodo / @cliente.PeriodoTexto</dd>
+                        </div>
+                        <div>
+                            <dt>Consumidas</dt>
+                            <dd>@cliente.ConsumidasPeriodo</dd>
+                        </div>
+                        <div>
+                            <dt>Restantes</dt>
+                            <dd>@cliente.RestantesPeriodo</dd>
+                        </div>
                     </dl>
+
+                    @if (cliente.ConfiguracionCuotaValida)
+                    {
+                        <p class="small text-muted">
+                            La cuota actual se reinicia el
+                            @cliente.ReiniciaUtc.ToString("dd/MM/yyyy HH:mm")
+                            UTC.
+                        </p>
+                    }
 
                     <form asp-action="ActualizarPlanCliente"
                           asp-route-apiClienteId="@cliente.ApiClienteId"
@@ -90,28 +120,39 @@
 
                         <div class="col-md-4">
                             <label class="form-label">Plan</label>
-                            <select name="plan" class="form-select">
-                                @if (string.Equals(cliente.Plan, "Comercial", StringComparison.OrdinalIgnoreCase))
+                            <select name="plan"
+                                    class="form-select">
+                                @foreach (string plan in ApiPlanes.Todos)
                                 {
-                                    <option value="Prueba">Prueba</option>
-                                    <option value="Comercial" selected>Comercial</option>
-                                }
-                                else
-                                {
-                                    <option value="Prueba" selected>Prueba</option>
-                                    <option value="Comercial">Comercial</option>
+                                    if (string.Equals(
+                                        cliente.Plan,
+                                        plan,
+                                        StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <option value="@plan" selected>@plan</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@plan">@plan</option>
+                                    }
                                 }
                             </select>
                         </div>
 
                         <div class="col-md-4">
-                            <label class="form-label">Cuota diaria</label>
+                            <label class="form-label">
+                                Cuota mensual personalizada
+                            </label>
                             <input type="number"
-                                   name="cuotaDiaria"
+                                   name="cuotaMensualPersonalizada"
                                    min="1"
-                                   max="1000000"
-                                   value="@cliente.CuotaDiaria"
+                                   max="@ApiPlanes.CuotaMensualMaximaPersonalizada"
+                                   value="@cliente.CuotaMensualPersonalizada"
+                                   placeholder="Solo para A medida"
                                    class="form-control" />
+                            <div class="form-text">
+                                Prueba: 200/día · Starter: 5.000/mes · Growth: 25.000/mes.
+                            </div>
                         </div>
 
                         <div class="col-md-4">

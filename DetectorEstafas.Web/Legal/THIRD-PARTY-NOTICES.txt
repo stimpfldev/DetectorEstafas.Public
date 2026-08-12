@@ -1,7 +1,7 @@
 DETECTOR DE ESTAFAS
 THIRD-PARTY NOTICES
-Versión del documento: 2.0.2
-Última actualización: 2026-08-09
+Versión del documento: 2.1.0
+Última actualización: 2026-08-10
 
 Este producto utiliza componentes, modelos y servicios de terceros. Cada componente
 permanece sujeto a su propia licencia, condiciones y avisos de copyright. Este archivo

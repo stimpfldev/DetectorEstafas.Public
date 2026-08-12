@@ -10,10 +10,14 @@ using Microsoft.Extensions.Options;
 namespace DetectorEstafas.Web.Controllers;
 
 [Route("administracion/api")]
-[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-public sealed class AdministracionApiController : Controller
+[ResponseCache(
+    Location = ResponseCacheLocation.None,
+    NoStore = true)]
+public sealed class AdministracionApiController :
+    Controller
 {
-    private const string SessionKey = "ApiAdministracionAutorizada";
+    private const string SessionKey =
+        "ApiAdministracionAutorizada";
 
     private readonly IApiAdministracionService _service;
     private readonly ApiAdministracionOptions _options;
@@ -37,11 +41,13 @@ public sealed class AdministracionApiController : Controller
 
         if (!EstaAutorizado())
         {
-            return RedirectToAction(nameof(Ingresar));
+            return RedirectToAction(
+                nameof(Ingresar));
         }
 
         ApiDashboardViewModel model =
-            await _service.ObtenerDashboardAsync(cancellationToken);
+            await _service.ObtenerDashboardAsync(
+                cancellationToken);
 
         return View(model);
     }
@@ -56,10 +62,12 @@ public sealed class AdministracionApiController : Controller
 
         if (EstaAutorizado())
         {
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                nameof(Index));
         }
 
-        return View(new ApiAdministracionLoginViewModel());
+        return View(
+            new ApiAdministracionLoginViewModel());
     }
 
     [HttpPost("ingresar")]
@@ -78,7 +86,9 @@ public sealed class AdministracionApiController : Controller
             return View(model);
         }
 
-        if (!SecretosIguales(model.Secret, _options.Secret))
+        if (!SecretosIguales(
+                model.Secret,
+                _options.Secret))
         {
             ModelState.AddModelError(
                 nameof(model.Secret),
@@ -87,8 +97,12 @@ public sealed class AdministracionApiController : Controller
             return View(model);
         }
 
-        HttpContext.Session.SetString(SessionKey, "1");
-        return RedirectToAction(nameof(Index));
+        HttpContext.Session.SetString(
+            SessionKey,
+            "1");
+
+        return RedirectToAction(
+            nameof(Index));
     }
 
     [HttpPost("salir")]
@@ -96,56 +110,72 @@ public sealed class AdministracionApiController : Controller
     public IActionResult Salir()
     {
         HttpContext.Session.Remove(SessionKey);
-        return RedirectToAction(nameof(Ingresar));
+
+        return RedirectToAction(
+            nameof(Ingresar));
     }
 
-    [HttpPost("clientes/{apiClienteId:int}/cambiar-estado")]
+    [HttpPost(
+        "clientes/{apiClienteId:int}/cambiar-estado")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CambiarEstadoCliente(
-        int apiClienteId,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult>
+        CambiarEstadoCliente(
+            int apiClienteId,
+            CancellationToken cancellationToken)
     {
         if (!EstaAutorizado())
         {
             return Unauthorized();
         }
 
-        bool changed = await _service.CambiarEstadoClienteAsync(
-            apiClienteId,
-            cancellationToken);
+        bool changed =
+            await _service.CambiarEstadoClienteAsync(
+                apiClienteId,
+                cancellationToken);
 
-        TempData[changed ? "Mensaje" : "Error"] = changed
-            ? "El estado del cliente fue actualizado."
-            : "No se encontró el cliente.";
+        TempData[
+            changed
+                ? "Mensaje"
+                : "Error"] =
+            changed
+                ? "El estado del cliente fue actualizado."
+                : "No se encontró el cliente.";
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(
+            nameof(Index));
     }
-
 
     [HttpPost("clientes/{apiClienteId:int}/plan")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ActualizarPlanCliente(
-        int apiClienteId,
-        string plan,
-        int cuotaDiaria,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult>
+        ActualizarPlanCliente(
+            int apiClienteId,
+            string plan,
+            int? cuotaMensualPersonalizada,
+            CancellationToken cancellationToken)
     {
         if (!EstaAutorizado())
         {
             return Unauthorized();
         }
 
-        bool updated = await _service.ActualizarPlanClienteAsync(
-            apiClienteId,
-            plan,
-            cuotaDiaria,
-            cancellationToken);
+        bool updated =
+            await _service.ActualizarPlanClienteAsync(
+                apiClienteId,
+                plan,
+                cuotaMensualPersonalizada,
+                cancellationToken);
 
-        TempData[updated ? "Mensaje" : "Error"] = updated
-            ? "El plan y la cuota del cliente fueron actualizados."
-            : "No fue posible actualizar el plan o la cuota.";
+        TempData[
+            updated
+                ? "Mensaje"
+                : "Error"] =
+            updated
+                ? "El plan y la cuota del cliente fueron actualizados."
+                : "No fue posible actualizar el plan o la cuota.";
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(
+            nameof(Index));
     }
 
     [HttpPost("claves/{apiClaveId:int}/revocar")]
@@ -159,36 +189,48 @@ public sealed class AdministracionApiController : Controller
             return Unauthorized();
         }
 
-        bool revoked = await _service.RevocarClaveAsync(
-            apiClaveId,
-            cancellationToken);
+        bool revoked =
+            await _service.RevocarClaveAsync(
+                apiClaveId,
+                cancellationToken);
 
-        TempData[revoked ? "Mensaje" : "Error"] = revoked
-            ? "La clave fue revocada."
-            : "La clave no existe o ya estaba revocada.";
+        TempData[
+            revoked
+                ? "Mensaje"
+                : "Error"] =
+            revoked
+                ? "La clave fue revocada."
+                : "La clave no existe o ya estaba revocada.";
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(
+            nameof(Index));
     }
 
     private bool EstaAutorizado()
     {
-        return HttpContext.Session.GetString(SessionKey) == "1";
+        return HttpContext.Session
+            .GetString(SessionKey) == "1";
     }
 
     private bool ConfiguracionValida()
     {
         return _options.Enabled &&
-               !string.IsNullOrWhiteSpace(_options.Secret);
+               !string.IsNullOrWhiteSpace(
+                   _options.Secret);
     }
 
     private static bool SecretosIguales(
         string supplied,
         string expected)
     {
-        byte[] suppliedBytes = Encoding.UTF8.GetBytes(supplied);
-        byte[] expectedBytes = Encoding.UTF8.GetBytes(expected);
+        byte[] suppliedBytes =
+            Encoding.UTF8.GetBytes(supplied);
 
-        return suppliedBytes.Length == expectedBytes.Length &&
+        byte[] expectedBytes =
+            Encoding.UTF8.GetBytes(expected);
+
+        return suppliedBytes.Length ==
+                   expectedBytes.Length &&
                CryptographicOperations.FixedTimeEquals(
                    suppliedBytes,
                    expectedBytes);

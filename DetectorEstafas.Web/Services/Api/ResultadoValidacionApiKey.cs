@@ -1,3 +1,5 @@
+using DetectorEstafas.Web.Models.ApiComercial;
+
 namespace DetectorEstafas.Web.Services.Api;
 
 public enum EstadoValidacionApiKey
@@ -16,9 +18,14 @@ public sealed class ResultadoValidacionApiKey
 
     public string NombreCliente { get; init; } = string.Empty;
 
-    public int CuotaDiaria { get; init; }
+    public PeriodoCuotaApi Periodo { get; init; }
 
-    public int ConsumidasHoy { get; init; }
+    public int Limite { get; init; }
 
-    public int Restantes => Math.Max(0, CuotaDiaria - ConsumidasHoy);
+    public int ConsumidasPeriodo { get; init; }
+
+    public DateTime ReiniciaUtc { get; init; }
+
+    public int Restantes =>
+        Math.Max(0, Limite - ConsumidasPeriodo);
 }

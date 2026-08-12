@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DetectorEstafas.Web.Data;
 
-public class DetectorEstafasDbContext : IdentityDbContext<UsuarioAplicacion>
+public class DetectorEstafasDbContext :
+    IdentityDbContext<UsuarioAplicacion>
 {
     public DetectorEstafasDbContext(
         DbContextOptions<DetectorEstafasDbContext> options)
@@ -136,11 +137,11 @@ public class DetectorEstafasDbContext : IdentityDbContext<UsuarioAplicacion>
                 reporte.FechaUtc);
         });
 
-
         modelBuilder.Entity<ApiCliente>(entity =>
         {
             entity.ToTable("ApiClientes");
-            entity.HasKey(item => item.ApiClienteId);
+            entity.HasKey(item =>
+                item.ApiClienteId);
 
             entity.Property(item => item.Nombre)
                 .HasMaxLength(100)
@@ -150,9 +151,14 @@ public class DetectorEstafasDbContext : IdentityDbContext<UsuarioAplicacion>
                 .HasMaxLength(40)
                 .IsRequired();
 
-            entity.Property(item => item.FechaCreacionUtc)
+            entity.Property(item =>
+                    item.FechaCreacionUtc)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
+
+            entity.Property(item =>
+                    item.FechaInicioPlanUtc)
+                .HasColumnType("datetime2(0)");
 
             entity.HasIndex(item => item.Nombre)
                 .IsUnique();
@@ -161,7 +167,8 @@ public class DetectorEstafasDbContext : IdentityDbContext<UsuarioAplicacion>
         modelBuilder.Entity<ApiClave>(entity =>
         {
             entity.ToTable("ApiClaves");
-            entity.HasKey(item => item.ApiClaveId);
+            entity.HasKey(item =>
+                item.ApiClaveId);
 
             entity.Property(item => item.Prefijo)
                 .HasMaxLength(8)
@@ -172,42 +179,57 @@ public class DetectorEstafasDbContext : IdentityDbContext<UsuarioAplicacion>
                 .HasColumnType("binary(32)")
                 .IsRequired();
 
-            entity.Property(item => item.FechaCreacionUtc)
+            entity.Property(item =>
+                    item.FechaCreacionUtc)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
-            entity.Property(item => item.FechaRevocacionUtc)
+            entity.Property(item =>
+                    item.FechaRevocacionUtc)
                 .HasColumnType("datetime2(0)");
 
             entity.HasOne(item => item.Cliente)
                 .WithMany(item => item.Claves)
-                .HasForeignKey(item => item.ApiClienteId)
+                .HasForeignKey(item =>
+                    item.ApiClienteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(item => item.Prefijo);
-            entity.HasIndex(item => new { item.ApiClienteId, item.Habilitada });
+
+            entity.HasIndex(item => new
+            {
+                item.ApiClienteId,
+                item.Habilitada
+            });
         });
 
         modelBuilder.Entity<ApiConsumoDiario>(entity =>
         {
             entity.ToTable("ApiConsumosDiarios");
-            entity.HasKey(item => item.ApiConsumoDiarioId);
+            entity.HasKey(item =>
+                item.ApiConsumoDiarioId);
 
             entity.Property(item => item.FechaUtc)
                 .HasColumnType("date")
                 .IsRequired();
 
-            entity.Property(item => item.UltimaSolicitudUtc)
+            entity.Property(item =>
+                    item.UltimaSolicitudUtc)
                 .HasColumnType("datetime2(0)")
                 .IsRequired();
 
             entity.HasOne(item => item.Cliente)
                 .WithMany(item => item.Consumos)
-                .HasForeignKey(item => item.ApiClienteId)
+                .HasForeignKey(item =>
+                    item.ApiClienteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasIndex(item => new { item.ApiClienteId, item.FechaUtc })
-                .IsUnique();
+            entity.HasIndex(item => new
+            {
+                item.ApiClienteId,
+                item.FechaUtc
+            })
+            .IsUnique();
         });
     }
 }

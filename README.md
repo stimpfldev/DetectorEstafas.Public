@@ -2,7 +2,7 @@
 
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
-**Versión estable actual: 2.0.2.** La versión web/PWA comercial está cerrada, validada localmente y publicada.
+**Versión estable actual: 2.1.0.** La versión web/PWA comercial está cerrada, validada localmente y publicada.
 
 El repositorio publica código fuente para revisión técnica bajo una licencia propietaria de código visible. La ejecución productiva, explotación comercial, redistribución y publicación de derivados requieren autorización escrita.
 
@@ -18,13 +18,32 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Confirmación de correo preparada para desarrollo y SMTP.
 - Catálogo de teléfonos oficiales y fuentes públicas verificadas.
 - PWA responsive instalable y preparada para uso móvil.
-- API comercial versionada con API keys, planes, cuotas y consumo diario.
+- API comercial versionada con API keys, planes, cuotas diarias/mensuales y consumo persistido.
 - Plan de prueba de 14 días y plan comercial administrable.
 - Dashboard interno para administración de clientes API.
 - Métricas, feedback y reportes comunitarios sin guardar el contenido analizado.
 - CI automático con build y pruebas mediante GitHub Actions.
-- 42 pruebas automatizadas validadas.
+- 47 pruebas automatizadas validadas.
 
+## Vista del producto
+
+Interfaz web/PWA responsive con análisis explicable para distintos tipos de contenido.
+
+<p align="center">
+  <img src="docs/images/01-inicio-recortada.png" alt="Pantalla principal de Detector de Estafas" width="900">
+</p>
+
+### Ejemplos de análisis
+
+| Resultado de riesgo | OCR de captura |
+|---|---|
+| <img src="docs/images/02-resultado.png" alt="Resultado de análisis de riesgo"> | <img src="docs/images/03-ocr.png" alt="Análisis mediante OCR"> |
+| **Detección explicable de señales de fraude.** | **Extracción local de texto y análisis posterior.** |
+
+| Audio y transcripción | API comercial |
+|---|---|
+| <img src="docs/images/04-audio.png" alt="Análisis de audio transcripto"> | <img src="docs/images/05-api-admin.png" alt="Dashboard de API comercial"> |
+| **Transcripción local seguida del motor de análisis.** | **Gestión de clientes, planes, cuotas y API keys.** |
 ## Privacidad por diseño
 
 Por defecto no se almacenan mensajes, enlaces completos, teléfonos, imágenes, audios ni transcripciones. Los archivos se procesan temporalmente y se eliminan al finalizar. La evaluación con IA externa es opcional y requiere consentimiento explícito.
@@ -151,7 +170,7 @@ powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Verificar-Repositorio-Publico.ps1
 ```
 
-También deben completarse [docs/PUBLICATION-CHECKLIST.md](docs/PUBLICATION-CHECKLIST.md) y [docs/RELEASE-CHECKLIST-2.0.2.md](docs/RELEASE-CHECKLIST-2.0.2.md).
+También deben completarse [docs/PUBLICATION-CHECKLIST.md](docs/PUBLICATION-CHECKLIST.md) y [docs/RELEASE-CHECKLIST-2.1.0.md](docs/RELEASE-CHECKLIST-2.1.0.md).
 
 
 ## Licencia

@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.Text.Json;
+using DetectorEstafas.Web.Models.ApiComercial;
 
 namespace DetectorEstafas.Web.Services.Api;
 
@@ -19,20 +21,24 @@ public sealed class ApiKeyMiddleware
         HttpContext context,
         IApiKeyValidator validator)
     {
-        if (!context.Request.Path.StartsWithSegments("/api/v1"))
+        if (!context.Request.Path
+                .StartsWithSegments("/api/v1"))
         {
             await _next(context);
             return;
         }
 
-        string? apiKey = context.Request.Headers[HeaderName].FirstOrDefault();
+        string? apiKey =
+            context.Request.Headers[HeaderName]
+                .FirstOrDefault();
 
         ResultadoValidacionApiKey result =
             await validator.ValidarYRegistrarConsumoAsync(
                 apiKey,
                 context.RequestAborted);
 
-        if (result.Estado == EstadoValidacionApiKey.Invalida)
+        if (result.Estado ==
+            EstadoValidacionApiKey.Invalida)
         {
             await EscribirErrorAsync(
                 context,
@@ -43,7 +49,8 @@ public sealed class ApiKeyMiddleware
             return;
         }
 
-        if (result.Estado == EstadoValidacionApiKey.PruebaExpirada)
+        if (result.Estado ==
+            EstadoValidacionApiKey.PruebaExpirada)
         {
             await EscribirErrorAsync(
                 context,
@@ -55,24 +62,48 @@ public sealed class ApiKeyMiddleware
         }
 
         context.Response.Headers["X-RateLimit-Limit"] =
-            result.CuotaDiaria.ToString();
+            result.Limite.ToString(
+                CultureInfo.InvariantCulture);
 
         context.Response.Headers["X-RateLimit-Remaining"] =
-            result.Restantes.ToString();
+            result.Restantes.ToString(
+                CultureInfo.InvariantCulture);
 
-        if (result.Estado == EstadoValidacionApiKey.CuotaAgotada)
+        context.Response.Headers["X-RateLimit-Period"] =
+            result.Periodo == PeriodoCuotaApi.Mensual
+                ? "month"
+                : "day";
+
+        context.Response.Headers["X-RateLimit-Reset"] =
+            new DateTimeOffset(result.ReiniciaUtc)
+                .ToUnixTimeSeconds()
+                .ToString(CultureInfo.InvariantCulture);
+
+        if (result.Estado ==
+            EstadoValidacionApiKey.CuotaAgotada)
         {
+            bool mensual =
+                result.Periodo ==
+                    PeriodoCuotaApi.Mensual;
+
             await EscribirErrorAsync(
                 context,
                 StatusCodes.Status429TooManyRequests,
-                "cuota_diaria_agotada",
-                "Se alcanzó la cuota diaria asignada a esta API key.");
+                mensual
+                    ? "cuota_mensual_agotada"
+                    : "cuota_diaria_agotada",
+                mensual
+                    ? "Se alcanzó la cuota mensual asignada a esta API key."
+                    : "Se alcanzó la cuota diaria asignada a esta API key.");
 
             return;
         }
 
-        context.Items[ClientItemName] = result.NombreCliente;
-        context.Items[ClientIdItemName] = result.ApiClienteId;
+        context.Items[ClientItemName] =
+            result.NombreCliente;
+
+        context.Items[ClientIdItemName] =
+            result.ApiClienteId;
 
         await _next(context);
     }
@@ -84,7 +115,8 @@ public sealed class ApiKeyMiddleware
         string message)
     {
         context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType =
+            "application/json";
 
         await context.Response.WriteAsync(
             JsonSerializer.Serialize(new

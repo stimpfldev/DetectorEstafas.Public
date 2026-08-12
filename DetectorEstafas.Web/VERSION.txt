@@ -1,7 +1,7 @@
 Producto: Detector de Estafas
-Versión: 2.0.2
+Versión: 2.1.0
 Etapa: Versión web/PWA comercial estabilizada
-Fecha de cierre: 2026-08-09
+Fecha de cierre: 2026-08-10
 
 Alcance principal:
 - análisis de mensajes, enlaces, teléfonos y llamadas;
@@ -10,7 +10,7 @@ Alcance principal:
 - evaluación opcional mediante IA externa;
 - registro y confirmación de correo;
 - PWA responsive instalable en Android y compatible con instalación en iPhone/iPad;
-- API comercial v1 con planes Prueba y Comercial;
+- API comercial v1 con planes Prueba, Starter, Growth y A medida;
 - prueba de 14 días y cuota diaria configurable;
 - administración de plan, cuota, habilitación y revocación de claves;
 - protección transaccional del consumo diario;
@@ -19,6 +19,17 @@ Alcance principal:
 - CI para build y pruebas automáticas;
 - seguridad, privacidad y documentación legal.
 
+Cambios 2.1.0:
+- reemplazo del plan Comercial genérico por Starter, Growth y A medida;
+- Prueba fijada en 200 análisis por día durante 14 días;
+- Starter con 5.000 análisis mensuales;
+- Growth con 25.000 análisis mensuales;
+- cuota mensual configurable para A medida;
+- control de consumo mensual sobre registros diarios persistidos;
+- headers de cuota con período y fecha de reinicio;
+- dashboard administrativo actualizado para los nuevos planes;
+- migración de datos existentes y preservación de consumos históricos;
+- ampliación de la suite automatizada a 47 pruebas.
 Correcciones 2.0.2:
 - mejora del análisis de llamadas transcritas;
 - detección ampliada de bloqueo, suspensión y variantes equivalentes;
@@ -41,6 +52,6 @@ Correcciones 2.0.1:
 Validación:
 - compilación local aprobada;
 - suite automatizada aprobada;
-- 42 pruebas automatizadas definidas;
+- 47 pruebas automatizadas definidas;
 - validación final de GitHub Actions pendiente hasta publicar el commit 2.0.2.
 

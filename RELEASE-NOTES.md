@@ -1,3 +1,54 @@
+# Detector de Estafas 2.1.0
+
+Fecha de cierre: 10 de agosto de 2026.
+
+## Objetivo
+
+Actualizar la API comercial para utilizar períodos de consumo coherentes con cada plan, reemplazando la cuota diaria genérica.
+
+## Cambios principales
+
+- Plan Prueba: 14 días y 200 análisis por día.
+- Plan Starter: 5.000 análisis por mes.
+- Plan Growth: 25.000 análisis por mes.
+- Plan A medida: cuota mensual configurable.
+- Eliminación del plan Comercial genérico.
+- Cómputo mensual basado en los registros diarios persistidos.
+- Reinicio mensual UTC y manejo del primer período desde el inicio del plan.
+- Headers de cuota con límite, restante, período y fecha de reinicio.
+- Dashboard administrativo actualizado para los nuevos planes.
+- Migración EF Core AddMonthlyApiQuotas.
+- Migración de clientes existentes sin eliminar consumos históricos.
+- 47 pruebas automatizadas aprobadas.
+
+## Validación
+
+- Migración aplicada correctamente sobre DetectorEstafas_Dev.
+- Datos existentes preservados.
+- Dashboard administrativo validado visualmente.
+- Build local aprobado.
+- Suite automatizada: 47/47 pruebas correctas.
+- GitHub Actions pendiente hasta publicar el commit 2.1.0.
+
+## Planes de API incluidos
+
+La estructura técnica queda preparada para:
+
+- Prueba: 14 días, 200 análisis/día.
+- Starter: 5.000 análisis/mes.
+- Growth: 25.000 análisis/mes.
+- A medida: cuota mensual configurable.
+
+Los precios comerciales y el canal de contacto no forman parte de la configuración técnica de esta versión.
+
+## Compatibilidad
+
+- Web responsive / PWA.
+- .NET 10.
+- SQL Server.
+- API REST v1.
+
+---
 # Detector de Estafas 2.0.2
 
 Fecha de cierre: 9 de agosto de 2026.

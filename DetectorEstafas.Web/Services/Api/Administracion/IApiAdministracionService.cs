@@ -14,7 +14,7 @@ public interface IApiAdministracionService
     Task<bool> ActualizarPlanClienteAsync(
         int apiClienteId,
         string plan,
-        int cuotaDiaria,
+        int? cuotaMensualPersonalizada,
         CancellationToken cancellationToken);
 
     Task<bool> RevocarClaveAsync(

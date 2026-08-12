@@ -6,15 +6,24 @@ public sealed class ApiCliente
 
     public string Nombre { get; set; } = string.Empty;
 
-    public string Plan { get; set; } = "Prueba";
+    public string Plan { get; set; } = ApiPlanes.Prueba;
 
-    public int CuotaDiaria { get; set; } = 100;
+    public int CuotaDiaria { get; set; } =
+        ApiPlanes.CuotaDiariaPrueba;
+
+    public int? CuotaMensual { get; set; }
 
     public bool Habilitado { get; set; } = true;
 
-    public DateTime FechaCreacionUtc { get; set; } = DateTime.UtcNow;
+    public DateTime FechaCreacionUtc { get; set; } =
+        DateTime.UtcNow;
 
-    public ICollection<ApiClave> Claves { get; set; } = new List<ApiClave>();
+    public DateTime? FechaInicioPlanUtc { get; set; } =
+        DateTime.UtcNow;
 
-    public ICollection<ApiConsumoDiario> Consumos { get; set; } = new List<ApiConsumoDiario>();
+    public ICollection<ApiClave> Claves { get; set; } =
+        new List<ApiClave>();
+
+    public ICollection<ApiConsumoDiario> Consumos { get; set; } =
+        new List<ApiConsumoDiario>();
 }
