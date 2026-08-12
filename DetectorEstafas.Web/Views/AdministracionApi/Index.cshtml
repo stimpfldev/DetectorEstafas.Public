@@ -82,6 +82,46 @@
                         <div><dt>Restantes</dt><dd>@cliente.RestantesHoy</dd></div>
                     </dl>
 
+                    <form asp-action="ActualizarPlanCliente"
+                          asp-route-apiClienteId="@cliente.ApiClienteId"
+                          method="post"
+                          class="row g-2 align-items-end mb-4">
+                        @Html.AntiForgeryToken()
+
+                        <div class="col-md-4">
+                            <label class="form-label">Plan</label>
+                            <select name="plan" class="form-select">
+                                @if (string.Equals(cliente.Plan, "Comercial", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <option value="Prueba">Prueba</option>
+                                    <option value="Comercial" selected>Comercial</option>
+                                }
+                                else
+                                {
+                                    <option value="Prueba" selected>Prueba</option>
+                                    <option value="Comercial">Comercial</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Cuota diaria</label>
+                            <input type="number"
+                                   name="cuotaDiaria"
+                                   min="1"
+                                   max="1000000"
+                                   value="@cliente.CuotaDiaria"
+                                   class="form-control" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+                                Actualizar plan
+                            </button>
+                        </div>
+                    </form>
+
                     <h3>Claves</h3>
                     <div class="table-responsive">
                         <table class="table align-middle">

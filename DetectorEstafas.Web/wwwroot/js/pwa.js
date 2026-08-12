@@ -5,6 +5,23 @@ let deferredInstallPrompt = null;
 const installButton =
     document.getElementById("installAppButton");
 
+function estaInstalada() {
+    return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+    );
+}
+
+function esIos() {
+    return (
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (
+            navigator.platform === "MacIntel" &&
+            navigator.maxTouchPoints > 1
+        )
+    );
+}
+
 function hideInstallButton() {
     if (installButton) {
         installButton.hidden = true;
@@ -77,24 +94,44 @@ window.addEventListener(
 
         deferredInstallPrompt = event;
 
-        showInstallButton();
+        if (!estaInstalada()) {
+            showInstallButton();
+        }
     });
 
 if (installButton) {
+
+    if (esIos() && !estaInstalada()) {
+        showInstallButton();
+    }
+
     installButton.addEventListener(
         "click",
         async () => {
-            if (!deferredInstallPrompt) {
+
+            if (estaInstalada()) {
+                hideInstallButton();
                 return;
             }
 
-            deferredInstallPrompt.prompt();
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
 
-            await deferredInstallPrompt.userChoice;
+                await deferredInstallPrompt.userChoice;
 
-            deferredInstallPrompt = null;
+                deferredInstallPrompt = null;
 
-            hideInstallButton();
+                hideInstallButton();
+
+                return;
+            }
+
+            if (esIos()) {
+                alert(
+                    "Para instalar Detector de Estafas en iPhone o iPad: " +
+                    "tocá Compartir y luego «Añadir a pantalla de inicio»."
+                );
+            }
         });
 }
 
@@ -102,20 +139,24 @@ window.addEventListener(
     "appinstalled",
     () => {
         deferredInstallPrompt = null;
-
         hideInstallButton();
     });
+
 function actualizarModoInstalado() {
-    const instalada =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true;
+    const instalada = estaInstalada();
 
     document.documentElement.classList.toggle(
         "pwa-standalone",
         instalada);
+
+    if (instalada) {
+        hideInstallButton();
+    }
 }
 
 actualizarModoInstalado();
 
 window.matchMedia("(display-mode: standalone)")
-    .addEventListener?.("change", actualizarModoInstalado);
+    .addEventListener?.(
+        "change",
+        actualizarModoInstalado);

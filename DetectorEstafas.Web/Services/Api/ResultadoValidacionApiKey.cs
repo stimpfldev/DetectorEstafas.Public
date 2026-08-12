@@ -4,7 +4,8 @@ public enum EstadoValidacionApiKey
 {
     Valida = 1,
     Invalida = 2,
-    CuotaAgotada = 3
+    CuotaAgotada = 3,
+    PruebaExpirada = 4
 }
 
 public sealed class ResultadoValidacionApiKey

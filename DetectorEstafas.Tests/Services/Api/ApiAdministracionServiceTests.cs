@@ -26,6 +26,34 @@ public sealed class ApiAdministracionServiceTests
         Assert.IsFalse(client.Habilitado);
     }
 
+
+    [TestMethod]
+    public async Task ActualizarPlanClienteAsync_PasaDePruebaAComercialYCambiaCuota()
+    {
+        await using DetectorEstafasDbContext context = CrearContexto();
+        ApiCliente client = new()
+        {
+            Nombre = "cliente-plan",
+            Plan = "Prueba",
+            CuotaDiaria = 10
+        };
+
+        context.ApiClientes.Add(client);
+        await context.SaveChangesAsync();
+
+        ApiAdministracionService service = new(context);
+
+        bool updated = await service.ActualizarPlanClienteAsync(
+            client.ApiClienteId,
+            "Comercial",
+            500,
+            CancellationToken.None);
+
+        Assert.IsTrue(updated);
+        Assert.AreEqual("Comercial", client.Plan);
+        Assert.AreEqual(500, client.CuotaDiaria);
+    }
+
     [TestMethod]
     public async Task RevocarClaveAsync_DeshabilitaYRegistraFecha()
     {

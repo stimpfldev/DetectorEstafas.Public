@@ -43,6 +43,17 @@ public sealed class ApiKeyMiddleware
             return;
         }
 
+        if (result.Estado == EstadoValidacionApiKey.PruebaExpirada)
+        {
+            await EscribirErrorAsync(
+                context,
+                StatusCodes.Status403Forbidden,
+                "prueba_expirada",
+                "El período de prueba de esta API key finalizó.");
+
+            return;
+        }
+
         context.Response.Headers["X-RateLimit-Limit"] =
             result.CuotaDiaria.ToString();
 

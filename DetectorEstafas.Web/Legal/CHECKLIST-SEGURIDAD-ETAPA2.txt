@@ -1,4 +1,4 @@
-DETECTOR DE ESTAFAS 2.0.0
+DETECTOR DE ESTAFAS 2.0.1
 CHECKLIST DE SEGURIDAD Y PRIVACIDAD - ETAPA 2
 
 Repositorio y secretos
@@ -34,6 +34,9 @@ API comercial
 [ ] API key revocada devuelve 401.
 [ ] Cliente deshabilitado devuelve 401.
 [ ] Cuota agotada devuelve 429.
+[ ] Prueba vencida devuelve 403.
+[ ] Clave revocada no puede reimportarse desde configuración.
+[ ] Consumo concurrente no puede superar la cuota diaria.
 [ ] La clave completa no se guarda en SQL Server.
 [ ] El hash almacenado ocupa 32 bytes.
 [ ] Los logs no contienen el cuerpo analizado ni la API key.
@@ -53,4 +56,4 @@ Dependencias y compilación
 [ ] Migraciones aplicadas sobre una base limpia de validación.
 
 Resultado final
-[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.0.0.
+[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.0.1.

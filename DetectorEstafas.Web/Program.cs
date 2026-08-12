@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using DetectorEstafas.Web.Services.Correo;
+
+
 WebApplicationBuilder builder =
     WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,14 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<CorreoOptions>(
+    builder.Configuration.GetSection(
+        CorreoOptions.SectionName));
+
+builder.Services.AddScoped<
+    ICorreoRegistroService,
+    SmtpCorreoRegistroService>();
 
 builder.Services.AddOpenApi();
 
@@ -168,7 +179,7 @@ builder.Services.AddHttpClient<
 
         httpClient.DefaultRequestHeaders
             .UserAgent
-            .ParseAdd("DetectorEstafas/1.0");
+            .ParseAdd("DetectorEstafas/2.0");
 
         httpClient.DefaultRequestHeaders
             .Accept
@@ -242,7 +253,19 @@ builder.Services.AddRateLimiter(options =>
                     AutoReplenishment = true
                 });
         });
-
+    options.AddPolicy(
+    "registro",
+    httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?
+                .ToString() ?? "sin-ip",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }));
     options.AddPolicy(
         "admin-login",
         httpContext =>
@@ -329,6 +352,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.Use(async (context, next) =>
 {
     IHeaderDictionary headers =
@@ -361,11 +390,6 @@ app.Use(async (context, next) =>
     await next();
 });
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-app.UseRouting();
 app.UseSession();
 app.UseRateLimiter();
 app.UseMiddleware<ApiKeyMiddleware>();

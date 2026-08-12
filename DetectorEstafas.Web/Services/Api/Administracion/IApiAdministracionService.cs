@@ -11,6 +11,12 @@ public interface IApiAdministracionService
         int apiClienteId,
         CancellationToken cancellationToken);
 
+    Task<bool> ActualizarPlanClienteAsync(
+        int apiClienteId,
+        string plan,
+        int cuotaDiaria,
+        CancellationToken cancellationToken);
+
     Task<bool> RevocarClaveAsync(
         int apiClaveId,
         CancellationToken cancellationToken);

@@ -92,6 +92,93 @@ public sealed class ApiKeyValidatorTests
         Assert.AreEqual(EstadoValidacionApiKey.CuotaAgotada, second.Estado);
     }
 
+
+    [TestMethod]
+    public async Task ValidarYRegistrarConsumoAsync_PruebaExpirada_DevuelvePruebaExpirada()
+    {
+        await using DetectorEstafasDbContext dbContext = CrearDbContext();
+
+        ApiCliente client = new()
+        {
+            Nombre = "cliente-expirado",
+            Plan = "Prueba",
+            CuotaDiaria = 10,
+            Habilitado = true,
+            FechaCreacionUtc = DateTime.UtcNow.AddDays(-20)
+        };
+
+        dbContext.ApiClientes.Add(client);
+        await dbContext.SaveChangesAsync();
+
+        ApiKeyValidator validator = new(
+            dbContext,
+            Options.Create(new ApiComercialOptions
+            {
+                Enabled = true,
+                TrialDays = 14,
+                Keys =
+                [
+                    new ApiKeyOptions
+                    {
+                        Name = "cliente-expirado",
+                        Key = "clave-expirada",
+                        Enabled = true
+                    }
+                ]
+            }));
+
+        ResultadoValidacionApiKey result =
+            await validator.ValidarYRegistrarConsumoAsync(
+                "clave-expirada",
+                CancellationToken.None);
+
+        Assert.AreEqual(
+            EstadoValidacionApiKey.PruebaExpirada,
+            result.Estado);
+    }
+
+    [TestMethod]
+    public async Task ValidarYRegistrarConsumoAsync_ClienteDeshabilitado_NoSeReactivaDesdeConfiguracion()
+    {
+        await using DetectorEstafasDbContext dbContext = CrearDbContext();
+
+        ApiCliente client = new()
+        {
+            Nombre = "cliente-deshabilitado",
+            Plan = "Comercial",
+            CuotaDiaria = 10,
+            Habilitado = false
+        };
+
+        dbContext.ApiClientes.Add(client);
+        await dbContext.SaveChangesAsync();
+
+        ApiKeyValidator validator = new(
+            dbContext,
+            Options.Create(new ApiComercialOptions
+            {
+                Enabled = true,
+                Keys =
+                [
+                    new ApiKeyOptions
+                    {
+                        Name = "cliente-deshabilitado",
+                        Key = "clave-deshabilitada",
+                        Enabled = true
+                    }
+                ]
+            }));
+
+        ResultadoValidacionApiKey result =
+            await validator.ValidarYRegistrarConsumoAsync(
+                "clave-deshabilitada",
+                CancellationToken.None);
+
+        Assert.AreEqual(
+            EstadoValidacionApiKey.Invalida,
+            result.Estado);
+    }
+
     private static DetectorEstafasDbContext CrearDbContext()
     {
         DbContextOptions<DetectorEstafasDbContext> options =

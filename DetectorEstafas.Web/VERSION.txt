@@ -1,26 +1,38 @@
 Producto: Detector de Estafas
-VersiÃ³n: 2.0.0
-Etapa: Segunda etapa funcional cerrada
-Fecha de cierre: 2026-08-02
+Versión: 2.0.1
+Etapa: Versión web/PWA comercial estabilizada
+Fecha de cierre: 2026-08-09
 
-Alcance implementado:
-- anÃ¡lisis de mensajes, enlaces, telÃ©fonos y llamadas;
-- motor local determinista de reglas;
-- anÃ¡lisis tÃ©cnico de enlaces y RDAP para dominios .ar;
-- capturas con validaciÃ³n segura, OCR local y eliminaciÃ³n temporal;
-- carga y grabaciÃ³n de audio con transcripciÃ³n local;
-- evaluaciÃ³n opcional y separada mediante IA externa;
-- registro de cuentas y confirmaciÃ³n de correo sin login pÃºblico;
-- identificaciÃ³n de lÃ­neas oficiales mediante fuentes pÃºblicas;
-- PWA responsive y recepciÃ³n de contenido compartido;
-- API comercial v1 con API keys, cuotas y consumo diario;
-- dashboard interno para clientes API;
-- mÃ©tricas, feedback y reportes sin almacenar contenido analizado;
-- seguridad, rate limiting y 37 pruebas automatizadas validadas.
+Alcance principal:
+- análisis de mensajes, enlaces, teléfonos y llamadas;
+- capturas con OCR local;
+- audios con transcripción local;
+- evaluación opcional mediante IA externa;
+- registro y confirmación de correo;
+- PWA responsive instalable en Android y compatible con instalación en iPhone/iPad;
+- API comercial v1 con planes Prueba y Comercial;
+- prueba de 14 días y cuota diaria configurable;
+- administración de plan, cuota, habilitación y revocación de claves;
+- protección transaccional del consumo diario;
+- dashboard administrativo protegido;
+- documentación de usuario y API comercial;
+- CI para build y pruebas automáticas;
+- seguridad, privacidad y documentación legal.
 
+Correcciones 2.0.1:
+- restauración de HSTS y manejo de excepciones de producción;
+- eliminación de middleware duplicado;
+- registro correcto del servicio SMTP y rate limit de registro;
+- assets PWA completos;
+- asistencia de instalación para iOS;
+- administración real del pasaje Prueba → Comercial;
+- expiración de prueba;
+- robustez de cuotas API ante concurrencia;
+- actualización de documentación de seguridad.
 
-Estado:
-- compilaciÃ³n Release validada;
-- 37 de 37 pruebas aprobadas;
-- validaciÃ³n de seguridad y repositorio pÃºblico aprobada;
-- revisiÃ³n jurÃ­dica profesional recomendada antes de explotaciÃ³n comercial.
+Validación:
+- compilación local aprobada;
+- suite automatizada aprobada;
+- 40 pruebas automatizadas definidas;
+- validación final de GitHub Actions pendiente hasta publicar el commit 2.0.1.
+

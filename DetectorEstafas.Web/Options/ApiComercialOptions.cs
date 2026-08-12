@@ -10,6 +10,8 @@ public sealed class ApiComercialOptions
 
     public int DefaultDailyQuota { get; set; } = 100;
 
+    public int TrialDays { get; set; } = 14;
+
     public List<ApiKeyOptions> Keys { get; set; } = new();
 }
 

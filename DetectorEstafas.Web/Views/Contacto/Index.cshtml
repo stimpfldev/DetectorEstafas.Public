@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Contacto";
+
+    string email =
+        ViewData["EmailContacto"] as string
+        ?? string.Empty;
+
+    bool mostrarEmail =
+        ViewData["MostrarEmailContacto"] as bool?
+        ?? false;
+}
+
+<section class="contact-page">
+    <div class="container">
+        <article class="contact-card">
+            <header class="contact-header">
+                <span class="contact-label">
+                    Contacto
+                </span>
+
+                <h1>
+                    ¿Necesitás comunicarte?
+                </h1>
+
+                <p>
+                    Este canal está previsto para consultas generales,
+                    soporte, privacidad y propuestas relacionadas con
+                    Detector de Estafas.
+                </p>
+            </header>
+
+            <div class="contact-content">
+                <h2>
+                    Correo de contacto
+                </h2>
+
+                @if (mostrarEmail)
+                {
+                    <p>
+                        Podés escribir al siguiente correo:
+                    </p>
+
+                    <div class="contact-email-box">
+                        <strong>
+                            Dirección habilitada
+                        </strong>
+
+                        <a class="contact-email-link"
+                           href="mailto:@email">
+                            @email
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="contact-pending"
+                         role="status">
+                        El correo de contacto se habilitará próximamente.
+                    </div>
+                }
+
+                <a class="contact-back"
+                   asp-controller="Analisis"
+                   asp-action="Index">
+                    Volver al analizador
+                </a>
+            </div>
+        </article>
+    </div>
+</section>

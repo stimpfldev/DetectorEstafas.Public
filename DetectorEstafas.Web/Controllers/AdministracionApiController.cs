@@ -121,6 +121,33 @@ public sealed class AdministracionApiController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+
+    [HttpPost("clientes/{apiClienteId:int}/plan")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ActualizarPlanCliente(
+        int apiClienteId,
+        string plan,
+        int cuotaDiaria,
+        CancellationToken cancellationToken)
+    {
+        if (!EstaAutorizado())
+        {
+            return Unauthorized();
+        }
+
+        bool updated = await _service.ActualizarPlanClienteAsync(
+            apiClienteId,
+            plan,
+            cuotaDiaria,
+            cancellationToken);
+
+        TempData[updated ? "Mensaje" : "Error"] = updated
+            ? "El plan y la cuota del cliente fueron actualizados."
+            : "No fue posible actualizar el plan o la cuota.";
+
+        return RedirectToAction(nameof(Index));
+    }
+
     [HttpPost("claves/{apiClaveId:int}/revocar")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RevocarClave(

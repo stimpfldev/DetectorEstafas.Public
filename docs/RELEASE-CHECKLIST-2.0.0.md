@@ -10,7 +10,7 @@
 
 ## Resguardo
 
-- [ ] Crear copia privada cifrada de la soluciÃ³n completa.
+- [ ] Crear copia privada cifrada de la solución completa.
 - [ ] Conservar respaldo de base y migraciones.
 - [ ] Guardar secretos en un gestor separado.
 - [ ] Rotar cualquier secreto que haya aparecido en el historial.
@@ -19,7 +19,7 @@
 
 - [ ] Ejecutar `Crear-Release-2.0.0.ps1`.
 - [ ] Verificar el contenido de `artifacts/DetectorEstafas-2.0.0`.
-- [ ] Ejecutar la publicaciÃ³n en una base de validaciÃ³n limpia.
+- [ ] Ejecutar la publicación en una base de validación limpia.
 - [ ] Confirmar ZIP y archivo `.sha256`.
 
 ## Git
@@ -32,14 +32,14 @@ git tag -a v2.0.0 -m "Detector de Estafas 2.0.0"
 git show v2.0.0 --stat
 ```
 
-Publicar el commit y el tag Ãºnicamente despuÃ©s de revisar el repositorio remoto y su visibilidad.
+Publicar el commit y el tag únicamente después de revisar el repositorio remoto y su visibilidad.
 
 ## GitHub
 
 - [ ] Repositorio bajo la visibilidad decidida.
-- [ ] DescripciÃ³n y temas correctos.
+- [ ] Descripción y temas correctos.
 - [ ] Rama principal protegida cuando corresponda.
-- [ ] Secret scanning y Dependabot habilitados si estÃ¡n disponibles.
+- [ ] Secret scanning y Dependabot habilitados si están disponibles.
 - [ ] Release de GitHub creada desde `v2.0.0`.
-- [ ] Adjuntar ZIP y SHA-256 solo si se decidiÃ³ distribuir binarios.
+- [ ] Adjuntar ZIP y SHA-256 solo si se decidió distribuir binarios.
 - [ ] No incluir base de datos, secretos ni datos reales.

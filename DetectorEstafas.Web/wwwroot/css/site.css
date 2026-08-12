@@ -2017,3 +2017,260 @@ input {
         grid-template-columns: 1fr 1fr;
     }
 }
+
+/* Contacto y refuerzo responsive global */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas,
+audio {
+    max-width: 100%;
+}
+
+main,
+.container,
+.row,
+[class*="col-"],
+.analyzer-card,
+.capture-card,
+.result-panel,
+.legal-card,
+.admin-api-client-card {
+    min-width: 0;
+}
+
+p,
+li,
+a,
+strong,
+span,
+h1,
+h2,
+h3 {
+    overflow-wrap: anywhere;
+}
+
+.contact-page {
+    padding: 64px 0 82px;
+    background: #f8fafc;
+}
+
+.contact-card {
+    max-width: 760px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+}
+
+.contact-header {
+    padding: 38px 44px 31px;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(135deg, #f8fafc, #eff6ff);
+}
+
+.contact-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--color-primary);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.contact-header h1 {
+    margin: 0 0 12px;
+    color: var(--color-secondary);
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: 850;
+    letter-spacing: -0.035em;
+}
+
+.contact-header p {
+    max-width: 620px;
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.7;
+}
+
+.contact-content {
+    padding: 34px 44px 42px;
+}
+
+.contact-content h2 {
+    margin: 0 0 10px;
+    color: var(--color-secondary);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.contact-content p {
+    margin: 0;
+    color: var(--color-text);
+    line-height: 1.7;
+}
+
+.contact-email-box,
+.contact-pending {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.contact-email-box {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+}
+
+.contact-email-box strong,
+.contact-email-box span {
+    display: block;
+}
+
+.contact-email-box strong {
+    color: var(--color-secondary);
+    font-size: 0.9rem;
+}
+
+.contact-email-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 12px;
+    padding: 11px 17px;
+    border-radius: 12px;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 800;
+    text-align: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.contact-email-link:hover,
+.contact-email-link:focus {
+    background: var(--color-primary-dark);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.contact-pending {
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #854d0e;
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.contact-back {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 26px;
+    color: var(--color-primary);
+    font-weight: 750;
+}
+
+.contact-back:hover,
+.contact-back:focus {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+    .contact-page {
+        padding: 28px 0 52px;
+    }
+
+    .contact-card {
+        border-radius: 16px;
+    }
+
+    .contact-header,
+    .contact-content {
+        padding-left: 21px;
+        padding-right: 21px;
+    }
+
+    .contact-header {
+        padding-top: 28px;
+        padding-bottom: 25px;
+    }
+
+    .contact-content {
+        padding-top: 26px;
+        padding-bottom: 30px;
+    }
+
+    .site-header .navbar .container {
+        flex-wrap: nowrap;
+    }
+
+    .header-actions {
+        min-width: 0;
+    }
+
+    .header-create-account,
+    .btn-install-app {
+        max-width: 132px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .admin-api-summary,
+    .admin-api-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 380px) {
+    .brand-text {
+        max-width: 6.2rem;
+    }
+
+    .header-create-account,
+    .btn-install-app {
+        max-width: 104px;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+        font-size: 0.78rem;
+    }
+
+    .analyzer-card,
+    .capture-card {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .result-header,
+    .result-summary,
+    .result-section,
+    .result-actions,
+    .result-feedback,
+    .community-report {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}

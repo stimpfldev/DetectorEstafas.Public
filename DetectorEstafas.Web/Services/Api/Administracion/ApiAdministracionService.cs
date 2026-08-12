@@ -77,6 +77,46 @@ public sealed class ApiAdministracionService : IApiAdministracionService
         return true;
     }
 
+
+    public async Task<bool> ActualizarPlanClienteAsync(
+        int apiClienteId,
+        string plan,
+        int cuotaDiaria,
+        CancellationToken cancellationToken)
+    {
+        string normalizedPlan = plan.Trim();
+
+        if ((!string.Equals(normalizedPlan, "Prueba", StringComparison.OrdinalIgnoreCase) &&
+             !string.Equals(normalizedPlan, "Comercial", StringComparison.OrdinalIgnoreCase)) ||
+            cuotaDiaria < 1 ||
+            cuotaDiaria > 1_000_000)
+        {
+            return false;
+        }
+
+        var client = await _dbContext.ApiClientes
+            .SingleOrDefaultAsync(
+                item => item.ApiClienteId == apiClienteId,
+                cancellationToken);
+
+        if (client is null)
+        {
+            return false;
+        }
+
+        client.Plan = string.Equals(
+            normalizedPlan,
+            "Comercial",
+            StringComparison.OrdinalIgnoreCase)
+                ? "Comercial"
+                : "Prueba";
+
+        client.CuotaDiaria = cuotaDiaria;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     public async Task<bool> RevocarClaveAsync(
         int apiClaveId,
         CancellationToken cancellationToken)

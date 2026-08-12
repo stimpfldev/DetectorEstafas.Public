@@ -1,13 +1,13 @@
-DETECTOR DE ESTAFAS 2.0.0
+DETECTOR DE ESTAFAS 2.0.1
 CHECKLIST DE VALIDACIÓN FINAL — ETAPA 2
-Fecha: 2026-08-02
+Fecha: 2026-08-09
 
 A. COMPILACIÓN Y PRUEBAS
 [ ] Restauración NuGet sin errores.
 [ ] No existen paquetes preview.
 [ ] No existen dependencias vulnerables informadas por dotnet list package.
 [ ] Compilación Release sin errores.
-[ ] 37 de 37 pruebas automáticas aprobadas.
+[ ] 40 de 40 pruebas automáticas aprobadas.
 [ ] Migraciones aplicadas sobre una base de validación.
 
 B. ANÁLISIS BASE
@@ -42,7 +42,7 @@ F. REGISTRO Y CORREO
 [ ] Registro exige privacidad y condiciones.
 [ ] Correo duplicado se rechaza.
 [ ] Confirmación de correo usa token de Identity.
-[ ] No existe inicio de sesión público en 2.0.0.
+[ ] No existe inicio de sesión público en 2.0.1.
 [ ] Contraseñas son administradas por ASP.NET Core Identity.
 
 G. IDENTIFICACIÓN TELEFÓNICA
@@ -66,6 +66,9 @@ I. API COMERCIAL
 [ ] Claves completas no se guardan en SQL Server.
 [ ] Hash de clave ocupa 32 bytes.
 [ ] Consumo diario se registra.
+[ ] Plan Prueba expira a los 14 días.
+[ ] El cambio Prueba → Comercial funciona desde administración.
+[ ] El consumo concurrente está protegido transaccionalmente.
 
 J. DASHBOARD ADMINISTRATIVO
 [ ] Está deshabilitado sin configuración explícita.
@@ -80,18 +83,18 @@ K. REPOSITORIO Y LEGAL
 [ ] Verificar-Repositorio-Publico.ps1 fue aprobado.
 [ ] No existen secretos, modelos, binarios, .vs, bin, obj, artifacts ni .user versionados.
 [ ] README, LICENSE, SECURITY, CONTRIBUTING y RELEASE-NOTES están presentes.
-[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.0.0.
+[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.0.1.
 [ ] Historial Git revisado y secretos antiguos rotados si correspondía.
 
 L. RELEASE
-[ ] VERSION.txt declara 2.0.0.
-[ ] El proyecto declara Version 2.0.0.
+[ ] VERSION.txt declara 2.0.1.
+[ ] El proyecto declara Version 2.0.1.
 [ ] Publicación Release limpia generada.
 [ ] Aplicación publicada inicia y accede a SQL Server.
 [ ] Archivos legales y VERSION.txt están en la publicación.
 [ ] ZIP y SHA-256 generados.
 [ ] Commit final creado.
-[ ] Tag v2.0.0 creado y verificado.
+[ ] Tag v2.0.1 creado y verificado.
 
 RESULTADO FINAL
-[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.0.0.
+[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.0.1.

@@ -1,9 +1,11 @@
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using DetectorEstafas.Web.Data;
 using DetectorEstafas.Web.Models.ApiComercial;
 using DetectorEstafas.Web.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 
 namespace DetectorEstafas.Web.Services.Api;
@@ -58,63 +60,117 @@ public sealed class ApiKeyValidator : IApiKeyValidator
                 cancellationToken);
         }
 
-        if (matched is null)
+        if (matched is null ||
+            !matched.Habilitada ||
+            matched.FechaRevocacionUtc is not null ||
+            !matched.Cliente.Habilitado)
         {
             return Invalida();
         }
 
         DateTime nowUtc = DateTime.UtcNow;
-        DateOnly todayUtc = DateOnly.FromDateTime(nowUtc);
 
-        ApiConsumoDiario? usage = await _dbContext.ApiConsumosDiarios
-            .SingleOrDefaultAsync(
-                item =>
-                    item.ApiClienteId == matched.ApiClienteId &&
-                    item.FechaUtc == todayUtc,
-                cancellationToken);
-
-        int alreadyUsed = usage?.CantidadSolicitudes ?? 0;
-
-        if (alreadyUsed >= matched.Cliente.CuotaDiaria)
+        if (PruebaExpirada(matched.Cliente, nowUtc))
         {
             return new ResultadoValidacionApiKey
             {
-                Estado = EstadoValidacionApiKey.CuotaAgotada,
+                Estado = EstadoValidacionApiKey.PruebaExpirada,
                 ApiClienteId = matched.ApiClienteId,
                 NombreCliente = matched.Cliente.Nombre,
                 CuotaDiaria = matched.Cliente.CuotaDiaria,
-                ConsumidasHoy = alreadyUsed
+                ConsumidasHoy = 0
             };
         }
 
-        if (usage is null)
+        DateOnly todayUtc = DateOnly.FromDateTime(nowUtc);
+
+        IDbContextTransaction? transaction = null;
+
+        if (_dbContext.Database.IsRelational())
         {
-            usage = new ApiConsumoDiario
+            transaction =
+                await _dbContext.Database.BeginTransactionAsync(
+                    IsolationLevel.Serializable,
+                    cancellationToken);
+        }
+
+        try
+        {
+            ApiConsumoDiario? usage = await _dbContext.ApiConsumosDiarios
+                .SingleOrDefaultAsync(
+                    item =>
+                        item.ApiClienteId == matched.ApiClienteId &&
+                        item.FechaUtc == todayUtc,
+                    cancellationToken);
+
+            int alreadyUsed = usage?.CantidadSolicitudes ?? 0;
+
+            if (alreadyUsed >= matched.Cliente.CuotaDiaria)
             {
+                return new ResultadoValidacionApiKey
+                {
+                    Estado = EstadoValidacionApiKey.CuotaAgotada,
+                    ApiClienteId = matched.ApiClienteId,
+                    NombreCliente = matched.Cliente.Nombre,
+                    CuotaDiaria = matched.Cliente.CuotaDiaria,
+                    ConsumidasHoy = alreadyUsed
+                };
+            }
+
+            if (usage is null)
+            {
+                usage = new ApiConsumoDiario
+                {
+                    ApiClienteId = matched.ApiClienteId,
+                    FechaUtc = todayUtc,
+                    CantidadSolicitudes = 1,
+                    UltimaSolicitudUtc = nowUtc
+                };
+
+                _dbContext.ApiConsumosDiarios.Add(usage);
+            }
+            else
+            {
+                usage.CantidadSolicitudes++;
+                usage.UltimaSolicitudUtc = nowUtc;
+            }
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (transaction is not null)
+            {
+                await transaction.CommitAsync(cancellationToken);
+            }
+
+            return new ResultadoValidacionApiKey
+            {
+                Estado = EstadoValidacionApiKey.Valida,
                 ApiClienteId = matched.ApiClienteId,
-                FechaUtc = todayUtc,
-                CantidadSolicitudes = 1,
-                UltimaSolicitudUtc = nowUtc
+                NombreCliente = matched.Cliente.Nombre,
+                CuotaDiaria = matched.Cliente.CuotaDiaria,
+                ConsumidasHoy = usage.CantidadSolicitudes
             };
-
-            _dbContext.ApiConsumosDiarios.Add(usage);
         }
-        else
+        finally
         {
-            usage.CantidadSolicitudes++;
-            usage.UltimaSolicitudUtc = nowUtc;
+            if (transaction is not null)
+            {
+                await transaction.DisposeAsync();
+            }
         }
+    }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return new ResultadoValidacionApiKey
-        {
-            Estado = EstadoValidacionApiKey.Valida,
-            ApiClienteId = matched.ApiClienteId,
-            NombreCliente = matched.Cliente.Nombre,
-            CuotaDiaria = matched.Cliente.CuotaDiaria,
-            ConsumidasHoy = usage.CantidadSolicitudes
-        };
+    private bool PruebaExpirada(
+        ApiCliente cliente,
+        DateTime nowUtc)
+    {
+        return string.Equals(
+                   cliente.Plan,
+                   "Prueba",
+                   StringComparison.OrdinalIgnoreCase) &&
+               _options.TrialDays > 0 &&
+               cliente.FechaCreacionUtc
+                   .AddDays(_options.TrialDays) <= nowUtc;
     }
 
     private async Task<ApiClave?> ImportarClaveConfiguradaAsync(
@@ -155,27 +211,39 @@ public sealed class ApiKeyValidator : IApiKeyValidator
 
             _dbContext.ApiClientes.Add(client);
         }
+        else if (!client.Habilitado)
+        {
+            return null;
+        }
 
         ApiClave? existing = client.Claves.FirstOrDefault(item =>
             item.Hash.Length == hash.Length &&
             CryptographicOperations.FixedTimeEquals(item.Hash, hash));
 
-        if (existing is null)
+        if (existing is not null)
         {
-            existing = new ApiClave
+            if (!existing.Habilitada ||
+                existing.FechaRevocacionUtc is not null)
             {
-                Cliente = client,
-                Prefijo = prefix,
-                Hash = hash,
-                Habilitada = true,
-                FechaCreacionUtc = DateTime.UtcNow
-            };
+                return null;
+            }
 
-            _dbContext.ApiClaves.Add(existing);
+            return existing;
         }
 
+        ApiClave nuevaClave = new()
+        {
+            Cliente = client,
+            Prefijo = prefix,
+            Hash = hash,
+            Habilitada = true,
+            FechaCreacionUtc = DateTime.UtcNow
+        };
+
+        _dbContext.ApiClaves.Add(nuevaClave);
+
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return existing;
+        return nuevaClave;
     }
 
     private static bool ClavesIguales(string supplied, string expected)

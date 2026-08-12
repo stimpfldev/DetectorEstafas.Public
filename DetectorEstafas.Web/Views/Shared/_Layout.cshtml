@@ -104,25 +104,31 @@
             <div class="footer-bottom">
                 © @DateTime.Now.Year Detector de Estafas
             </div>
+
+            <nav class="footer-legal-links"
+                 aria-label="Información del sitio">
+
+                <a asp-controller="Contacto"
+                   asp-action="Index">
+                    Contacto
+                </a>
+
+                <a asp-controller="Legal"
+                   asp-action="Privacidad">
+                    Privacidad
+                </a>
+
+                <a asp-controller="Legal"
+                   asp-action="Condiciones">
+                    Condiciones de uso
+                </a>
+
+                <a asp-controller="Legal"
+                   asp-action="Terceros">
+                    Licencias y terceros
+                </a>
+            </nav>
         </div>
-        <nav class="footer-legal-links"
-     aria-label="Información legal">
-
-    <a asp-controller="Legal"
-       asp-action="Privacidad">
-        Privacidad
-    </a>
-
-    <a asp-controller="Legal"
-       asp-action="Condiciones">
-        Condiciones de uso
-    </a>
-
-    <a asp-controller="Legal"
-       asp-action="Terceros">
-        Licencias y terceros
-    </a>
-</nav>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
