@@ -1,3 +1,39 @@
+# Detector de Estafas 2.0.2
+
+Fecha de cierre: 9 de agosto de 2026.
+
+## Objetivo
+
+Corrección de mantenimiento enfocada en mejorar la detección de riesgo en llamadas transcritas.
+
+## Correcciones y mejoras
+
+- Ampliada la detección de bloqueo, suspensión y variantes equivalentes.
+- Mejorada la detección de solicitudes de códigos, credenciales y datos de acceso.
+- Agregada una regla específica para llamadas que solicitan compartir códigos o credenciales.
+- Mejorada la tolerancia del motor ante transcripciones reales de voz.
+- Corregido un caso real donde una llamada sospechosa podía clasificarse con riesgo insuficiente.
+- Agregadas 2 pruebas automatizadas específicas para el análisis de llamadas.
+
+## Validación
+
+- Compilación local aprobada.
+- Suite automatizada aprobada.
+- 42 pruebas automatizadas definidas.
+- Validación funcional manual del flujo audio → transcripción → análisis aprobada.
+- La validación final de GitHub Actions se realizará al publicar el commit final.
+
+## Compatibilidad
+
+- Web responsive.
+- PWA instalable en navegadores compatibles.
+- Instalación desde pantalla de inicio en Android y iPhone/iPad.
+- .NET 10.
+- SQL Server.
+
+---
+
+
 # Detector de Estafas 2.0.1
 
 Fecha de cierre: 9 de agosto de 2026.

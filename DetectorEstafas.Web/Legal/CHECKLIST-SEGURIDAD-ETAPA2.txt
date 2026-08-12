@@ -1,4 +1,4 @@
-DETECTOR DE ESTAFAS 2.0.1
+DETECTOR DE ESTAFAS 2.0.2
 CHECKLIST DE SEGURIDAD Y PRIVACIDAD - ETAPA 2
 
 Repositorio y secretos
@@ -56,4 +56,4 @@ Dependencias y compilación
 [ ] Migraciones aplicadas sobre una base limpia de validación.
 
 Resultado final
-[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.0.1.
+[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.0.2.

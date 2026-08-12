@@ -1,5 +1,5 @@
 Producto: Detector de Estafas
-Versión: 2.0.1
+Versión: 2.0.2
 Etapa: Versión web/PWA comercial estabilizada
 Fecha de cierre: 2026-08-09
 
@@ -19,6 +19,14 @@ Alcance principal:
 - CI para build y pruebas automáticas;
 - seguridad, privacidad y documentación legal.
 
+Correcciones 2.0.2:
+- mejora del análisis de llamadas transcritas;
+- detección ampliada de bloqueo, suspensión y variantes equivalentes;
+- detección de solicitudes de códigos, credenciales y datos de acceso;
+- mayor tolerancia a transcripciones reales de voz;
+- incorporación de 2 pruebas automatizadas específicas para llamadas;
+- validación funcional del caso real que previamente clasificaba incorrectamente como riesgo bajo.
+
 Correcciones 2.0.1:
 - restauración de HSTS y manejo de excepciones de producción;
 - eliminación de middleware duplicado;
@@ -33,6 +41,6 @@ Correcciones 2.0.1:
 Validación:
 - compilación local aprobada;
 - suite automatizada aprobada;
-- 40 pruebas automatizadas definidas;
-- validación final de GitHub Actions pendiente hasta publicar el commit 2.0.1.
+- 42 pruebas automatizadas definidas;
+- validación final de GitHub Actions pendiente hasta publicar el commit 2.0.2.
 

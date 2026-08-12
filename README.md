@@ -2,7 +2,7 @@
 
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
-**Versión estable actual: 2.0.0.** La segunda etapa funcional está cerrada y validada.
+**Versión estable actual: 2.0.2.** La versión web/PWA comercial está cerrada, validada localmente y publicada.
 
 El repositorio publica código fuente para revisión técnica bajo una licencia propietaria de código visible. La ejecución productiva, explotación comercial, redistribución y publicación de derivados requieren autorización escrita.
 
@@ -17,10 +17,13 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Registro de cuentas y confirmación de correo.
 - Confirmación de correo preparada para desarrollo y SMTP.
 - Catálogo de teléfonos oficiales y fuentes públicas verificadas.
-- PWA responsive con recepción de contenido compartido.
-- API comercial versionada con API keys, cuotas y consumo diario.
+- PWA responsive instalable y preparada para uso móvil.
+- API comercial versionada con API keys, planes, cuotas y consumo diario.
+- Plan de prueba de 14 días y plan comercial administrable.
 - Dashboard interno para administración de clientes API.
 - Métricas, feedback y reportes comunitarios sin guardar el contenido analizado.
+- CI automático con build y pruebas mediante GitHub Actions.
+- 42 pruebas automatizadas validadas.
 
 ## Privacidad por diseño
 
@@ -112,6 +115,12 @@ La configuración pública de referencia está en:
 DetectorEstafas.Web/appsettings.Public.example.json
 ```
 
+## Uso y operación
+
+- [Guía de usuario](docs/USER-GUIDE.md)
+- [Guía de API comercial](docs/COMMERCIAL-API.md)
+- [Resguardo y recuperación](docs/BACKUP-RESTORE.md)
+
 ## API comercial
 
 Documento OpenAPI local:
@@ -142,7 +151,7 @@ powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Verificar-Repositorio-Publico.ps1
 ```
 
-También deben completarse [docs/PUBLICATION-CHECKLIST.md](docs/PUBLICATION-CHECKLIST.md) y [docs/RELEASE-CHECKLIST-2.0.0.md](docs/RELEASE-CHECKLIST-2.0.0.md).
+También deben completarse [docs/PUBLICATION-CHECKLIST.md](docs/PUBLICATION-CHECKLIST.md) y [docs/RELEASE-CHECKLIST-2.0.2.md](docs/RELEASE-CHECKLIST-2.0.2.md).
 
 
 ## Licencia
@@ -153,7 +162,7 @@ Los componentes de terceros conservan sus propias licencias. Ver `DetectorEstafa
 
 ## Versión y cambios
 
-Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance cerrado de la versión 2.0.0.
+Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance y las correcciones de la versión 2.0.1.
 
 ## Autor
 

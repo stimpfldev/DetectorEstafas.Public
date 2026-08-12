@@ -1,4 +1,4 @@
-DETECTOR DE ESTAFAS 2.0.1
+DETECTOR DE ESTAFAS 2.0.2
 CHECKLIST DE VALIDACIÓN FINAL — ETAPA 2
 Fecha: 2026-08-09
 
@@ -42,7 +42,7 @@ F. REGISTRO Y CORREO
 [ ] Registro exige privacidad y condiciones.
 [ ] Correo duplicado se rechaza.
 [ ] Confirmación de correo usa token de Identity.
-[ ] No existe inicio de sesión público en 2.0.1.
+[ ] No existe inicio de sesión público en 2.0.2.
 [ ] Contraseñas son administradas por ASP.NET Core Identity.
 
 G. IDENTIFICACIÓN TELEFÓNICA
@@ -83,18 +83,18 @@ K. REPOSITORIO Y LEGAL
 [ ] Verificar-Repositorio-Publico.ps1 fue aprobado.
 [ ] No existen secretos, modelos, binarios, .vs, bin, obj, artifacts ni .user versionados.
 [ ] README, LICENSE, SECURITY, CONTRIBUTING y RELEASE-NOTES están presentes.
-[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.0.1.
+[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.0.2.
 [ ] Historial Git revisado y secretos antiguos rotados si correspondía.
 
 L. RELEASE
-[ ] VERSION.txt declara 2.0.1.
-[ ] El proyecto declara Version 2.0.1.
+[ ] VERSION.txt declara 2.0.2.
+[ ] El proyecto declara Version 2.0.2.
 [ ] Publicación Release limpia generada.
 [ ] Aplicación publicada inicia y accede a SQL Server.
 [ ] Archivos legales y VERSION.txt están en la publicación.
 [ ] ZIP y SHA-256 generados.
 [ ] Commit final creado.
-[ ] Tag v2.0.1 creado y verificado.
+[ ] Tag v2.0.2 creado y verificado.
 
 RESULTADO FINAL
-[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.0.1.
+[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.0.2.

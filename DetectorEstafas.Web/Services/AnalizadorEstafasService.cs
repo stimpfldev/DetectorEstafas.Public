@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.RegularExpressions;
 using DetectorEstafas.Web.Models;
 
@@ -21,7 +21,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "El contenido intenta generar urgencia."),
 
             new(
-                @"\b(contraseña|contrasena|clave|pin|token|código de seguridad|codigo de seguridad)\b",
+                @"\b(contraseña|contrasena|clave|pin|token|código de seguridad|codigo de seguridad|datos de acceso|credenciales(?: de acceso)?|c[oó]digo\b.{0,50}\b(?:recibir|llegar))\b",
                 25,
                 "Solicita o menciona credenciales de seguridad."),
 
@@ -41,7 +41,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "Solicita instalar o utilizar una herramienta de acceso remoto."),
 
             new(
-                @"\b(bloquearemos|suspendida|suspendido|inhabilitada|inhabilitado|cerrar.*cuenta)\b",
+                @"\b(bloque(?:o|ar|ada|ado|adas|ados|aremos|arán|aran|an|en)|suspend(?:ida|ido|idas|idos|er|erán|eran|en)|suspensión|suspension|inhabilitada|inhabilitado|cerrar.*cuenta)\b",
                 20,
                 "Amenaza con bloquear o suspender una cuenta."),
 
@@ -435,6 +435,19 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             puntaje += 35;
             senales.Add(
                 "Describe una posible falsa emergencia familiar.");
+        }
+
+        bool solicitaCredenciales = Regex.IsMatch(
+            contenido,
+            @"\b(inform(?:es|e|ar)|compart(?:as|a|ir)|dict(?:es|e|ar)|confirm(?:es|e|ar)|indiqu(?:es|e|ar)|dec(?:ime|ir)).{0,80}\b(código|codigo|clave|token|contraseña|contrasena|datos de acceso|credenciales)\b",
+            RegexOptions.IgnoreCase |
+            RegexOptions.CultureInvariant);
+
+        if (solicitaCredenciales)
+        {
+            puntaje += 30;
+            senales.Add(
+                "La llamada solicita compartir códigos o credenciales de acceso.");
         }
     }
 

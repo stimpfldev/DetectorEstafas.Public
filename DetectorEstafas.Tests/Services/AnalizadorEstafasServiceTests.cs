@@ -1,4 +1,4 @@
-﻿using DetectorEstafas.Web.Models;
+using DetectorEstafas.Web.Models;
 using DetectorEstafas.Web.Services;
 
 namespace DetectorEstafas.Tests.Services;
@@ -174,6 +174,63 @@ public class AnalizadorEstafasServiceTests
                     StringComparison.OrdinalIgnoreCase)));
     }
 
+    [TestMethod]
+    public void Analizar_LlamadaSolicitaCodigoYDatosAcceso_RetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Hola, llamamos del banco. Detectamos un problema con tu cuenta " +
+            "para evitar el bloqueo, necesitamos que nos informes del código " +
+            "que vas a recibir por S, M, E, S y confirmes tus datos de acceso.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Llamada);
+
+        Assert.AreEqual(
+            NivelRiesgo.Alto,
+            resultado.Nivel);
+
+        Assert.IsTrue(
+            resultado.Puntaje >= 55);
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "credenciales",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "bloquear",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "llamada solicita",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_LlamadaBancariaInformativa_NoRetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Hola, llamamos del banco para informarte que tu nueva tarjeta " +
+            "ya está disponible para retirar en la sucursal.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Llamada);
+
+        Assert.AreEqual(
+            NivelRiesgo.Bajo,
+            resultado.Nivel);
+
+        Assert.AreEqual(
+            0,
+            resultado.Puntaje);
+    }
     [TestMethod]
     public void Analizar_ContenidoSinSenales_NoGarantizaSeguridad()
     {
