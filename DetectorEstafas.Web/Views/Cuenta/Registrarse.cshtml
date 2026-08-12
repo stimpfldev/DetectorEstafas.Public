@@ -1,0 +1,115 @@
+@model DetectorEstafas.Web.ViewModels.Cuenta.RegistroViewModel
+
+@{
+    ViewData["Title"] = "Crear cuenta";
+}
+
+<section class="container py-5" style="max-width: 620px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+            <h1 class="h3 mb-2">Crear cuenta</h1>
+            <p class="text-secondary mb-4">
+                El análisis anónimo continúa disponible. El registro requiere confirmación de correo.
+            </p>
+
+            @if (TempData["RegistroExitoso"] is string mensajeRegistro)
+            {
+                <div class="alert alert-success" role="status">
+                    @mensajeRegistro
+                </div>
+            }
+
+            @if (TempData["EnlaceConfirmacionDesarrollo"] is string enlaceDesarrollo)
+            {
+                <div class="alert alert-warning" role="status">
+                    <strong>Modo desarrollo:</strong>
+                    usá este enlace para confirmar el correo sin configurar todavía un servidor SMTP.
+                    <div class="mt-2">
+                        <a href="@enlaceDesarrollo" class="alert-link">
+                            Confirmar correo registrado
+                        </a>
+                    </div>
+                </div>
+            }
+
+            <form asp-action="Registrarse" method="post" novalidate>
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger"
+                     role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email"
+                           class="form-control"
+                           autocomplete="email" />
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password"
+                           class="form-control"
+                           autocomplete="new-password" />
+                    <div class="form-text">
+                        Mínimo 10 caracteres, con mayúscula, minúscula, número y símbolo.
+                    </div>
+                    <span asp-validation-for="Password"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword"
+                           class="form-control"
+                           autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="AceptoCondiciones"
+                           class="form-check-input" />
+                    <label asp-for="AceptoCondiciones"
+                           class="form-check-label">
+                        Acepto las
+                        <a asp-controller="Legal"
+                           asp-action="Condiciones"
+                           target="_blank"
+                           rel="noopener">condiciones de uso</a>.
+                    </label>
+                    <span asp-validation-for="AceptoCondiciones"
+                          class="d-block text-danger"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="AceptoPrivacidad"
+                           class="form-check-input" />
+                    <label asp-for="AceptoPrivacidad"
+                           class="form-check-label">
+                        Acepto la
+                        <a asp-controller="Legal"
+                           asp-action="Privacidad"
+                           target="_blank"
+                           rel="noopener">política de privacidad</a>.
+                    </label>
+                    <span asp-validation-for="AceptoPrivacidad"
+                          class="d-block text-danger"></span>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary w-100">
+                    Crear cuenta
+                </button>
+            </form>
+
+            <p class="text-center text-secondary mt-4 mb-0">
+                El registro se utiliza para crear y confirmar la cuenta.
+            </p>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

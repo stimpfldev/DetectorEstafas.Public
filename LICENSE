@@ -1,0 +1,51 @@
+DETECTOR DE ESTAFAS — SOURCE-AVAILABLE PROPRIETARY LICENSE
+Version 1.0 — 2026-08-01
+
+Copyright (c) 2026 Federico Stimpfl. All rights reserved.
+
+1. PURPOSE
+This repository is made available for source-code review, technical evaluation,
+security review and non-commercial educational study.
+It is not an open-source license.
+
+2. PERMITTED USE
+You may:
+- view and study the source code;
+- clone or fork the repository solely for private, non-commercial evaluation;
+- run the software locally for testing and evaluation;
+- quote limited portions of the code for review or commentary, with attribution.
+
+3. PROHIBITED USE
+Without prior written permission from the copyright holder, you may not:
+- use the software or any substantial portion of it in production;
+- offer, sell, sublicense, host, rent, or commercialize the software;
+- redistribute compiled or modified versions;
+- publish derivative products based substantially on this code;
+- remove copyright, attribution, license, or trademark notices;
+- use the project name, logo, visual identity, or confusingly similar branding;
+- use the software to process third-party data unlawfully or to facilitate abuse.
+
+4. CONTRIBUTIONS
+No contribution is accepted under this license automatically. Any contribution
+requires a separate written agreement defining ownership and permitted use.
+
+5. THIRD-PARTY COMPONENTS
+Third-party components remain governed by their own licenses. Their notices are
+listed in DetectorEstafas.Web/Legal/THIRD-PARTY-NOTICES.txt.
+
+6. NO WARRANTY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, ACCURACY, AVAILABILITY, SECURITY, OR NON-INFRINGEMENT.
+
+7. LIMITATION OF LIABILITY
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER SHALL NOT BE LIABLE
+FOR ANY CLAIM, LOSS, DAMAGE, OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS
+USE.
+
+8. COMMERCIAL LICENSING
+Commercial use, hosted use, redistribution, white-label use, institutional use,
+and integration rights require a separate written license.
+
+Contact and project information:
+https://www.federicostimpfl.com.ar

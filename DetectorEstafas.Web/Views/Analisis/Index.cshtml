@@ -1,0 +1,872 @@
+@using DetectorEstafas.Web.Models
+@model DetectorEstafas.Web.ViewModels.AnalisisViewModel
+
+@{
+    ViewData["Title"] = "Analizar contenido sospechoso";
+
+    string claseRiesgo = Model.Resultado?.Nivel switch
+    {
+        NivelRiesgo.Alto => "alto",
+        NivelRiesgo.Medio => "medio",
+        NivelRiesgo.Bajo => "bajo",
+        _ => "bajo"
+    };
+}
+
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-12 col-lg-7">
+                <div class="hero-badge">
+                    Protección digital simple
+                </div>
+
+                <h1 class="hero-title">
+                    Detectá señales de estafa
+                    <span>antes de actuar.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Analizá mensajes, enlaces, números telefónicos o llamadas
+                    sospechosas y recibí una evaluación clara del riesgo.
+                </p>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <span class="feature-check">✓</span>
+                        Resultado inmediato
+                    </div>
+
+                    <div class="hero-feature">
+                        <span class="feature-check">✓</span>
+                        Explicación en lenguaje simple
+                    </div>
+
+                    <div class="hero-feature">
+                        <span class="feature-check">✓</span>
+                        Recomendaciones concretas
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-5">
+                <div class="hero-security-card">
+                    <div class="security-visual">
+                        <div class="security-circle security-circle-large"></div>
+                        <div class="security-circle security-circle-medium"></div>
+
+                        <div class="security-shield">
+                            <svg viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M12 2 20 5v6c0 5.1-3.4 9.8-8 11-4.6-1.2-8-5.9-8-11V5l8-3Z" />
+                                <path d="m9 12 2 2 4-5" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="security-card-text">
+                        <strong>Antes de responder</strong>
+
+                        <span>
+                            Verificá las señales de riesgo.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="analyzer-section"
+         id="analizador">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+
+                <div class="capture-card">
+                    <div class="capture-card-header">
+                        <div>
+                            <span class="section-label">
+                                Nueva entrada
+                            </span>
+
+                            <h2>Validar una captura</h2>
+
+                            <p>
+                                Cargá una imagen PNG o JPEG de hasta 5 MB.
+                                El OCR se ejecuta localmente, el texto se analiza con
+                                el motor existente y la imagen se elimina automáticamente.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form asp-controller="Analisis"
+                          asp-action="CargarCaptura"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <input asp-for="Origen"
+                               type="hidden" />
+
+                        <div class="form-section">
+                            <label for="captura"
+                                   class="form-label-custom">
+                                Captura de pantalla
+                            </label>
+
+                            <input id="captura"
+                                   name="captura"
+                                   type="file"
+                                   accept="image/*,.png,.jpg,.jpeg"
+                                   class="form-control form-control-custom" />
+
+                            <div class="field-footer">
+                                <span class="text-danger">
+                                    @Html.ValidationMessage("Captura")
+                                </span>
+
+                                <span>PNG o JPEG · máximo 5 MB · en móvil podés usar cámara o galería</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-check ia-consent">
+                            <input asp-for="SolicitarEvaluacionIa"
+                                   class="form-check-input" />
+                            <label asp-for="SolicitarEvaluacionIa"
+                                   class="form-check-label">
+                                Agregar una evaluación complementaria con IA externa.
+                                Se enviará únicamente el contenido procesado y el resultado local.
+                            </label>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-analyze">
+                            Extraer y analizar texto
+                        </button>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.CapturaError))
+                    {
+                        <div class="capture-error"
+                             role="alert"
+                             aria-live="assertive">
+                            <strong>Captura rechazada</strong>
+                            <span>@Model.CapturaError</span>
+                        </div>
+                    }
+
+                    @if (Model.CapturaValidada is not null)
+                    {
+                        <div class="capture-result"
+                             aria-live="polite">
+                            <div>
+                                <strong>Texto extraído, analizado e imagen eliminada</strong>
+                                <span>
+                                    @Model.CapturaValidada.TipoContenido ·
+                                    @Math.Ceiling(Model.CapturaValidada.TamanoBytes / 1024d) KB ·
+                                    confianza OCR @Math.Round(Model.CapturaValidada.ConfianzaOcr * 100) %
+                                </span>
+
+                                @if (Model.CapturaValidada.TextoFueTruncado)
+                                {
+                                    <span>El texto fue limitado a 5000 caracteres.</span>
+                                }
+                            </div>
+
+                            <img src="@Model.CapturaValidada.VistaPreviaDataUrl"
+                                 alt="Vista previa temporal de la captura validada" />
+                        </div>
+                    }
+                </div>
+
+                <div class="capture-card audio-card">
+                    <div class="capture-card-header">
+                        <div>
+                            <span class="section-label">
+                                Nueva entrada
+                            </span>
+
+                            <h2>Validar un audio</h2>
+
+                            <p>
+                                Cargá un archivo MP3 o WAV de hasta 10 MB.
+                                El audio se valida, se transcribe localmente, se analiza
+                                y se elimina automáticamente.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form id="audio-form"
+                          asp-controller="Analisis"
+                          asp-action="CargarAudio"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <input asp-for="Origen"
+                               type="hidden" />
+
+                        <div class="form-section">
+                            <label for="audio"
+                                   class="form-label-custom">
+                                Audio o grabación
+                            </label>
+
+                            <input id="audio"
+                                   name="audio"
+                                   type="file"
+                                   accept="audio/*,.mp3,.wav"
+                                   class="form-control form-control-custom" />
+
+                            <div class="field-footer">
+                                <span class="text-danger">
+                                    @Html.ValidationMessage("Audio")
+                                </span>
+
+                                <span>MP3 o WAV · máximo 10 MB · en móvil podés elegir un archivo o grabar</span>
+                            </div>
+                        </div>
+
+                        <div class="audio-recorder" data-audio-recorder>
+                            <div class="form-check audio-consent">
+                                <input id="audio-consentimiento"
+                                       type="checkbox"
+                                       class="form-check-input" />
+                                <label for="audio-consentimiento"
+                                       class="form-check-label">
+                                    Confirmo que tengo autorización para procesar esta grabación.
+                                    El audio se eliminará después del análisis.
+                                </label>
+                            </div>
+
+                            <div class="audio-recorder-actions">
+                                <button id="audio-iniciar-grabacion"
+                                        type="button"
+                                        class="btn btn-outline-primary"
+                                        disabled>
+                                    Iniciar grabación
+                                </button>
+
+                                <button id="audio-detener-grabacion"
+                                        type="button"
+                                        class="btn btn-outline-danger"
+                                        disabled>
+                                    Detener
+                                </button>
+
+                                <span id="audio-tiempo-grabacion"
+                                      class="audio-recorder-time">
+                                    00:00 / 01:00
+                                </span>
+                            </div>
+
+                            <div id="audio-estado-grabacion"
+                                 class="audio-recorder-status"
+                                 role="status"
+                                 aria-live="polite">
+                                Podés cargar un archivo o grabar hasta 60 segundos.
+                            </div>
+
+                            <audio id="audio-vista-previa"
+                                   class="audio-preview"
+                                   controls
+                                   hidden></audio>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-analyze">
+                            Transcribir y analizar audio
+                        </button>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.AudioError))
+                    {
+                        <div class="capture-error"
+                             role="alert"
+                             aria-live="assertive">
+                            <strong>Audio rechazado</strong>
+                            <span>@Model.AudioError</span>
+                        </div>
+                    }
+
+                    @if (Model.AudioValidado is not null)
+                    {
+                        <div class="audio-result"
+                             aria-live="polite">
+                            <strong>Audio transcripto, analizado y eliminado</strong>
+                            <span>
+                                @Model.AudioValidado.TipoContenido ·
+                                @Math.Ceiling(Model.AudioValidado.TamanoBytes / 1024d) KB
+                            </span>
+                            <span>@Model.AudioValidado.TextoTranscripto</span>
+
+                            @if (Model.AudioValidado.TextoFueTruncado)
+                            {
+                                <span>La transcripción fue limitada a 5000 caracteres.</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <div class="analyzer-card">
+                    <div class="analyzer-header">
+                        <div>
+                            <span class="section-label">
+                                Análisis preventivo
+                            </span>
+
+                            <h2>
+                                ¿Qué recibiste?
+                            </h2>
+
+                            <p>
+                                Seleccioná el tipo de contenido y pegá la información
+                                que querés verificar.
+                            </p>
+                        </div>
+
+                        <div class="analyzer-status">
+                            <span></span>
+                            Servicio disponible
+                        </div>
+                    </div>
+
+                    <form asp-controller="Analisis"
+                          asp-action="Index"
+                          method="post">
+
+                        <input asp-for="Origen"
+                               type="hidden" />
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="validation-summary">
+                        </div>
+
+                        <div class="form-section">
+                            <label asp-for="Tipo"
+                                   class="form-label-custom">
+                                Tipo de contenido
+                            </label>
+
+                            <select asp-for="Tipo"
+                                    asp-items="Html.GetEnumSelectList<TipoContenido>()"
+                                    class="form-select form-select-custom">
+                            </select>
+                        </div>
+
+                        <div class="form-section">
+                            <label asp-for="Contenido"
+                                   class="form-label-custom">
+                                Contenido sospechoso
+                            </label>
+
+                            <textarea asp-for="Contenido"
+                                      class="form-control form-control-custom"
+                                      rows="8"
+                                      maxlength="5000"
+                                      placeholder="Ejemplo: Último aviso. Tu cuenta será bloqueada. Ingresá al siguiente enlace y verificá tus datos."></textarea>
+
+                            <div class="field-footer">
+                                <span asp-validation-for="Contenido"
+                                      class="text-danger">
+                                </span>
+
+                                <span>
+                                    Máximo 5000 caracteres
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-check ia-consent">
+                            <input asp-for="SolicitarEvaluacionIa"
+                                   class="form-check-input" />
+                            <label asp-for="SolicitarEvaluacionIa"
+                                   class="form-check-label">
+                                Agregar una evaluación complementaria con IA externa.
+                                Se enviará únicamente el contenido procesado y el resultado local.
+                            </label>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-analyze">
+
+                            <svg viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <circle cx="11"
+                                        cy="11"
+                                        r="7"></circle>
+
+                                <path d="m20 20-4-4"></path>
+                            </svg>
+
+                            Analizar contenido
+                        </button>
+
+                        <div class="form-warning">
+                            <svg viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <circle cx="12"
+                                        cy="12"
+                                        r="9"></circle>
+
+                                <path d="M12 8v5"></path>
+                                <path d="M12 16h.01"></path>
+                            </svg>
+
+                            No ingreses contraseñas, códigos de seguridad,
+                            datos completos de tarjetas ni información bancaria sensible.
+                        </div>
+                    </form>
+                </div>
+
+                @if (Model.Resultado is not null)
+                {
+                    <div id="resultadoAnalisis"
+                         class="result-panel result-panel--@claseRiesgo"
+                         aria-live="polite">
+                        <div class="result-header">
+                            <div class="risk-icon">
+                                @if (Model.Resultado.Nivel == NivelRiesgo.Alto)
+                                {
+                                    <span>!</span>
+                                }
+                                else if (Model.Resultado.Nivel == NivelRiesgo.Medio)
+                                {
+                                    <span>?</span>
+                                }
+                                else
+                                {
+                                    <span>✓</span>
+                                }
+                            </div>
+
+                            <div class="result-title">
+                                <span>Resultado del análisis</span>
+
+                                <h2>
+                                    Riesgo @Model.Resultado.Nivel
+                                </h2>
+                            </div>
+
+                            <div class="result-score">
+                                <strong>@Model.Resultado.Puntaje</strong>
+                                <span>/ 100</span>
+                            </div>
+                        </div>
+
+                        <div class="risk-meter"
+                             role="progressbar"
+                             aria-valuenow="@Model.Resultado.Puntaje"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+
+                            <div class="risk-meter-value"
+                                 style="width: @(Model.Resultado.Puntaje)%;">
+                            </div>
+                        </div>
+
+                        <p class="result-summary">
+                            @Model.Resultado.Resumen
+                        </p>
+
+                        <div class="result-grid">
+                            <div class="result-section">
+                                <div class="result-section-title">
+                                    <svg viewBox="0 0 24 24"
+                                         aria-hidden="true">
+                                        <path d="M12 3 2 21h20L12 3Z"></path>
+                                        <path d="M12 9v4"></path>
+                                        <path d="M12 17h.01"></path>
+                                    </svg>
+
+                                    <h3>Señales detectadas</h3>
+                                </div>
+
+                                @if (Model.Resultado.SenalesDetectadas.Count == 0)
+                                {
+                                    <div class="empty-result">
+                                        No se encontraron señales automáticas importantes.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <ul class="result-list">
+                                        @foreach (string senal in Model.Resultado.SenalesDetectadas)
+                                        {
+                                            <li>
+                                                <span></span>
+                                                @senal
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+
+                            <div class="result-section">
+                                <div class="result-section-title">
+                                    <svg viewBox="0 0 24 24"
+                                         aria-hidden="true">
+                                        <path d="M9 11 12 14 22 4"></path>
+                                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    </svg>
+
+                                    <h3>Qué hacer ahora</h3>
+                                </div>
+
+                                <ul class="result-list recommendation-list">
+                                    @foreach (string recomendacion in Model.Resultado.Recomendaciones)
+                                    {
+                                        <li>
+                                            <span>✓</span>
+                                            @recomendacion
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        @if (Model.IdentificacionTelefono is not null)
+                        {
+                            <div class="phone-identification">
+                                <h3>Identificación pública del teléfono</h3>
+                                <p><strong>@Model.IdentificacionTelefono.Clasificacion</strong></p>
+
+                                @if (Model.IdentificacionTelefono.Encontrado)
+                                {
+                                    <p>@Model.IdentificacionTelefono.Entidad</p>
+                                    <p>@Model.IdentificacionTelefono.Descripcion</p>
+                                    <p>Confianza: @Model.IdentificacionTelefono.NivelConfianza</p>
+                                    <p>
+                                        Fuente: <a href="@Model.IdentificacionTelefono.FuenteUrl" target="_blank" rel="noopener noreferrer">@Model.IdentificacionTelefono.FuenteNombre</a>
+                                        · verificada el @Model.IdentificacionTelefono.FechaConsultaUtc?.ToString("dd/MM/yyyy")
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>No se atribuye este número a una persona o entidad sin una fuente pública confiable.</p>
+                                }
+                            </div>
+                        }
+
+                        @if (Model.Resultado.EnlacesAnalizados.Count > 0)
+                        {
+                            <div class="analyzed-links">
+                                <h3>Enlaces analizados</h3>
+
+                                <div class="analyzed-links-grid">
+                                    @foreach (EnlaceAnalizado enlace in Model.Resultado.EnlacesAnalizados)
+                                    {
+                                        string claseEnlace = enlace.Nivel switch
+                                        {
+                                            NivelRiesgo.Alto => "alto",
+                                            NivelRiesgo.Medio => "medio",
+                                            _ => "bajo"
+                                        };
+
+                                        <div class="analyzed-link analyzed-link--@claseEnlace">
+                                            <div class="analyzed-link-header">
+                                                <div>
+                                                    <span>Dominio</span>
+
+                                                    <strong>
+                                                        @(enlace.EsValido
+                                                            ? enlace.Dominio
+                                                            : "Formato no válido")
+                                                    </strong>
+                                                </div>
+
+                                                <div class="analyzed-link-score">
+                                                    @enlace.Puntaje/100
+                                                </div>
+                                            </div>
+
+                                            @if (enlace.EsValido)
+                                            {
+                                                <div class="analyzed-link-data">
+                                                    <span>
+                                                        @(enlace.UsaHttps
+                                                            ? "Conexión HTTPS"
+                                                            : "Sin HTTPS")
+                                                    </span>
+
+                                                    <span>
+                                                        Riesgo @enlace.Nivel
+                                                    </span>
+                                                </div>
+                                            }
+                                           @if (enlace.EsValido &&
+     enlace.Dominio.EndsWith(
+         ".ar",
+         StringComparison.OrdinalIgnoreCase))
+{
+    <div class="rdap-result js-rdap-result"
+         data-domain="@enlace.Dominio">
+
+        <strong>Registro del dominio</strong>
+
+        <span class="js-rdap-status">
+            Consultando registro oficial…
+        </span>
+
+        <div class="js-rdap-details"
+             hidden>
+        </div>
+    </div>
+}
+                                            @if (enlace.Senales.Count == 0)
+                                            {
+                                                <p>
+                                                    No se detectaron señales técnicas básicas.
+                                                </p>
+                                            }
+                                            else
+                                            {
+                                                <ul>
+                                                    @foreach (string senal in enlace.Senales)
+                                                    {
+                                                        <li>@senal</li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (Model.EvaluacionIa is not null)
+                        {
+                            <div class="result-section ia-complementaria">
+                                <div class="result-section-title">
+                                    <h3>Evaluación complementaria con IA</h3>
+                                </div>
+
+                                <p>
+                                    @Model.EvaluacionIa.Estado
+                                </p>
+
+                                <p>
+                                    @Model.EvaluacionIa.Resumen
+                                </p>
+
+                                @if (Model.EvaluacionIa.Disponible &&
+                                     Model.EvaluacionIa.Confianza.HasValue)
+                                {
+                                    <p>
+                                        Confianza informada por el proveedor:
+                                        @Math.Round(Model.EvaluacionIa.Confianza.Value * 100) %
+                                    </p>
+                                }
+
+                                @if (Model.EvaluacionIa.SenalesAdicionales.Count > 0)
+                                {
+                                    <ul class="result-list">
+                                        @foreach (string senal in Model.EvaluacionIa.SenalesAdicionales)
+                                        {
+                                            <li>
+                                                <span></span>
+                                                @senal
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        }
+
+                        @if (Model.AnalisisRegistroId.HasValue)
+{
+    <div id="communityReport"
+         class="community-report"
+         data-analysis-id="@Model.AnalisisRegistroId.Value">
+
+        <div class="community-report-copy">
+            <strong>¿Considerás que fue un intento de estafa?</strong>
+
+            <span>
+                Podés reportarlo anónimamente sin compartir el contenido ingresado.
+            </span>
+        </div>
+
+        <div class="community-report-controls">
+            <select id="communityReportCategory"
+                    class="community-report-select"
+                    asp-items="Html.GetEnumSelectList<CategoriaReporteComunitario>()">
+
+                <option value="">
+                    Seleccioná una categoría
+                </option>
+            </select>
+
+            <button id="communityReportButton"
+                    type="button"
+                    class="community-report-button">
+                Reportar como sospechoso
+            </button>
+        </div>
+
+        <div id="communityReportStatus"
+             class="community-report-status"
+             role="status"
+             hidden>
+        </div>
+    </div>
+}
+                        @if (Model.AnalisisRegistroId.HasValue)
+{
+    <div id="resultFeedback"
+         class="result-feedback"
+         data-analysis-id="@Model.AnalisisRegistroId.Value">
+
+        <div>
+            <strong>¿Este resultado te ayudó?</strong>
+
+            <span>
+                Tu respuesta mejora el detector.
+            </span>
+        </div>
+
+        <div class="feedback-actions">
+            <button type="button"
+                    class="feedback-button"
+                    data-useful="true">
+                Sí, me ayudó
+            </button>
+
+            <button type="button"
+                    class="feedback-button"
+                    data-useful="false">
+                No fue suficiente
+            </button>
+        </div>
+
+        <div id="feedbackStatus"
+             class="feedback-status"
+             role="status"
+             hidden>
+        </div>
+    </div>
+}
+                        <div class="result-actions">
+                            <button id="shareResultButton"
+                                    type="button"
+                                    class="btn-share-result"
+                                    data-risk="@Model.Resultado.Nivel"
+                                    data-score="@Model.Resultado.Puntaje">
+
+                                <svg viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <circle cx="18"
+                                            cy="5"
+                                            r="3"></circle>
+
+                                    <circle cx="6"
+                                            cy="12"
+                                            r="3"></circle>
+
+                                    <circle cx="18"
+                                            cy="19"
+                                            r="3"></circle>
+
+                                    <path d="m8.6 10.6 6.8-4.2"></path>
+                                    <path d="m8.6 13.4 6.8 4.2"></path>
+                                </svg>
+
+                                Compartir resultado
+                            </button>
+
+                            <a asp-controller="Analisis"
+                               asp-action="Index"
+                               asp-fragment="analizador"
+                               class="btn-new-analysis">
+                                Realizar otro análisis
+                            </a>
+
+                            <div id="shareResultStatus"
+                                 class="share-result-status"
+                                 role="status"
+                                 hidden>
+                            </div>
+                        </div>
+
+                        <div class="result-disclaimer">
+                            Este resultado es orientativo. La ausencia de señales
+                            detectadas no garantiza que el contenido sea seguro.
+                            No se comparte el contenido ingresado.
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works-section"
+         id="como-funciona">
+
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-label">
+                Proceso simple
+            </span>
+
+            <h2>
+                Cómo funciona
+            </h2>
+
+            <p>
+                Tres pasos para evaluar una comunicación sospechosa.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="step-card">
+                    <span class="step-number">01</span>
+
+                    <h3>Ingresá el contenido</h3>
+
+                    <p>
+                        Pegá el mensaje, enlace, teléfono o descripción
+                        de la llamada recibida.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="step-card">
+                    <span class="step-number">02</span>
+
+                    <h3>Analizamos las señales</h3>
+
+                    <p>
+                        El sistema busca patrones de urgencia, engaño,
+                        solicitudes de dinero y datos sensibles.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="step-card">
+                    <span class="step-number">03</span>
+
+                    <h3>Recibí recomendaciones</h3>
+
+                    <p>
+                        Obtené un nivel de riesgo, las señales encontradas
+                        y las acciones recomendadas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/resultado.js"
+            asp-append-version="true"></script>
+}

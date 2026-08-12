@@ -1,0 +1,197 @@
+﻿using DetectorEstafas.Web.Models;
+using DetectorEstafas.Web.Services;
+
+namespace DetectorEstafas.Tests.Services;
+
+[TestClass]
+public class AnalizadorEstafasServiceTests
+{
+    private AnalizadorEstafasService _service = null!;
+
+    [TestInitialize]
+    public void Inicializar()
+    {
+        _service = new AnalizadorEstafasService();
+    }
+
+    [TestMethod]
+    public void Analizar_MensajeConUrgenciaYCodigo_RetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Último aviso. Tu cuenta será suspendida. " +
+            "Ingresá ahora y enviá tu código de seguridad.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(
+            NivelRiesgo.Alto,
+            resultado.Nivel);
+
+        Assert.IsTrue(
+            resultado.Puntaje >= 55);
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "urgencia",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "credenciales",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_EnlaceHttpsNormal_RetornaRiesgoBajo()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "https://www.microsoft.com",
+            TipoContenido.Enlace);
+
+        Assert.AreEqual(
+            NivelRiesgo.Bajo,
+            resultado.Nivel);
+
+        Assert.AreEqual(
+            0,
+            resultado.Puntaje);
+
+        Assert.AreEqual(
+            1,
+            resultado.EnlacesAnalizados.Count);
+
+        EnlaceAnalizado enlace =
+            resultado.EnlacesAnalizados[0];
+
+        Assert.IsTrue(enlace.EsValido);
+        Assert.IsTrue(enlace.UsaHttps);
+
+        Assert.AreEqual(
+            "www.microsoft.com",
+            enlace.Dominio);
+    }
+
+    [TestMethod]
+    public void Analizar_EnlaceHttpConIp_DetectaSenalesTecnicas()
+    {
+        const string contenido =
+            "http://192.168.1.50:8080/verificar";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Enlace);
+
+        Assert.IsTrue(
+            resultado.Puntaje >= 25);
+
+        Assert.AreEqual(
+            1,
+            resultado.EnlacesAnalizados.Count);
+
+        EnlaceAnalizado enlace =
+            resultado.EnlacesAnalizados[0];
+
+        Assert.IsFalse(enlace.UsaHttps);
+
+        Assert.IsTrue(
+            enlace.Senales.Any(
+                senal => senal.Contains(
+                    "HTTPS",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            enlace.Senales.Any(
+                senal => senal.Contains(
+                    "dirección IP",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            enlace.Senales.Any(
+                senal => senal.Contains(
+                    "puerto",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_MensajeConEnlace_ExtraeYAnalizaElEnlace()
+    {
+        const string contenido =
+            "Verificá tu cuenta en " +
+            "http://192.168.1.50/verificar ahora.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(
+            1,
+            resultado.EnlacesAnalizados.Count);
+
+        EnlaceAnalizado enlace =
+            resultado.EnlacesAnalizados[0];
+
+        Assert.AreEqual(
+            "192.168.1.50",
+            enlace.Dominio);
+
+        Assert.IsTrue(
+            enlace.Senales.Any(
+                senal => senal.Contains(
+                    "dirección IP",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_LlamadaConEmergenciaFamiliar_RetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Mi hijo tuvo un accidente. " +
+            "Necesito que hagas una transferencia urgente " +
+            "y no le digas a nadie.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Llamada);
+
+        Assert.AreEqual(
+            NivelRiesgo.Alto,
+            resultado.Nivel);
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "emergencia familiar",
+                    StringComparison.OrdinalIgnoreCase)));
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "terceros",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_ContenidoSinSenales_NoGarantizaSeguridad()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "Hola, nos reunimos mañana a las diez.",
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(
+            NivelRiesgo.Bajo,
+            resultado.Nivel);
+
+        Assert.AreEqual(
+            0,
+            resultado.Puntaje);
+
+        Assert.IsTrue(
+            resultado.Resumen.Contains(
+                "no garantiza",
+                StringComparison.OrdinalIgnoreCase));
+    }
+}

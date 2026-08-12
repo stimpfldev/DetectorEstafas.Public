@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="error-page">
+    <div class="container">
+        <div class="error-card">
+            <h1>No pudimos completar la operación</h1>
+
+            <p>
+                Ocurrió un error inesperado. Volvé al analizador
+                e intentá nuevamente.
+            </p>
+
+            <a asp-controller="Analisis"
+               asp-action="Index"
+               class="btn btn-analyze mt-4">
+
+                Volver al analizador
+            </a>
+        </div>
+    </div>
+</section>

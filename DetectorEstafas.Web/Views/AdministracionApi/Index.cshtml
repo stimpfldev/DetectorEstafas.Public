@@ -1,0 +1,126 @@
+@model DetectorEstafas.Web.ViewModels.ApiAdministracion.ApiDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard de API";
+}
+
+<section class="admin-api-dashboard container">
+    <div class="admin-api-heading">
+        <div>
+            <h1>Dashboard de API</h1>
+            <p>Consumo del @Model.FechaUtc.ToString("dd/MM/yyyy") en UTC.</p>
+        </div>
+
+        <form asp-action="Salir" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary">
+                Cerrar administración
+            </button>
+        </form>
+    </div>
+
+    @if (TempData["Mensaje"] is string mensaje)
+    {
+        <div class="alert alert-success">@mensaje</div>
+    }
+
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    <div class="admin-api-summary">
+        <article>
+            <span>Clientes</span>
+            <strong>@Model.TotalClientes</strong>
+        </article>
+        <article>
+            <span>Habilitados</span>
+            <strong>@Model.ClientesHabilitados</strong>
+        </article>
+        <article>
+            <span>Solicitudes hoy</span>
+            <strong>@Model.SolicitudesHoy</strong>
+        </article>
+    </div>
+
+    @if (Model.Clientes.Count == 0)
+    {
+        <div class="alert alert-info">
+            Todavía no existen clientes API registrados.
+        </div>
+    }
+    else
+    {
+        <div class="admin-api-clients">
+            @foreach (var cliente in Model.Clientes)
+            {
+                <article class="admin-api-client-card">
+                    <div class="admin-api-client-header">
+                        <div>
+                            <h2>@cliente.Nombre</h2>
+                            <span class="badge @(cliente.Habilitado ? "text-bg-success" : "text-bg-secondary")">
+                                @(cliente.Habilitado ? "Habilitado" : "Deshabilitado")
+                            </span>
+                        </div>
+
+                        <form asp-action="CambiarEstadoCliente"
+                              asp-route-apiClienteId="@cliente.ApiClienteId"
+                              method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit"
+                                    class="btn btn-sm @(cliente.Habilitado ? "btn-outline-danger" : "btn-outline-success")">
+                                @(cliente.Habilitado ? "Deshabilitar" : "Habilitar")
+                            </button>
+                        </form>
+                    </div>
+
+                    <dl class="admin-api-metrics">
+                        <div><dt>Plan</dt><dd>@cliente.Plan</dd></div>
+                        <div><dt>Cuota diaria</dt><dd>@cliente.CuotaDiaria</dd></div>
+                        <div><dt>Consumidas</dt><dd>@cliente.ConsumidasHoy</dd></div>
+                        <div><dt>Restantes</dt><dd>@cliente.RestantesHoy</dd></div>
+                    </dl>
+
+                    <h3>Claves</h3>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Prefijo</th>
+                                    <th>Creada UTC</th>
+                                    <th>Estado</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var clave in cliente.Claves)
+                            {
+                                <tr>
+                                    <td><code>@clave.Prefijo…</code></td>
+                                    <td>@clave.FechaCreacionUtc.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@(clave.Habilitada ? "Activa" : "Revocada")</td>
+                                    <td class="text-end">
+                                    @if (clave.Habilitada)
+                                    {
+                                        <form asp-action="RevocarClave"
+                                              asp-route-apiClaveId="@clave.ApiClaveId"
+                                              method="post">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                Revocar
+                                            </button>
+                                        </form>
+                                    }
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+</section>

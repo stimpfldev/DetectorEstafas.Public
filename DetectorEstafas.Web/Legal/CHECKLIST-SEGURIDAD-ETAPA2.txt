@@ -1,0 +1,56 @@
+DETECTOR DE ESTAFAS 2.0.0
+CHECKLIST DE SEGURIDAD Y PRIVACIDAD - ETAPA 2
+
+Repositorio y secretos
+[ ] Verificar-Repositorio-Publico.ps1 finaliza correctamente.
+[ ] No existen API keys, secretos administrativos, credenciales SMTP ni cadenas productivas versionadas.
+[ ] Los modelos OCR y Whisper no están incluidos en Git.
+[ ] bin, obj, .vs, artifacts, archivos .user y request.json no están versionados.
+[ ] Se revisó el historial Git antes de hacerlo público.
+
+Archivos temporales
+[ ] PNG/JPEG válidos se procesan y se eliminan.
+[ ] Archivos con extensión manipulada se rechazan.
+[ ] MP3/WAV válidos se procesan y se eliminan.
+[ ] Audios manipulados o demasiado grandes se rechazan.
+[ ] No se escriben imágenes, audios, OCR ni transcripciones en logs.
+
+IA externa
+[ ] La IA permanece deshabilitada sin configuración explícita.
+[ ] El usuario debe prestar consentimiento antes del envío.
+[ ] Timeout y fallback al motor local funcionan.
+[ ] La API key del proveedor está fuera del repositorio.
+[ ] La respuesta externa se valida y no ejecuta instrucciones.
+
+Registro y correo
+[ ] El registro exige condiciones y privacidad.
+[ ] El correo duplicado se rechaza.
+[ ] La confirmación usa token de Identity.
+[ ] No existe inicio de sesión público en esta versión.
+[ ] Las contraseñas son administradas por ASP.NET Core Identity.
+
+API comercial
+[ ] Solicitud sin API key devuelve 401.
+[ ] API key revocada devuelve 401.
+[ ] Cliente deshabilitado devuelve 401.
+[ ] Cuota agotada devuelve 429.
+[ ] La clave completa no se guarda en SQL Server.
+[ ] El hash almacenado ocupa 32 bytes.
+[ ] Los logs no contienen el cuerpo analizado ni la API key.
+
+Dashboard administrativo
+[ ] Está deshabilitado sin configuración explícita.
+[ ] El secreto se encuentra fuera del repositorio.
+[ ] El acceso usa comparación en tiempo constante.
+[ ] El ingreso tiene rate limit de 5 intentos cada 15 minutos por IP.
+[ ] Las respuestas administrativas usan no-store.
+[ ] La cookie es HttpOnly, Secure y SameSite=Strict.
+
+Dependencias y compilación
+[ ] dotnet list package --vulnerable --include-transitive no informa vulnerabilidades.
+[ ] Compilación Release exitosa.
+[ ] Todas las pruebas automáticas pasan.
+[ ] Migraciones aplicadas sobre una base limpia de validación.
+
+Resultado final
+[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.0.0.

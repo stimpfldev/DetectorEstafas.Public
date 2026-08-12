@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DetectorEstafas.Tests/DetectorEstafas.Tests.csproj" Id="ad7c713f-8a42-48c7-88d7-bd2d57283849" />
+  <Project Path="DetectorEstafas.Web/DetectorEstafas.Web.csproj" />
+</Solution>
