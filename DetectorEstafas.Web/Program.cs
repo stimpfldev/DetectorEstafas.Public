@@ -377,11 +377,11 @@ app.Use(async (context, next) =>
 
     headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self'; " +
+        "script-src 'self' https://www.googletagmanager.com; " +
         "style-src 'self' 'unsafe-inline'; " +
-        "img-src 'self' data:; " +
+        "img-src 'self' data: https://*.google-analytics.com https://www.googletagmanager.com; " +
         "font-src 'self'; " +
-        "connect-src 'self'; " +
+        "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; " +
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self'; " +
@@ -397,6 +397,57 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapGet(
+    "/robots.txt",
+    (HttpContext context) =>
+    {
+        string baseUrl =
+            $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}";
+
+        string robots =
+            "User-agent: *\n" +
+            "Allow: /\n" +
+            "Disallow: /Cuenta/\n" +
+            "Disallow: /AdministracionApi/\n" +
+            "Disallow: /api/\n" +
+            "Disallow: /openapi/\n" +
+            $"Sitemap: {baseUrl}/sitemap.xml\n";
+
+        return Results.Text(
+            robots,
+            "text/plain; charset=utf-8");
+    })
+    .ExcludeFromDescription();
+
+app.MapGet(
+    "/sitemap.xml",
+    (HttpContext context) =>
+    {
+        string baseUrl =
+            $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}";
+
+        string escapedBaseUrl =
+            System.Security.SecurityElement.Escape(baseUrl)
+            ?? baseUrl;
+
+        string sitemap =
+            $"""
+            <?xml version="1.0" encoding="UTF-8"?>
+            <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+              <url><loc>{escapedBaseUrl}/</loc></url>
+              <url><loc>{escapedBaseUrl}/Contacto</loc></url>
+              <url><loc>{escapedBaseUrl}/Legal/Privacidad</loc></url>
+              <url><loc>{escapedBaseUrl}/Legal/Condiciones</loc></url>
+              <url><loc>{escapedBaseUrl}/Legal/Terceros</loc></url>
+            </urlset>
+            """;
+
+        return Results.Text(
+            sitemap,
+            "application/xml; charset=utf-8");
+    })
+    .ExcludeFromDescription();
 
 app.MapOpenApi();
 

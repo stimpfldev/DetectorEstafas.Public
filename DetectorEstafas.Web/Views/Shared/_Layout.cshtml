@@ -1,3 +1,35 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+
+@{
+    var googleAnalyticsEnabled =
+        string.Equals(
+            Configuration["GoogleAnalytics:Enabled"],
+            "true",
+            StringComparison.OrdinalIgnoreCase);
+
+    var googleAnalyticsMeasurementId =
+        Configuration["GoogleAnalytics:MeasurementId"];
+
+var currentPath =
+    Context.Request.Path.Value ?? string.Empty;
+
+var sensitiveGoogleAnalyticsPath =
+    currentPath.StartsWith(
+        "/Cuenta",
+        StringComparison.OrdinalIgnoreCase)
+    || currentPath.StartsWith(
+        "/AdministracionApi",
+        StringComparison.OrdinalIgnoreCase);
+
+var disableGoogleAnalytics =
+    (ViewData["DisableGoogleAnalytics"] as bool? ?? false)
+    || sensitiveGoogleAnalyticsPath;
+
+    var loadGoogleAnalytics =
+        googleAnalyticsEnabled
+        && !string.IsNullOrWhiteSpace(googleAnalyticsMeasurementId)
+        && !disableGoogleAnalytics;
+}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,7 +43,11 @@
 
     <meta name="theme-color"
           content="#0f172a" />
-
+@if (loadGoogleAnalytics)
+{
+    <meta name="google-analytics-measurement-id"
+          content="@googleAnalyticsMeasurementId" />
+}
     <meta name="mobile-web-app-capable"
           content="yes" />
 
@@ -135,9 +171,12 @@
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="~/js/pwa.js"
-            asp-append-version="true"></script>
+<script src="~/js/pwa.js"
+        asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+<script src="~/js/google-analytics.js"
+        asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
