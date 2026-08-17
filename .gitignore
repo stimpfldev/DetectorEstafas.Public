@@ -409,3 +409,5 @@ LEEME-*.txt
 # Modelos locales en cualquier ubicación
 **/OcrData/
 **/WhisperModels/
+
+publish-shark/
