@@ -20,6 +20,8 @@ El resultado indica nivel de riesgo, puntaje, señales detectadas y recomendacio
 3. Ejecutá el análisis.
 4. Revisá las señales detectadas y las recomendaciones antes de actuar.
 
+Al cambiar el tipo de contenido, el campo de entrada se limpia para evitar analizar accidentalmente información correspondiente al tipo anterior.
+
 No ingreses contraseñas, códigos de autenticación, datos bancarios, documentos ni información personal innecesaria.
 
 ## Capturas
@@ -34,9 +36,11 @@ El audio puede cargarse o grabarse desde un dispositivo compatible. La transcrip
 
 La evaluación mediante IA externa es complementaria, opcional y separada del motor local. Solo debe utilizarse cuando el usuario acepta el tratamiento correspondiente.
 
-## Cuenta
+## Compartir un resultado
 
-El análisis anónimo continúa disponible. El registro de cuenta requiere confirmación de correo.
+La opción **Compartir resultado** genera un vínculo protegido y con vencimiento. El vínculo permite compartir el nivel de riesgo, puntaje, tipo analizado, cantidad de señales y fecha, pero no incluye el contenido original analizado.
+
+Un vínculo inválido, modificado o vencido no permite acceder al resultado.
 
 ## Instalación como aplicación
 
@@ -53,6 +57,10 @@ En Safari:
 3. Elegí **Añadir a pantalla de inicio**.
 
 En iOS algunas capacidades de integración del navegador pueden diferir de Android.
+
+## Uso sin conexión
+
+La PWA puede mostrar una página offline cuando no hay acceso a la red. Los análisis necesitan el servidor y no se ejecutan sin conexión.
 
 ## Privacidad
 
