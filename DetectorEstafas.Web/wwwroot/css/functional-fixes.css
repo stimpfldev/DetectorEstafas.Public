@@ -1,0 +1,220 @@
+/* Correcciones de QA funcional 2026-08-21 */
+
+/* El formulario principal debe ser la primera acción visible. */
+.analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+    display: flex;
+    flex-direction: column;
+}
+
+.analyzer-section .analyzer-card {
+    order: 1;
+}
+
+.analyzer-section .result-panel {
+    order: 2;
+}
+
+.analyzer-section .capture-card:not(.audio-card) {
+    order: 3;
+}
+
+.analyzer-section .audio-card {
+    order: 4;
+}
+
+/* Escala general más compacta en escritorio. */
+.hero-section {
+    padding: 52px 0 74px;
+}
+
+.hero-title {
+    max-width: 680px;
+    font-size: clamp(2rem, 3.2vw, 3.15rem);
+    line-height: 1.04;
+}
+
+.hero-description {
+    margin-top: 20px;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.hero-features {
+    margin-top: 24px;
+}
+
+.hero-security-card {
+    max-width: 315px;
+    min-height: 300px;
+    border-radius: 26px;
+}
+
+.security-visual {
+    height: 215px;
+}
+
+.security-circle-large {
+    width: 180px;
+    height: 180px;
+}
+
+.security-circle-medium {
+    width: 132px;
+    height: 132px;
+}
+
+.security-shield {
+    width: 88px;
+    height: 88px;
+    border-radius: 26px;
+}
+
+.security-shield svg {
+    width: 50px;
+    height: 50px;
+}
+
+.security-card-text {
+    padding: 0 24px 24px;
+}
+
+.analyzer-section {
+    margin-top: -28px;
+    padding-bottom: 56px;
+}
+
+.analyzer-card,
+.capture-card {
+    padding: 26px;
+    border-radius: 16px;
+}
+
+.analyzer-header {
+    margin-bottom: 24px;
+}
+
+.analyzer-header h2 {
+    font-size: 1.55rem;
+}
+
+.capture-card {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.audio-card {
+    margin-top: 16px;
+}
+
+.capture-card-header {
+    margin-bottom: 18px;
+}
+
+.capture-card-header h2 {
+    font-size: 1.3rem;
+}
+
+.capture-card-header p {
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.form-section {
+    margin-bottom: 18px;
+}
+
+/* La regla original daba 190px también a inputs file. */
+textarea.form-control-custom {
+    min-height: 135px;
+    padding: 13px 14px;
+}
+
+input[type="file"].form-control-custom {
+    min-height: 46px;
+    padding: 8px 11px;
+    line-height: 1.4;
+}
+
+.btn-analyze {
+    min-height: 49px;
+}
+
+.result-panel {
+    margin-top: 20px;
+}
+
+.result-header {
+    padding: 22px 25px 18px;
+}
+
+.result-summary,
+.result-section,
+.analyzed-links,
+.result-actions,
+.result-feedback,
+.community-report {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.how-it-works-section {
+    padding: 62px 0 74px;
+}
+
+.step-card {
+    padding: 23px;
+}
+
+@media (max-width: 991px) {
+    .hero-section {
+        padding: 44px 0 62px;
+    }
+
+    .hero-security-card {
+        max-width: 290px;
+        min-height: 270px;
+    }
+
+    .security-visual {
+        height: 190px;
+    }
+}
+
+@media (max-width: 767px) {
+    .hero-section {
+        padding: 38px 0 54px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-security-card {
+        min-height: 250px;
+    }
+
+    .analyzer-section {
+        margin-top: -18px;
+        padding-bottom: 44px;
+    }
+
+    .analyzer-card,
+    .capture-card {
+        padding: 20px 18px;
+    }
+
+    textarea.form-control-custom {
+        min-height: 125px;
+    }
+
+    .result-header,
+    .result-summary,
+    .result-section,
+    .analyzed-links,
+    .result-actions,
+    .result-feedback,
+    .community-report {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+}
