@@ -46,6 +46,29 @@ public class AnalizadorEstafasServiceTests
     }
 
     [TestMethod]
+    public void Analizar_MensajeDeBancoSolicitandoPin_RetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Hola, somos de tu banco. Para validar tu cuenta, ingresá tu PIN.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(
+            NivelRiesgo.Alto,
+            resultado.Nivel);
+
+        Assert.IsTrue(resultado.Puntaje >= 55);
+
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "entidad financiera",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
     public void Analizar_EnlaceHttpsNormal_RetornaRiesgoBajo()
     {
         ResultadoAnalisis resultado = _service.Analizar(
@@ -73,6 +96,22 @@ public class AnalizadorEstafasServiceTests
         Assert.AreEqual(
             "www.microsoft.com",
             enlace.Dominio);
+    }
+
+    [TestMethod]
+    public void Analizar_EnlaceConIpHttps_RetornaRiesgoMedio()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "https://192.168.1.50/verificar",
+            TipoContenido.Enlace);
+
+        Assert.AreEqual(
+            NivelRiesgo.Medio,
+            resultado.Nivel);
+
+        Assert.AreEqual(
+            25,
+            resultado.Puntaje);
     }
 
     [TestMethod]
@@ -231,6 +270,7 @@ public class AnalizadorEstafasServiceTests
             0,
             resultado.Puntaje);
     }
+
     [TestMethod]
     public void Analizar_ContenidoSinSenales_NoGarantizaSeguridad()
     {
