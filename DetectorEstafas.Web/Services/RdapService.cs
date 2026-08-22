@@ -15,6 +15,21 @@ public class RdapService : IRdapService
         RegexOptions.CultureInvariant |
         RegexOptions.Compiled);
 
+    private static readonly HashSet<string> ZonasSegundoNivelAr = new(
+        StringComparer.OrdinalIgnoreCase)
+    {
+        "com.ar",
+        "net.ar",
+        "org.ar",
+        "gob.ar",
+        "gov.ar",
+        "edu.ar",
+        "mil.ar",
+        "int.ar",
+        "tur.ar",
+        "musica.ar"
+    };
+
     private readonly HttpClient _httpClient;
     private readonly IMemoryCache _memoryCache;
     private readonly ILogger<RdapService> _logger;
@@ -33,10 +48,8 @@ public class RdapService : IRdapService
         string dominio,
         CancellationToken cancellationToken)
     {
-        string dominioNormalizado = dominio
-            .Trim()
-            .TrimEnd('.')
-            .ToLowerInvariant();
+        string dominioNormalizado =
+            NormalizarDominioConsultable(dominio);
 
         if (!DominioArRegex.IsMatch(dominioNormalizado))
         {
@@ -67,7 +80,7 @@ public class RdapService : IRdapService
             CancellationTokenSource.CreateLinkedTokenSource(
                 cancellationToken);
 
-        timeout.CancelAfter(TimeSpan.FromSeconds(2));
+        timeout.CancelAfter(TimeSpan.FromSeconds(4));
 
         try
         {
@@ -238,6 +251,35 @@ public class RdapService : IRdapService
 
             return resultado;
         }
+    }
+
+    private static string NormalizarDominioConsultable(string dominio)
+    {
+        string normalizado = dominio
+            .Trim()
+            .TrimEnd('.')
+            .ToLowerInvariant();
+
+        string[] partes = normalizado.Split(
+            '.',
+            StringSplitOptions.RemoveEmptyEntries);
+
+        if (partes.Length <= 2)
+        {
+            return normalizado;
+        }
+
+        string ultimasDos =
+            $"{partes[^2]}.{partes[^1]}";
+
+        if (ZonasSegundoNivelAr.Contains(ultimasDos))
+        {
+            return partes.Length >= 3
+                ? $"{partes[^3]}.{ultimasDos}"
+                : normalizado;
+        }
+
+        return ultimasDos;
     }
 
     private void GuardarEnCache(
