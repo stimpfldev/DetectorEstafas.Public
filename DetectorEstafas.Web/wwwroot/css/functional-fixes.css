@@ -1,12 +1,29 @@
 /* Correcciones de QA funcional 2026-08-21 */
 
-/* El formulario principal queda primero y Captura + Audio forman una cuadrícula. */
-.analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+/* Usar mejor el ancho disponible en escritorio. */
+.hero-section .container,
+.analyzer-section .container,
+.how-it-works-section .container {
+    width: calc(100% - 48px);
+    max-width: 1180px;
 }
 
+.analyzer-section .row.justify-content-center {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+/* Orden funcional: analizador primero; Captura + Audio debajo. */
 .analyzer-section .analyzer-card {
     order: 1;
     grid-column: 1 / -1;
@@ -25,81 +42,188 @@
     order: 4;
 }
 
-/* Escala general más compacta en escritorio. */
+/* HERO más compacto. */
 .hero-section {
-    padding: 52px 0 74px;
+    padding: 34px 0 46px;
+}
+
+.hero-badge {
+    margin-bottom: 14px;
+    padding: 5px 10px;
+    font-size: 0.66rem;
 }
 
 .hero-title {
-    max-width: 680px;
-    font-size: clamp(2rem, 3.2vw, 3.15rem);
+    max-width: 590px;
+    font-size: clamp(1.8rem, 2.8vw, 2.45rem);
     line-height: 1.04;
 }
 
 .hero-description {
-    margin-top: 20px;
-    font-size: 1.05rem;
-    line-height: 1.6;
+    max-width: 600px;
+    margin-top: 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
 }
 
 .hero-features {
-    margin-top: 24px;
+    gap: 9px 18px;
+    margin-top: 17px;
+}
+
+.hero-feature {
+    gap: 7px;
+    font-size: 0.8rem;
+}
+
+.feature-check {
+    width: 18px;
+    height: 18px;
+    font-size: 0.68rem;
 }
 
 .hero-security-card {
-    max-width: 315px;
-    min-height: 300px;
-    border-radius: 26px;
+    max-width: 245px;
+    min-height: 215px;
+    border-radius: 22px;
 }
 
 .security-visual {
-    height: 215px;
+    height: 150px;
 }
 
 .security-circle-large {
-    width: 180px;
-    height: 180px;
+    width: 128px;
+    height: 128px;
 }
 
 .security-circle-medium {
-    width: 132px;
-    height: 132px;
+    width: 94px;
+    height: 94px;
 }
 
 .security-shield {
-    width: 88px;
-    height: 88px;
-    border-radius: 26px;
+    width: 66px;
+    height: 66px;
+    border-radius: 20px;
 }
 
 .security-shield svg {
-    width: 50px;
-    height: 50px;
+    width: 37px;
+    height: 37px;
 }
 
 .security-card-text {
-    padding: 0 24px 24px;
+    padding: 0 18px 18px;
 }
 
+.security-card-text strong {
+    font-size: 0.88rem;
+}
+
+.security-card-text span {
+    font-size: 0.76rem;
+}
+
+/* Analizador principal: menos alto y botón compacto. */
 .analyzer-section {
-    margin-top: -28px;
-    padding-bottom: 56px;
+    margin-top: -17px;
+    padding-bottom: 42px;
 }
 
 .analyzer-card,
 .capture-card {
-    padding: 26px;
-    border-radius: 16px;
+    padding: 18px;
+    border-radius: 14px;
 }
 
 .analyzer-header {
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 15px;
+}
+
+.section-label {
+    margin-bottom: 6px;
+    padding: 5px 9px;
+    font-size: 0.65rem;
 }
 
 .analyzer-header h2 {
-    font-size: 1.55rem;
+    font-size: 1.25rem;
 }
 
+.analyzer-header p {
+    margin-top: 5px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.analyzer-status {
+    padding: 6px 9px;
+    font-size: 0.72rem;
+}
+
+.form-section {
+    margin-bottom: 12px;
+}
+
+.form-label-custom {
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+}
+
+.form-select-custom {
+    min-height: 40px;
+    font-size: 0.86rem;
+}
+
+textarea.form-control-custom {
+    min-height: 88px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+input[type="file"].form-control-custom {
+    min-height: 40px;
+    padding: 6px 9px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.field-footer {
+    gap: 12px;
+    margin-top: 5px;
+    font-size: 0.68rem;
+}
+
+.ia-consent {
+    margin-top: 3px;
+    margin-bottom: 10px;
+    font-size: 0.76rem;
+}
+
+.analyzer-card .btn-analyze {
+    display: inline-flex;
+    width: auto;
+    min-width: 185px;
+    min-height: 40px;
+    padding: 8px 15px;
+    font-size: 0.84rem;
+}
+
+.form-warning {
+    margin-top: 10px;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.form-warning svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Captura y Audio en cuadrícula compacta. */
 .capture-card {
     height: 100%;
     margin: 0;
@@ -110,39 +234,19 @@
 }
 
 .capture-card-header {
-    margin-bottom: 18px;
+    margin-bottom: 12px;
 }
 
 .capture-card-header h2 {
-    font-size: 1.3rem;
+    margin: 4px 0 5px;
+    font-size: 1.05rem;
 }
 
 .capture-card-header p {
-    font-size: 0.92rem;
-    line-height: 1.55;
+    font-size: 0.78rem;
+    line-height: 1.45;
 }
 
-.form-section {
-    margin-bottom: 18px;
-}
-
-/* La regla original daba 190px también a inputs file. */
-textarea.form-control-custom {
-    min-height: 135px;
-    padding: 13px 14px;
-}
-
-input[type="file"].form-control-custom {
-    min-height: 46px;
-    padding: 8px 11px;
-    line-height: 1.4;
-}
-
-.btn-analyze {
-    min-height: 49px;
-}
-
-/* Los CTA de Captura y Audio no necesitan ocupar toda la tarjeta. */
 .capture-card form {
     display: flex;
     flex-direction: column;
@@ -151,17 +255,43 @@ input[type="file"].form-control-custom {
 .capture-card .btn-analyze {
     align-self: flex-start;
     width: auto;
-    min-height: 42px;
-    padding: 9px 16px;
-    font-size: 0.9rem;
+    min-height: 37px;
+    padding: 7px 13px;
+    font-size: 0.78rem;
+}
+
+.audio-recorder {
+    margin: 10px 0 12px;
+    padding: 11px;
+    border-radius: 11px;
+}
+
+.audio-consent {
+    margin-bottom: 9px;
+    font-size: 0.76rem;
+}
+
+.audio-recorder-actions {
+    gap: 7px;
+}
+
+.audio-recorder-actions .btn {
+    min-height: 35px;
+    padding: 6px 10px;
+    font-size: 0.76rem;
+}
+
+.audio-recorder-time,
+.audio-recorder-status {
+    font-size: 0.74rem;
 }
 
 .result-panel {
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .result-header {
-    padding: 22px 25px 18px;
+    padding: 18px 21px 15px;
 }
 
 .result-summary,
@@ -170,16 +300,46 @@ input[type="file"].form-control-custom {
 .result-actions,
 .result-feedback,
 .community-report {
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 21px;
+    padding-right: 21px;
 }
 
+/* Sección inferior también más compacta. */
 .how-it-works-section {
-    padding: 62px 0 74px;
+    padding: 38px 0 48px;
+}
+
+.section-heading {
+    margin-bottom: 26px;
+}
+
+.section-heading h2 {
+    font-size: 1.7rem;
+}
+
+.section-heading p {
+    margin-top: 7px;
+    font-size: 0.8rem;
 }
 
 .step-card {
-    padding: 23px;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.step-number {
+    margin-bottom: 14px;
+    font-size: 0.7rem;
+}
+
+.step-card h3 {
+    font-size: 0.92rem;
+}
+
+.step-card p {
+    margin-top: 7px;
+    font-size: 0.76rem;
+    line-height: 1.5;
 }
 
 .shared-result-page {
@@ -246,41 +406,53 @@ input[type="file"].form-control-custom {
 }
 
 @media (max-width: 991px) {
+    .hero-section .container,
+    .analyzer-section .container,
+    .how-it-works-section .container {
+        width: calc(100% - 32px);
+    }
+
     .hero-section {
-        padding: 44px 0 62px;
+        padding: 30px 0 40px;
     }
 
     .hero-security-card {
-        max-width: 290px;
-        min-height: 270px;
+        max-width: 225px;
+        min-height: 205px;
     }
 
     .security-visual {
-        height: 190px;
+        height: 142px;
     }
 }
 
 @media (max-width: 767px) {
+    .hero-section .container,
+    .analyzer-section .container,
+    .how-it-works-section .container {
+        width: calc(100% - 24px);
+    }
+
     .hero-section {
-        padding: 38px 0 54px;
+        padding: 28px 0 42px;
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.85rem;
     }
 
     .hero-security-card {
-        min-height: 250px;
+        min-height: 230px;
     }
 
     .analyzer-section {
-        margin-top: -18px;
-        padding-bottom: 44px;
+        margin-top: -14px;
+        padding-bottom: 36px;
     }
 
     .analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 12px;
     }
 
     .analyzer-section .analyzer-card,
@@ -290,17 +462,17 @@ input[type="file"].form-control-custom {
 
     .analyzer-card,
     .capture-card {
-        padding: 20px 18px;
+        padding: 17px 15px;
     }
 
     textarea.form-control-custom {
-        min-height: 125px;
+        min-height: 110px;
     }
 
+    .analyzer-card .btn-analyze,
     .capture-card .btn-analyze {
-        align-self: stretch;
         width: 100%;
-        min-height: 48px;
+        min-height: 46px;
     }
 
     .result-header,
@@ -310,8 +482,8 @@ input[type="file"].form-control-custom {
     .result-actions,
     .result-feedback,
     .community-report {
-        padding-left: 18px;
-        padding-right: 18px;
+        padding-left: 16px;
+        padding-right: 16px;
     }
 
     .shared-result-page {
