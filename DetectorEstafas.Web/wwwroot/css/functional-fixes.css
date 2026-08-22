@@ -1,17 +1,20 @@
 /* Correcciones de QA funcional 2026-08-21 */
 
-/* El formulario principal debe ser la primera acción visible. */
+/* El formulario principal queda primero y Captura + Audio forman una cuadrícula. */
 .analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
 }
 
 .analyzer-section .analyzer-card {
     order: 1;
+    grid-column: 1 / -1;
 }
 
 .analyzer-section .result-panel {
     order: 2;
+    grid-column: 1 / -1;
 }
 
 .analyzer-section .capture-card:not(.audio-card) {
@@ -98,12 +101,12 @@
 }
 
 .capture-card {
-    margin-top: 16px;
-    margin-bottom: 0;
+    height: 100%;
+    margin: 0;
 }
 
 .audio-card {
-    margin-top: 16px;
+    margin-top: 0;
 }
 
 .capture-card-header {
@@ -139,8 +142,22 @@ input[type="file"].form-control-custom {
     min-height: 49px;
 }
 
+/* Los CTA de Captura y Audio no necesitan ocupar toda la tarjeta. */
+.capture-card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.capture-card .btn-analyze {
+    align-self: flex-start;
+    width: auto;
+    min-height: 42px;
+    padding: 9px 16px;
+    font-size: 0.9rem;
+}
+
 .result-panel {
-    margin-top: 20px;
+    margin-top: 4px;
 }
 
 .result-header {
@@ -261,6 +278,16 @@ input[type="file"].form-control-custom {
         padding-bottom: 44px;
     }
 
+    .analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .analyzer-section .analyzer-card,
+    .analyzer-section .result-panel {
+        grid-column: 1;
+    }
+
     .analyzer-card,
     .capture-card {
         padding: 20px 18px;
@@ -268,6 +295,12 @@ input[type="file"].form-control-custom {
 
     textarea.form-control-custom {
         min-height: 125px;
+    }
+
+    .capture-card .btn-analyze {
+        align-self: stretch;
+        width: 100%;
+        min-height: 48px;
     }
 
     .result-header,
