@@ -29,47 +29,47 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         {
             new(
                 @"\b(urgente|inmediatamente|ahora mismo|último aviso|ultimo aviso)\b",
-                15,
+                20,
                 "El contenido intenta generar urgencia."),
 
             new(
                 @"\b(contraseña|contrasena|clave|pin|token|código de seguridad|codigo de seguridad|datos de acceso|credenciales(?: de acceso)?|c[oó]digo\b.{0,50}\b(?:recibir|llegar))\b",
-                25,
+                35,
                 "Solicita o menciona credenciales de seguridad."),
 
             new(
                 @"\b(transferencia|transferir|depositar|depósito|deposito|pagar|pago inmediato)\b",
-                20,
+                30,
                 "Solicita o menciona una operación de dinero."),
 
             new(
                 @"\b(premio|ganaste|sorteo|beneficio exclusivo|recompensa)\b",
-                20,
+                25,
                 "Promete un premio o beneficio inesperado."),
 
             new(
                 @"\b(anydesk|teamviewer|acceso remoto|control remoto)\b",
-                35,
+                45,
                 "Solicita instalar o utilizar una herramienta de acceso remoto."),
 
             new(
                 @"\b(bloque(?:o|ar|ada|ado|adas|ados|aremos|arán|aran|an|en)|suspend(?:ida|ido|idas|idos|er|erán|eran|en)|suspensión|suspension|inhabilitada|inhabilitado|cerrar.*cuenta)\b",
-                20,
+                30,
                 "Amenaza con bloquear o suspender una cuenta."),
 
             new(
                 @"\b(dni|documento|número de tarjeta|numero de tarjeta|cbu|cvu|datos bancarios)\b",
-                20,
+                30,
                 "Solicita o menciona datos personales o bancarios."),
 
             new(
                 @"\b(bit\.ly|tinyurl\.com|t\.co|cutt\.ly|shorturl\.at)\b",
-                15,
+                20,
                 "Contiene un enlace acortado que oculta el destino real."),
 
             new(
                 @"\b(mercado pago|banco nación|banco nacion|anses|afip|arca|correo argentino)\b",
-                10,
+                15,
                 "Utiliza el nombre de una empresa u organismo conocido.")
         };
 
@@ -159,7 +159,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             return;
         }
 
-        puntaje += 35;
+        puntaje += 45;
         senales.Add(
             "Una entidad financiera solicita una credencial que nunca debería compartirse por este medio.");
     }
@@ -211,7 +211,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 UriKind.Absolute,
                 out Uri? uri))
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "El enlace no tiene un formato válido.");
@@ -221,7 +221,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         if (uri.Scheme != Uri.UriSchemeHttp &&
             uri.Scheme != Uri.UriSchemeHttps)
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "El enlace utiliza un protocolo no permitido.");
@@ -230,7 +230,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (string.IsNullOrWhiteSpace(uri.Host))
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "No se pudo identificar el dominio.");
@@ -245,14 +245,14 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (!resultado.UsaHttps)
         {
-            puntaje += 15;
+            puntaje += 20;
             resultado.Senales.Add(
                 "No utiliza una conexión HTTPS.");
         }
 
         if (IPAddress.TryParse(uri.Host, out _))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "Utiliza una dirección IP en lugar de un dominio.");
         }
@@ -261,21 +261,21 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "xn--",
                 StringComparison.OrdinalIgnoreCase))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "El dominio contiene caracteres internacionales codificados.");
         }
 
         if (!string.IsNullOrWhiteSpace(uri.UserInfo))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "El enlace contiene información antes del dominio que puede resultar engañosa.");
         }
 
         if (uri.Host.Count(caracter => caracter == '-') >= 3)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El dominio contiene una cantidad inusual de guiones.");
         }
@@ -286,21 +286,21 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (cantidadPartesDominio > 4)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El dominio contiene una cantidad inusual de subdominios.");
         }
 
         if (!uri.IsDefaultPort)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "Utiliza un puerto de conexión no habitual.");
         }
 
         if (uri.AbsoluteUri.Length > 180)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El enlace es inusualmente largo.");
         }
@@ -312,7 +312,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (cantidadParametros > 5)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El enlace contiene una cantidad elevada de parámetros.");
         }
@@ -376,7 +376,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (soloDigitos.Length < 8 || soloDigitos.Length > 15)
         {
-            puntaje += 15;
+            puntaje += 20;
             senales.Add(
                 "El número telefónico tiene un formato inusual.");
         }
@@ -388,7 +388,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "1111",
                 StringComparison.OrdinalIgnoreCase))
         {
-            puntaje += 10;
+            puntaje += 15;
             senales.Add(
                 "El número contiene una secuencia repetitiva inusual.");
         }
@@ -407,7 +407,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (intentaAislar)
         {
-            puntaje += 30;
+            puntaje += 40;
             senales.Add(
                 "La persona intenta impedir que consultes con terceros.");
         }
@@ -420,7 +420,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (emergenciaFamiliar)
         {
-            puntaje += 35;
+            puntaje += 45;
             senales.Add(
                 "Describe una posible falsa emergencia familiar.");
         }
@@ -433,7 +433,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (solicitaCredenciales)
         {
-            puntaje += 30;
+            puntaje += 40;
             senales.Add(
                 "La llamada solicita compartir códigos o credenciales de acceso.");
         }
@@ -441,12 +441,12 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
     private static NivelRiesgo ObtenerNivelRiesgo(int puntaje)
     {
-        if (puntaje >= 55)
+        if (puntaje >= 50)
         {
             return NivelRiesgo.Alto;
         }
 
-        if (puntaje >= 25)
+        if (puntaje >= 20)
         {
             return NivelRiesgo.Medio;
         }
