@@ -343,33 +343,90 @@
                              class="validation-summary">
                         </div>
 
-                        <div class="form-section">
-                            <label asp-for="Tipo"
-                                   class="form-label-custom">
-                                Tipo de contenido
-                            </label>
+                                <div class="form-section">
+                            <span class="form-label-custom">
+                                ¿Qué querés analizar?
+                            </span>
+
+                            <div class="content-type-tabs"
+                                 id="contentTypeTabs"
+                                 role="tablist"
+                                 aria-label="Tipo de contenido">
+
+                                <button type="button"
+                                        class="content-type-tab is-active"
+                                        data-tab-index="0"
+                                        data-label="Mensaje sospechoso"
+                                        data-placeholder="Pegá el mensaje que recibiste."
+                                        data-mode="multiline"
+                                        role="tab"
+                                        aria-selected="true">
+                                    Mensaje
+                                </button>
+
+                                <button type="button"
+                                        class="content-type-tab"
+                                        data-tab-index="1"
+                                        data-label="Enlace sospechoso"
+                                        data-placeholder="Pegá la URL completa. Ejemplo: https://sitio-ejemplo.com"
+                                        data-mode="singleline"
+                                        role="tab"
+                                        aria-selected="false">
+                                    Enlace
+                                </button>
+
+                                <button type="button"
+                                        class="content-type-tab"
+                                        data-tab-index="2"
+                                        data-label="Número telefónico sospechoso"
+                                        data-placeholder="Ingresá el número con característica. Ejemplo: +54 11 1234 5678"
+                                        data-mode="singleline"
+                                        role="tab"
+                                        aria-selected="false">
+                                    Número telefónico
+                                </button>
+
+                                <button type="button"
+                                        class="content-type-tab"
+                                        data-tab-index="3"
+                                        data-label="Descripción de la llamada"
+                                        data-placeholder="Describí qué te dijeron en la llamada, qué te pidieron y si te apuraron."
+                                        data-mode="multiline"
+                                        role="tab"
+                                        aria-selected="false">
+                                    Llamada
+                                </button>
+                            </div>
 
                             <select asp-for="Tipo"
                                     asp-items="Html.GetEnumSelectList<TipoContenido>()"
-                                    class="form-select form-select-custom">
+                                    class="visually-hidden"
+                                    tabindex="-1"
+                                    aria-hidden="true">
                             </select>
                         </div>
 
                         <div class="form-section">
                             <label asp-for="Contenido"
+                                   id="contentInputLabel"
                                    class="form-label-custom">
-                                Contenido sospechoso
+                                Mensaje sospechoso
                             </label>
 
                             <textarea asp-for="Contenido"
+                                      id="Contenido"
                                       class="form-control form-control-custom"
-                                      rows="8"
+                                      rows="4"
                                       maxlength="5000"
-                                      placeholder="Ejemplo: Último aviso. Tu cuenta será bloqueada. Ingresá al siguiente enlace y verificá tus datos."></textarea>
+                                      placeholder="Pegá el mensaje que recibiste."></textarea>
+
+                            <span asp-validation-for="Contenido"
+                                  class="text-danger">
+                            </span>
 
                             <div class="field-footer">
-                                <span asp-validation-for="Contenido"
-                                      class="text-danger">
+                                <span id="contentHelpText">
+                                    Analizá primero el contenido principal y luego revisá el resultado.
                                 </span>
 
                                 <span>
