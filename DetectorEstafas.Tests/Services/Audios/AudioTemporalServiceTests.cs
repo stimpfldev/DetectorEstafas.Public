@@ -1,11 +1,12 @@
-using DetectorEstafas.Web.Options;
 using DetectorEstafas.Web.Models.Audios;
+using DetectorEstafas.Web.Options;
 using DetectorEstafas.Web.Services.Audios;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NAudio.Wave;
 
 namespace DetectorEstafas.Tests.Services.Audios;
 
@@ -15,13 +16,20 @@ public class AudioTemporalServiceTests
     [TestMethod]
     public async Task ProcesarAsync_WavValido_AceptaYEliminaTemporal()
     {
-        byte[] contenido =
-        [
-            (byte)'R', (byte)'I', (byte)'F', (byte)'F',
-            0, 0, 0, 0,
-            (byte)'W', (byte)'A', (byte)'V', (byte)'E'
-        ];
+        byte[] contenido;
 
+        using (var memoria = new MemoryStream())
+        {
+            using (var writer = new WaveFileWriter(
+                       memoria,
+                       new WaveFormat(16000, 16, 1)))
+            {
+                byte[] silencio = new byte[16000 * 2];
+                writer.Write(silencio, 0, silencio.Length);
+            }
+
+            contenido = memoria.ToArray();
+        }
         FormFile archivo = CrearArchivo(
             contenido,
             "audio.wav",
@@ -69,9 +77,9 @@ public class AudioTemporalServiceTests
     public async Task ProcesarAsync_ExtensionNoPermitida_Rechaza()
     {
         FormFile archivo = CrearArchivo(
-            [0x49, 0x44, 0x33],
-            "audio.m4a",
-            "audio/mp4");
+     [0x01, 0x02, 0x03],
+     "audio.txt",
+     "text/plain");
 
         AudioTemporalService service = CrearServicio(
             $"DetectorEstafasTests/Audios/{Guid.NewGuid():N}");
@@ -86,15 +94,16 @@ public class AudioTemporalServiceTests
     {
         AudioOptions options = new()
         {
-            MaxFileSizeBytes = 1024,
+            MaxFileSizeBytes = 10 * 1024 * 1024,
             RetentionMinutes = 60,
             TemporaryFolderName = carpeta
         };
 
         return new AudioTemporalService(
-            Options.Create(options),
-            new WebHostEnvironmentFalso(),
-            new TranscriptorFalso());
+       Options.Create(options),
+       new WebHostEnvironmentFalso(),
+       new TranscriptorFalso(),
+       new NormalizadorFalso());
     }
 
     private static FormFile CrearArchivo(
@@ -113,7 +122,22 @@ public class AudioTemporalServiceTests
             ContentType = contentType
         };
     }
+    private sealed class NormalizadorFalso
+    : IAudioNormalizadorService
+    {
+        public Task NormalizarAWavAsync(
+            string rutaOrigen,
+            string rutaDestino,
+            CancellationToken cancellationToken)
+        {
+            File.Copy(
+                rutaOrigen,
+                rutaDestino,
+                overwrite: true);
 
+            return Task.CompletedTask;
+        }
+    }
     private sealed class TranscriptorFalso : ITranscriptorAudioService
     {
         public Task<ResultadoTranscripcionAudio> TranscribirAsync(

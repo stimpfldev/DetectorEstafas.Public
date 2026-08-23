@@ -1,7 +1,8 @@
 using DetectorEstafas.Web.Models.Audios;
 using DetectorEstafas.Web.Options;
+using FFMpegCore;
 using Microsoft.Extensions.Options;
-
+using NAudio.Wave;
 namespace DetectorEstafas.Web.Services.Audios;
 
 public class AudioTemporalService : IAudioTemporalService
@@ -10,30 +11,27 @@ public class AudioTemporalService : IAudioTemporalService
         new(StringComparer.OrdinalIgnoreCase)
         {
             ".mp3",
-            ".wav"
-        };
-
-    private static readonly HashSet<string> TiposPermitidos =
-        new(StringComparer.OrdinalIgnoreCase)
-        {
-            "audio/mpeg",
-            "audio/mp3",
-            "audio/wav",
-            "audio/x-wav",
-            "audio/wave"
+            ".wav",
+            ".ogg",
+            ".opus",
+            ".m4a",
+            ".aac"
         };
 
     private readonly AudioOptions _options;
     private readonly string _directorioTemporal;
     private readonly ITranscriptorAudioService _transcriptor;
+    private readonly IAudioNormalizadorService _normalizador;
 
     public AudioTemporalService(
         IOptions<AudioOptions> options,
         IWebHostEnvironment environment,
-        ITranscriptorAudioService transcriptor)
+        ITranscriptorAudioService transcriptor,
+        IAudioNormalizadorService normalizador)
     {
         _options = options.Value;
         _transcriptor = transcriptor;
+        _normalizador = normalizador;
 
         string carpetaConfigurada =
             _options.TemporaryFolderName
@@ -61,6 +59,10 @@ public class AudioTemporalService : IAudioTemporalService
             _directorioTemporal,
             $"{Guid.NewGuid():N}{extension}");
 
+        string rutaNormalizada = Path.Combine(
+            _directorioTemporal,
+            $"{Guid.NewGuid():N}.wav");
+
         try
         {
             await using (FileStream destino = new(
@@ -77,27 +79,23 @@ public class AudioTemporalService : IAudioTemporalService
                     cancellationToken);
             }
 
-            await ValidarFirmaAsync(
+            await ValidarAudioRealAsync(rutaTemporal);
+
+            await _normalizador.NormalizarAWavAsync(
                 rutaTemporal,
-                extension,
+                rutaNormalizada,
                 cancellationToken);
 
             ResultadoTranscripcionAudio transcripcion =
                 await _transcriptor.TranscribirAsync(
-                    rutaTemporal,
-                    extension,
+                    rutaNormalizada,
+                    ".wav",
                     cancellationToken);
 
             return new ResultadoAudioTemporal
             {
-                NombreMostrado =
-                    extension == ".mp3"
-                        ? "audio-procesado.mp3"
-                        : "audio-procesado.wav",
-                TipoContenido =
-                    extension == ".mp3"
-                        ? "audio/mpeg"
-                        : "audio/wav",
+                NombreMostrado = "audio-procesado.wav",
+                TipoContenido = "audio/wav",
                 TamanoBytes = archivo.Length,
                 TextoTranscripto = transcripcion.Texto,
                 TextoFueTruncado =
@@ -107,6 +105,7 @@ public class AudioTemporalService : IAudioTemporalService
         finally
         {
             EliminarSiExiste(rutaTemporal);
+            EliminarSiExiste(rutaNormalizada);
         }
     }
 
@@ -124,91 +123,51 @@ public class AudioTemporalService : IAudioTemporalService
                 "El audio supera el límite permitido de 10 MB.");
         }
 
-        string extension = Path.GetExtension(archivo.FileName);
+        string extension =
+            Path.GetExtension(archivo.FileName);
 
         if (!ExtensionesPermitidas.Contains(extension))
         {
             throw new AudioInvalidoException(
-                "Solo se permiten audios MP3 o WAV.");
+                "Solo se permiten audios MP3, WAV, OGG, OPUS, M4A o AAC.");
         }
+    }
 
-        if (!TiposPermitidos.Contains(archivo.ContentType))
+    private static async Task ValidarAudioRealAsync(
+        string ruta)
+    {
+        try
+        {
+            var informacion =
+                await FFProbe.AnalyseAsync(ruta);
+
+            if (!informacion.AudioStreams.Any())
+            {
+                throw new AudioInvalidoException(
+                    "El archivo no contiene una pista de audio válida.");
+            }
+        }
+        catch (AudioInvalidoException)
+        {
+            throw;
+        }
+        catch
         {
             throw new AudioInvalidoException(
-                "El tipo declarado del archivo no corresponde a un audio permitido.");
+                "El contenido del archivo no corresponde a un audio válido.");
         }
-    }
-
-    private static async Task ValidarFirmaAsync(
-        string ruta,
-        string extension,
-        CancellationToken cancellationToken)
-    {
-        byte[] encabezado = new byte[12];
-
-        await using FileStream stream = new(
-            ruta,
-            FileMode.Open,
-            FileAccess.Read,
-            FileShare.Read,
-            4096,
-            FileOptions.Asynchronous |
-            FileOptions.SequentialScan);
-
-        int leidos = await stream.ReadAsync(
-            encabezado,
-            cancellationToken);
-
-        bool firmaValida = extension switch
-        {
-            ".wav" => EsWav(encabezado, leidos),
-            ".mp3" => EsMp3(encabezado, leidos),
-            _ => false
-        };
-
-        if (!firmaValida)
-        {
-            throw new AudioInvalidoException(
-                "El contenido del archivo no corresponde a un audio MP3 o WAV válido.");
-        }
-    }
-
-    private static bool EsWav(byte[] bytes, int cantidad)
-    {
-        return cantidad >= 12 &&
-               bytes[0] == (byte)'R' &&
-               bytes[1] == (byte)'I' &&
-               bytes[2] == (byte)'F' &&
-               bytes[3] == (byte)'F' &&
-               bytes[8] == (byte)'W' &&
-               bytes[9] == (byte)'A' &&
-               bytes[10] == (byte)'V' &&
-               bytes[11] == (byte)'E';
-    }
-
-    private static bool EsMp3(byte[] bytes, int cantidad)
-    {
-        bool tieneId3 =
-            cantidad >= 3 &&
-            bytes[0] == (byte)'I' &&
-            bytes[1] == (byte)'D' &&
-            bytes[2] == (byte)'3';
-
-        bool tieneFrameMpeg =
-            cantidad >= 2 &&
-            bytes[0] == 0xFF &&
-            (bytes[1] & 0xE0) == 0xE0;
-
-        return tieneId3 || tieneFrameMpeg;
     }
 
     private void LimpiarTemporalesAbandonados()
     {
         DateTime limite =
             DateTime.UtcNow.AddMinutes(
-                -Math.Max(1, _options.RetentionMinutes));
+                -Math.Max(
+                    1,
+                    _options.RetentionMinutes));
 
-        foreach (string ruta in Directory.EnumerateFiles(
+        foreach (string ruta in
+                 Directory.EnumerateFiles(
                      _directorioTemporal))
         {
             try
@@ -227,7 +186,8 @@ public class AudioTemporalService : IAudioTemporalService
         }
     }
 
-    private static void EliminarSiExiste(string ruta)
+    private static void EliminarSiExiste(
+        string ruta)
     {
         try
         {

@@ -1,0 +1,800 @@
+/* Correcciones de QA funcional 2026-08-21 */
+
+/* Usar mejor el ancho disponible en escritorio. */
+.hero-section .container,
+.analyzer-section .container,
+.how-it-works-section .container {
+    width: calc(100% - 48px);
+    max-width: 1180px;
+}
+
+.analyzer-section .row.justify-content-center {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+/* Orden funcional: analizador primero; Captura + Audio debajo. */
+.analyzer-section .analyzer-card {
+    order: 1;
+    grid-column: 1 / -1;
+}
+
+.analyzer-section .result-panel {
+    order: 2;
+    grid-column: 1 / -1;
+}
+
+.analyzer-section .capture-card:not(.audio-card) {
+    order: 3;
+}
+
+.analyzer-section .audio-card {
+    order: 4;
+}
+
+/* HERO más compacto. */
+.hero-section {
+    padding: 34px 0 46px;
+}
+
+.hero-badge {
+    margin-bottom: 14px;
+    padding: 5px 10px;
+    font-size: 0.66rem;
+}
+
+.hero-title {
+    max-width: 590px;
+    font-size: clamp(1.8rem, 2.8vw, 2.45rem);
+    line-height: 1.04;
+}
+
+.hero-description {
+    max-width: 600px;
+    margin-top: 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.hero-features {
+    gap: 9px 18px;
+    margin-top: 17px;
+}
+
+.hero-feature {
+    gap: 7px;
+    font-size: 0.8rem;
+}
+
+.feature-check {
+    width: 18px;
+    height: 18px;
+    font-size: 0.68rem;
+}
+
+.hero-security-card {
+    max-width: 245px;
+    min-height: 215px;
+    border-radius: 22px;
+}
+
+.security-visual {
+    height: 150px;
+}
+
+.security-circle-large {
+    width: 128px;
+    height: 128px;
+}
+
+.security-circle-medium {
+    width: 94px;
+    height: 94px;
+}
+
+.security-shield {
+    width: 66px;
+    height: 66px;
+    border-radius: 20px;
+}
+
+.security-shield svg {
+    width: 37px;
+    height: 37px;
+}
+
+.security-card-text {
+    padding: 0 18px 18px;
+}
+
+.security-card-text strong {
+    font-size: 0.88rem;
+}
+
+.security-card-text span {
+    font-size: 0.76rem;
+}
+
+/* Analizador principal: menos alto y botón compacto. */
+.analyzer-section {
+    margin-top: -17px;
+    padding-bottom: 42px;
+}
+
+.analyzer-card,
+.capture-card {
+    padding: 18px;
+    border-radius: 14px;
+}
+
+.analyzer-header {
+    gap: 16px;
+    margin-bottom: 15px;
+}
+
+.section-label {
+    margin-bottom: 6px;
+    padding: 5px 9px;
+    font-size: 0.65rem;
+}
+
+.analyzer-header h2 {
+    font-size: 1.25rem;
+}
+
+.analyzer-header p {
+    margin-top: 5px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.analyzer-status {
+    padding: 6px 9px;
+    font-size: 0.72rem;
+}
+
+.form-section {
+    margin-bottom: 12px;
+}
+
+.form-label-custom {
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+}
+
+.form-select-custom {
+    min-height: 40px;
+    font-size: 0.86rem;
+}
+
+textarea.form-control-custom {
+    min-height: 88px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+input[type="file"].form-control-custom {
+    min-height: 40px;
+    padding: 6px 9px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.field-footer {
+    gap: 12px;
+    margin-top: 5px;
+    font-size: 0.68rem;
+}
+
+.ia-consent {
+    margin-top: 3px;
+    margin-bottom: 10px;
+    font-size: 0.76rem;
+}
+
+.analyzer-card .btn-analyze {
+    display: inline-flex;
+    width: auto;
+    min-width: 185px;
+    min-height: 40px;
+    padding: 8px 15px;
+    font-size: 0.84rem;
+}
+
+.form-warning {
+    margin-top: 10px;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.form-warning svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Captura y Audio en cuadrícula compacta. */
+.capture-card {
+    height: 100%;
+    margin: 0;
+}
+
+.audio-card {
+    margin-top: 0;
+}
+
+.capture-card-header {
+    margin-bottom: 12px;
+}
+
+.capture-card-header h2 {
+    margin: 4px 0 5px;
+    font-size: 1.05rem;
+}
+
+.capture-card-header p {
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.capture-card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.capture-card .btn-analyze {
+    align-self: flex-start;
+    width: auto;
+    min-height: 37px;
+    padding: 7px 13px;
+    font-size: 0.78rem;
+}
+
+.audio-recorder {
+    margin: 10px 0 12px;
+    padding: 11px;
+    border-radius: 11px;
+}
+
+.audio-consent {
+    margin-bottom: 9px;
+    font-size: 0.76rem;
+}
+
+.audio-recorder-actions {
+    gap: 7px;
+}
+
+.audio-recorder-actions .btn {
+    min-height: 35px;
+    padding: 6px 10px;
+    font-size: 0.76rem;
+}
+
+.audio-recorder-time,
+.audio-recorder-status {
+    font-size: 0.74rem;
+}
+
+.result-panel {
+    margin-top: 2px;
+}
+
+.result-header {
+    padding: 18px 21px 15px;
+}
+
+.result-summary,
+.result-section,
+.analyzed-links,
+.result-actions,
+.result-feedback,
+.community-report {
+    padding-left: 21px;
+    padding-right: 21px;
+}
+
+/* Sección inferior también más compacta. */
+.how-it-works-section {
+    padding: 38px 0 48px;
+}
+
+.section-heading {
+    margin-bottom: 26px;
+}
+
+.section-heading h2 {
+    font-size: 1.7rem;
+}
+
+.section-heading p {
+    margin-top: 7px;
+    font-size: 0.8rem;
+}
+
+.step-card {
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.step-number {
+    margin-bottom: 14px;
+    font-size: 0.7rem;
+}
+
+.step-card h3 {
+    font-size: 0.92rem;
+}
+
+.step-card p {
+    margin-top: 7px;
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+.shared-result-page {
+    min-height: calc(100vh - 210px);
+    padding: 54px 0 70px;
+}
+
+.shared-result-card {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: var(--shadow-small);
+}
+
+.shared-result-card h1 {
+    margin: 4px 0 20px;
+    color: var(--color-secondary);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.shared-result-score {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 24px;
+}
+
+.shared-result-score strong {
+    font-size: 2.2rem;
+}
+
+.shared-result-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 22px;
+}
+
+.shared-result-details div {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.shared-result-details dt {
+    color: var(--color-muted);
+    font-size: 0.76rem;
+}
+
+.shared-result-details dd {
+    margin: 4px 0 0;
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+.shared-result-privacy,
+.shared-result-card > p {
+    color: var(--color-muted);
+    line-height: 1.6;
+}
+
+@media (max-width: 991px) {
+    .hero-section .container,
+    .analyzer-section .container,
+    .how-it-works-section .container {
+        width: calc(100% - 32px);
+    }
+
+    .hero-section {
+        padding: 30px 0 40px;
+    }
+
+    .hero-security-card {
+        max-width: 225px;
+        min-height: 205px;
+    }
+
+    .security-visual {
+        height: 142px;
+    }
+}
+
+@media (max-width: 767px) {
+    .hero-section .container,
+    .analyzer-section .container,
+    .how-it-works-section .container {
+        width: calc(100% - 24px);
+    }
+
+    .hero-section {
+        padding: 28px 0 42px;
+    }
+
+    .hero-title {
+        font-size: 1.85rem;
+    }
+
+    .hero-security-card {
+        min-height: 230px;
+    }
+
+    .analyzer-section {
+        margin-top: -14px;
+        padding-bottom: 36px;
+    }
+
+    .analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .analyzer-section .analyzer-card,
+    .analyzer-section .result-panel {
+        grid-column: 1;
+    }
+
+    .analyzer-card,
+    .capture-card {
+        padding: 17px 15px;
+    }
+
+    textarea.form-control-custom {
+        min-height: 110px;
+    }
+
+    .analyzer-card .btn-analyze,
+    .capture-card .btn-analyze {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    .result-header,
+    .result-summary,
+    .result-section,
+    .analyzed-links,
+    .result-actions,
+    .result-feedback,
+    .community-report {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .shared-result-page {
+        padding: 30px 0 48px;
+    }
+
+    .shared-result-card {
+        padding: 22px 18px;
+    }
+
+    .shared-result-details {
+        grid-template-columns: 1fr;
+    }
+}
+/* ===== Rediseño del bloque principal ===== */
+
+.hero-section .container,
+.analyzer-section .container,
+.how-it-works-section .container {
+    width: calc(100% - 24px);
+    max-width: 1320px;
+}
+
+.analyzer-section {
+    margin-top: -10px;
+    padding-bottom: 34px;
+}
+
+    .analyzer-section .row.justify-content-center {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+        .analyzer-section .row.justify-content-center > .col-12.col-xl-10 {
+            width: 100%;
+            max-width: none;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+.analyzer-card {
+    padding: 18px 18px 16px;
+    border-radius: 14px;
+}
+
+.analyzer-header {
+    margin-bottom: 14px;
+}
+
+    .analyzer-header h2 {
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .analyzer-header p {
+        font-size: 0.82rem;
+        line-height: 1.4;
+        margin-bottom: 0;
+    }
+
+.section-label {
+    padding: 5px 10px;
+    font-size: 0.68rem;
+    margin-bottom: 8px;
+}
+
+.analyzer-status {
+    font-size: 0.74rem;
+    padding: 6px 10px;
+}
+
+.form-section {
+    margin-bottom: 12px;
+}
+
+.form-label-custom {
+    font-size: 0.82rem;
+    margin-bottom: 7px;
+}
+
+/* Tabs visibles del tipo de contenido */
+.content-type-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.content-type-tab {
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid #cfd8e3;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+    .content-type-tab:hover {
+        border-color: #7aa2ff;
+        background: #f7faff;
+    }
+
+    .content-type-tab.is-active {
+        border-color: #2d6cff;
+        background: #eef4ff;
+        color: #1d4ed8;
+        box-shadow: inset 0 0 0 1px rgba(45, 108, 255, 0.15);
+    }
+
+/* Campo principal más compacto */
+textarea.form-control-custom {
+    min-height: 96px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+    textarea.form-control-custom.content-field--compact {
+        min-height: 52px;
+        max-height: 52px;
+        resize: none;
+    }
+
+.field-footer {
+    margin-top: 6px;
+    font-size: 0.68rem;
+}
+
+/* CTA principal más profesional y menos enorme */
+.analyzer-card .btn-analyze {
+    width: auto;
+    min-width: 180px;
+    min-height: 40px;
+    padding: 8px 16px;
+    font-size: 0.84rem;
+    border-radius: 12px;
+}
+
+.form-warning {
+    margin-top: 10px;
+    font-size: 0.7rem;
+    line-height: 1.35;
+}
+
+/* Captura y Audio */
+.capture-card {
+    padding: 18px;
+    border-radius: 14px;
+}
+
+.capture-card-header h2 {
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+}
+
+.capture-card-header p {
+    font-size: 0.78rem;
+    line-height: 1.42;
+}
+
+.capture-card .btn-analyze {
+    width: auto;
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 0.76rem;
+    border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .content-type-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .hero-section .container,
+    .analyzer-section .container,
+    .how-it-works-section .container {
+        width: calc(100% - 16px);
+    }
+
+    .analyzer-card,
+    .capture-card {
+        padding: 16px;
+    }
+
+    .content-type-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .analyzer-card .btn-analyze,
+    .capture-card .btn-analyze {
+        width: 100%;
+    }
+}
+@media (max-width: 480px) {
+    .site-header .navbar {
+        min-height: 62px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+    .site-header .container {
+        flex-wrap: nowrap;
+        min-width: 0;
+    }
+
+    .navbar-brand {
+        min-width: 0;
+        max-width: 100%;
+        gap: 8px;
+        font-size: 0.88rem;
+        white-space: nowrap;
+    }
+
+    .brand-icon {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+    }
+
+        .brand-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+    .brand-text {
+        display: block;
+        white-space: nowrap;
+    }
+}
+.install-label-short {
+    display: none;
+}
+
+@media (max-width: 480px) {
+
+    .site-header .navbar {
+        min-height: 60px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+        .site-header .navbar .container {
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+    .navbar-brand {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-right: 0;
+        gap: 8px;
+        font-size: 0.82rem;
+    }
+
+    .brand-icon {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+    }
+
+        .brand-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    .brand-text {
+        display: inline-block;
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+
+    .header-actions {
+        flex: 0 0 auto;
+        min-width: 0;
+        margin-left: auto;
+    }
+
+    .btn-install-app {
+        width: auto;
+        max-width: none;
+        min-height: 38px;
+        padding: 6px 10px;
+        font-size: 0.76rem;
+        white-space: nowrap;
+    }
+
+    .install-label-full {
+        display: none;
+    }
+
+    .install-label-short {
+        display: inline;
+    }
+}
+.field-footer {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+    .field-footer > span:last-child {
+        margin-right: auto;
+    }

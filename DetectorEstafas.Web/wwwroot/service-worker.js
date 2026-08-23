@@ -1,9 +1,12 @@
-const CACHE_NAME = "detector-estafas-v5";
+const CACHE_NAME = "detector-estafas-v7";
 
 const STATIC_ASSETS = [
     "/offline.html",
     "/manifest.webmanifest",
     "/css/site.css",
+    "/css/functional-fixes.css",
+    "/js/site.js",
+    "/js/functional-fixes.js",
     "/js/pwa.js",
     "/lib/bootstrap/dist/css/bootstrap.min.css",
     "/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
