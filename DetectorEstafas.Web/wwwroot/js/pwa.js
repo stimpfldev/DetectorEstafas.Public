@@ -34,45 +34,9 @@ function showInstallButton() {
     }
 }
 
-async function limpiarPwaEnDesarrollo() {
-    const esLocal =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1";
-
-    if (!esLocal) {
-        return false;
-    }
-
-    if ("serviceWorker" in navigator) {
-        const registros =
-            await navigator.serviceWorker.getRegistrations();
-
-        for (const registro of registros) {
-            await registro.unregister();
-        }
-    }
-
-    if ("caches" in window) {
-        const nombresCache = await caches.keys();
-
-        await Promise.all(
-            nombresCache.map(nombre =>
-                caches.delete(nombre)));
-    }
-
-    return true;
-}
-
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
         try {
-            const desarrollo =
-                await limpiarPwaEnDesarrollo();
-
-            if (desarrollo) {
-                return;
-            }
-
             await navigator.serviceWorker.register(
                 "/service-worker.js",
                 {

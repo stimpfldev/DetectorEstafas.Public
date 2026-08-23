@@ -12,52 +12,64 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         RegexOptions.CultureInvariant |
         RegexOptions.Compiled);
 
+    private static readonly Regex EntidadFinancieraRegex = new(
+        @"\b(banco|entidad bancaria|mercado pago|billetera virtual|tarjeta de crédito|tarjeta de credito)\b",
+        RegexOptions.IgnoreCase |
+        RegexOptions.CultureInvariant |
+        RegexOptions.Compiled);
+
+    private static readonly Regex SolicitudCredencialRegex = new(
+        @"\b(ingres(?:á|a|e|ar)|indic(?:á|a|e|ar)|inform(?:á|a|e|ar)|envi(?:á|a|e|ar)|compart(?:í|i|a|ir)|confirm(?:á|a|e|ar)|dict(?:á|a|e|ar)|decime|proporcion(?:á|a|e|ar)|solicit(?:amos|an|a|ar)|pedimos|piden|pedirte)\b.{0,100}\b(pin|clave|contraseña|contrasena|token|código de seguridad|codigo de seguridad|código de verificación|codigo de verificacion|datos de acceso|credenciales)\b",
+        RegexOptions.IgnoreCase |
+        RegexOptions.CultureInvariant |
+        RegexOptions.Compiled);
+
     private static readonly IReadOnlyList<ReglaAnalisis> Reglas =
         new List<ReglaAnalisis>
         {
             new(
                 @"\b(urgente|inmediatamente|ahora mismo|último aviso|ultimo aviso)\b",
-                15,
+                20,
                 "El contenido intenta generar urgencia."),
 
             new(
                 @"\b(contraseña|contrasena|clave|pin|token|código de seguridad|codigo de seguridad|datos de acceso|credenciales(?: de acceso)?|c[oó]digo\b.{0,50}\b(?:recibir|llegar))\b",
-                25,
+                35,
                 "Solicita o menciona credenciales de seguridad."),
 
             new(
                 @"\b(transferencia|transferir|depositar|depósito|deposito|pagar|pago inmediato)\b",
-                20,
+                30,
                 "Solicita o menciona una operación de dinero."),
 
             new(
                 @"\b(premio|ganaste|sorteo|beneficio exclusivo|recompensa)\b",
-                20,
+                25,
                 "Promete un premio o beneficio inesperado."),
 
             new(
                 @"\b(anydesk|teamviewer|acceso remoto|control remoto)\b",
-                35,
+                45,
                 "Solicita instalar o utilizar una herramienta de acceso remoto."),
 
             new(
                 @"\b(bloque(?:o|ar|ada|ado|adas|ados|aremos|arán|aran|an|en)|suspend(?:ida|ido|idas|idos|er|erán|eran|en)|suspensión|suspension|inhabilitada|inhabilitado|cerrar.*cuenta)\b",
-                20,
+                30,
                 "Amenaza con bloquear o suspender una cuenta."),
 
             new(
                 @"\b(dni|documento|número de tarjeta|numero de tarjeta|cbu|cvu|datos bancarios)\b",
-                20,
+                30,
                 "Solicita o menciona datos personales o bancarios."),
 
             new(
                 @"\b(bit\.ly|tinyurl\.com|t\.co|cutt\.ly|shorturl\.at)\b",
-                15,
+                20,
                 "Contiene un enlace acortado que oculta el destino real."),
 
             new(
                 @"\b(mercado pago|banco nación|banco nacion|anses|afip|arca|correo argentino)\b",
-                10,
+                15,
                 "Utiliza el nombre de una empresa u organismo conocido.")
         };
 
@@ -73,13 +85,11 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         foreach (ReglaAnalisis regla in Reglas)
         {
-            bool coincide = Regex.IsMatch(
-                contenidoNormalizado,
-                regla.Patron,
-                RegexOptions.IgnoreCase |
-                RegexOptions.CultureInvariant);
-
-            if (!coincide)
+            if (!Regex.IsMatch(
+                    contenidoNormalizado,
+                    regla.Patron,
+                    RegexOptions.IgnoreCase |
+                    RegexOptions.CultureInvariant))
             {
                 continue;
             }
@@ -87,6 +97,11 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             puntaje += regla.Puntaje;
             senales.Add(regla.Descripcion);
         }
+
+        AnalizarSolicitudCredencialesDeEntidad(
+            contenidoNormalizado,
+            ref puntaje,
+            senales);
 
         AnalizarSegunTipo(
             contenidoNormalizado,
@@ -101,10 +116,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (enlacesAnalizados.Count > 0)
         {
-            int mayorPuntajeEnlace =
-                enlacesAnalizados.Max(enlace => enlace.Puntaje);
-
-            puntaje += mayorPuntajeEnlace;
+            puntaje += enlacesAnalizados.Max(enlace => enlace.Puntaje);
 
             foreach (EnlaceAnalizado enlace in enlacesAnalizados)
             {
@@ -115,16 +127,13 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                             ? "El enlace"
                             : enlace.Dominio;
 
-                    senales.Add(
-                        $"{identificador}: {senalEnlace}");
+                    senales.Add($"{identificador}: {senalEnlace}");
                 }
             }
         }
 
         puntaje = Math.Clamp(puntaje, 0, 100);
-
-        NivelRiesgo nivel =
-            ObtenerNivelRiesgo(puntaje);
+        NivelRiesgo nivel = ObtenerNivelRiesgo(puntaje);
 
         return new ResultadoAnalisis
         {
@@ -139,6 +148,22 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         };
     }
 
+    private static void AnalizarSolicitudCredencialesDeEntidad(
+        string contenido,
+        ref int puntaje,
+        List<string> senales)
+    {
+        if (!EntidadFinancieraRegex.IsMatch(contenido) ||
+            !SolicitudCredencialRegex.IsMatch(contenido))
+        {
+            return;
+        }
+
+        puntaje += 45;
+        senales.Add(
+            "Una entidad financiera solicita una credencial que nunca debería compartirse por este medio.");
+    }
+
     private static List<EnlaceAnalizado> ObtenerEnlacesAnalizados(
         string contenido,
         TipoContenido tipoContenido)
@@ -151,13 +176,11 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         }
         else
         {
-            MatchCollection coincidencias =
-                UrlRegex.Matches(contenido);
+            MatchCollection coincidencias = UrlRegex.Matches(contenido);
 
             foreach (Match coincidencia in coincidencias)
             {
-                string enlace =
-                    LimpiarEnlaceExtraido(coincidencia.Value);
+                string enlace = LimpiarEnlaceExtraido(coincidencia.Value);
 
                 if (!string.IsNullOrWhiteSpace(enlace))
                 {
@@ -181,60 +204,55 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             ValorIngresado = valorIngresado
         };
 
-        string enlaceNormalizado =
-            NormalizarEnlace(valorIngresado);
+        string enlaceNormalizado = NormalizarEnlace(valorIngresado);
 
         if (!Uri.TryCreate(
                 enlaceNormalizado,
                 UriKind.Absolute,
                 out Uri? uri))
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "El enlace no tiene un formato válido.");
-
             return resultado;
         }
 
         if (uri.Scheme != Uri.UriSchemeHttp &&
             uri.Scheme != Uri.UriSchemeHttps)
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "El enlace utiliza un protocolo no permitido.");
-
             return resultado;
         }
 
         if (string.IsNullOrWhiteSpace(uri.Host))
         {
-            resultado.Puntaje = 35;
+            resultado.Puntaje = 40;
             resultado.Nivel = NivelRiesgo.Medio;
             resultado.Senales.Add(
                 "No se pudo identificar el dominio.");
-
             return resultado;
         }
 
         resultado.EsValido = true;
         resultado.Dominio = uri.IdnHost;
-        resultado.UsaHttps =
-            uri.Scheme == Uri.UriSchemeHttps;
+        resultado.UsaHttps = uri.Scheme == Uri.UriSchemeHttps;
 
         int puntaje = 0;
 
         if (!resultado.UsaHttps)
         {
-            puntaje += 15;
+            puntaje += 20;
             resultado.Senales.Add(
                 "No utiliza una conexión HTTPS.");
         }
 
         if (IPAddress.TryParse(uri.Host, out _))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "Utiliza una dirección IP en lugar de un dominio.");
         }
@@ -243,84 +261,71 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "xn--",
                 StringComparison.OrdinalIgnoreCase))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "El dominio contiene caracteres internacionales codificados.");
         }
 
         if (!string.IsNullOrWhiteSpace(uri.UserInfo))
         {
-            puntaje += 25;
+            puntaje += 35;
             resultado.Senales.Add(
                 "El enlace contiene información antes del dominio que puede resultar engañosa.");
         }
 
-        int cantidadGuiones =
-            uri.Host.Count(caracter => caracter == '-');
-
-        if (cantidadGuiones >= 3)
+        if (uri.Host.Count(caracter => caracter == '-') >= 3)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El dominio contiene una cantidad inusual de guiones.");
         }
 
-        int cantidadPartesDominio =
-            uri.Host.Split(
-                '.',
-                StringSplitOptions.RemoveEmptyEntries)
-                .Length;
+        int cantidadPartesDominio = uri.Host.Split(
+            '.',
+            StringSplitOptions.RemoveEmptyEntries).Length;
 
         if (cantidadPartesDominio > 4)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El dominio contiene una cantidad inusual de subdominios.");
         }
 
         if (!uri.IsDefaultPort)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "Utiliza un puerto de conexión no habitual.");
         }
 
         if (uri.AbsoluteUri.Length > 180)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El enlace es inusualmente largo.");
         }
 
-        int cantidadParametros =
-            uri.Query
-                .TrimStart('?')
-                .Split(
-                    '&',
-                    StringSplitOptions.RemoveEmptyEntries)
-                .Length;
+        int cantidadParametros = uri.Query
+            .TrimStart('?')
+            .Split('&', StringSplitOptions.RemoveEmptyEntries)
+            .Length;
 
         if (cantidadParametros > 5)
         {
-            puntaje += 10;
+            puntaje += 15;
             resultado.Senales.Add(
                 "El enlace contiene una cantidad elevada de parámetros.");
         }
 
-        resultado.Puntaje =
-            Math.Clamp(puntaje, 0, 100);
-
-        resultado.Nivel =
-            ObtenerNivelRiesgo(resultado.Puntaje);
+        resultado.Puntaje = Math.Clamp(puntaje, 0, 100);
+        resultado.Nivel = ObtenerNivelRiesgo(resultado.Puntaje);
 
         return resultado;
     }
 
-    private static string NormalizarEnlace(
-        string enlace)
+    private static string NormalizarEnlace(string enlace)
     {
-        string resultado =
-            LimpiarEnlaceExtraido(enlace.Trim());
+        string resultado = LimpiarEnlaceExtraido(enlace.Trim());
 
         if (resultado.StartsWith(
                 "http://",
@@ -335,19 +340,10 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         return $"https://{resultado}";
     }
 
-    private static string LimpiarEnlaceExtraido(
-        string enlace)
+    private static string LimpiarEnlaceExtraido(string enlace)
     {
         return enlace.TrimEnd(
-            '.',
-            ',',
-            ';',
-            ':',
-            '!',
-            '?',
-            ')',
-            ']',
-            '}');
+            '.', ',', ';', ':', '!', '?', ')', ']', '}');
     }
 
     private static void AnalizarSegunTipo(
@@ -359,17 +355,11 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         switch (tipoContenido)
         {
             case TipoContenido.Telefono:
-                AnalizarTelefono(
-                    contenido,
-                    ref puntaje,
-                    senales);
+                AnalizarTelefono(contenido, ref puntaje, senales);
                 break;
 
             case TipoContenido.Llamada:
-                AnalizarLlamada(
-                    contenido,
-                    ref puntaje,
-                    senales);
+                AnalizarLlamada(contenido, ref puntaje, senales);
                 break;
         }
     }
@@ -379,16 +369,14 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         ref int puntaje,
         List<string> senales)
     {
-        string soloDigitos =
-            Regex.Replace(
-                contenido,
-                @"\D",
-                string.Empty);
+        string soloDigitos = Regex.Replace(
+            contenido,
+            @"\D",
+            string.Empty);
 
-        if (soloDigitos.Length < 8 ||
-            soloDigitos.Length > 15)
+        if (soloDigitos.Length < 8 || soloDigitos.Length > 15)
         {
-            puntaje += 15;
+            puntaje += 20;
             senales.Add(
                 "El número telefónico tiene un formato inusual.");
         }
@@ -400,7 +388,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "1111",
                 StringComparison.OrdinalIgnoreCase))
         {
-            puntaje += 10;
+            puntaje += 15;
             senales.Add(
                 "El número contiene una secuencia repetitiva inusual.");
         }
@@ -419,7 +407,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (intentaAislar)
         {
-            puntaje += 30;
+            puntaje += 40;
             senales.Add(
                 "La persona intenta impedir que consultes con terceros.");
         }
@@ -432,7 +420,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (emergenciaFamiliar)
         {
-            puntaje += 35;
+            puntaje += 45;
             senales.Add(
                 "Describe una posible falsa emergencia familiar.");
         }
@@ -445,21 +433,20 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         if (solicitaCredenciales)
         {
-            puntaje += 30;
+            puntaje += 40;
             senales.Add(
                 "La llamada solicita compartir códigos o credenciales de acceso.");
         }
     }
 
-    private static NivelRiesgo ObtenerNivelRiesgo(
-        int puntaje)
+    private static NivelRiesgo ObtenerNivelRiesgo(int puntaje)
     {
-        if (puntaje >= 55)
+        if (puntaje >= 50)
         {
             return NivelRiesgo.Alto;
         }
 
-        if (puntaje >= 25)
+        if (puntaje >= 20)
         {
             return NivelRiesgo.Medio;
         }
@@ -467,24 +454,20 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         return NivelRiesgo.Bajo;
     }
 
-    private static string ObtenerResumen(
-        NivelRiesgo nivel)
+    private static string ObtenerResumen(NivelRiesgo nivel)
     {
         return nivel switch
         {
             NivelRiesgo.Alto =>
                 "Se detectaron señales fuertes de riesgo. No realices ninguna acción solicitada.",
-
             NivelRiesgo.Medio =>
                 "Se detectaron señales que requieren precaución y verificación independiente.",
-
             _ =>
                 "No se detectaron señales fuertes, pero esto no garantiza que el contenido sea seguro."
         };
     }
 
-    private static List<string> ObtenerRecomendaciones(
-        NivelRiesgo nivel)
+    private static List<string> ObtenerRecomendaciones(NivelRiesgo nivel)
     {
         if (nivel == NivelRiesgo.Alto)
         {

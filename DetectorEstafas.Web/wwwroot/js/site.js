@@ -14,7 +14,96 @@
     const estado = document.getElementById("audio-estado-grabacion");
     const vistaPrevia = document.getElementById("audio-vista-previa");
     const inputAudio = document.getElementById("audio");
+    const audioForm = document.getElementById("audio-form");
+    const elegirArchivo =
+        document.getElementById("audio-elegir-archivo");
+    const maxAudioBytes = 10 * 1024 * 1024;
 
+    const validarArchivoAudio = () => {
+        const archivo = inputAudio.files?.[0];
+
+        if (!archivo) {
+            return true;
+        }
+
+        const nombre = archivo.name.toLowerCase();
+
+        const extensionValida =
+            nombre.endsWith(".mp3") ||
+            nombre.endsWith(".wav") ||
+            nombre.endsWith(".ogg") ||
+            nombre.endsWith(".opus") ||
+            nombre.endsWith(".m4a") ||
+            nombre.endsWith(".aac");
+
+        if (!extensionValida) {
+            inputAudio.value = "";
+
+            actualizarEstado(
+                "Solo se permiten archivos de audio MP3, WAV, OGG/OPUS, M4A o AAC.",
+                true);
+
+            return false;
+        }
+
+        if (archivo.size > maxAudioBytes) {
+            inputAudio.value = "";
+
+            actualizarEstado(
+                "El audio supera el límite permitido de 10 MB.",
+                true);
+
+            return false;
+        }
+
+        return true;
+    };
+
+    elegirArchivo?.addEventListener("click", async () => {
+
+        if (!window.showOpenFilePicker) {
+            inputAudio.click();
+            return;
+        }
+
+        try {
+            const [handle] = await window.showOpenFilePicker({
+                multiple: false,
+                excludeAcceptAllOption: true,
+                types: [
+                    {
+                        description: "Archivos de audio",
+                        accept: {
+                            "audio/mpeg": [".mp3"],
+                            "audio/wav": [".wav"],
+                            "audio/ogg": [".ogg", ".opus"],
+                            "audio/mp4": [".m4a"],
+                            "audio/aac": [".aac"]
+                        }
+                    }
+                ]
+            });
+
+            const archivo = await handle.getFile();
+
+            const transferencia = new DataTransfer();
+            transferencia.items.add(archivo);
+
+            inputAudio.files = transferencia.files;
+
+            if (validarArchivoAudio()) {
+                actualizarEstado(
+                    "Archivo seleccionado. Ya podés transcribirlo y analizarlo.");
+            }
+        }
+        catch (error) {
+            if (error?.name !== "AbortError") {
+                actualizarEstado(
+                    "No fue posible seleccionar el archivo de audio.",
+                    true);
+            }
+        }
+    });
     if (!consentimiento || !iniciar || !detener || !tiempo ||
         !estado || !vistaPrevia || !inputAudio) {
         return;
@@ -153,8 +242,18 @@
     });
 
     inputAudio.addEventListener("change", () => {
+        if (!validarArchivoAudio()) {
+            return;
+        }
+
         if (inputAudio.files.length > 0) {
-            actualizarEstado("Archivo seleccionado. Ya podés transcribirlo y analizarlo.");
+            actualizarEstado(
+                "Archivo seleccionado. Ya podés transcribirlo y analizarlo.");
+        }
+    });
+    audioForm?.addEventListener("submit", event => {
+        if (!validarArchivoAudio()) {
+            event.preventDefault();
         }
     });
 
@@ -257,3 +356,15 @@
         }
     });
 })();
+const rutaActual = window.location.pathname.toLowerCase();
+
+if (
+    rutaActual === "/analisis/cargaraudio" ||
+    rutaActual === "/analisis/cargarcaptura"
+) {
+    window.history.replaceState(
+        null,
+        "",
+        "/Analisis"
+    );
+}

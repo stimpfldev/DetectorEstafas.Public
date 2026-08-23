@@ -13,11 +13,19 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
 using DetectorEstafas.Web.Services.Correo;
-
+using FFMpegCore;
 
 WebApplicationBuilder builder =
     WebApplication.CreateBuilder(args);
+string ffmpegBinaryFolder =
+    builder.Configuration["FFmpeg:BinaryFolder"]
+    ?? throw new InvalidOperationException(
+        "No se configuró FFmpeg:BinaryFolder.");
 
+GlobalFFOptions.Configure(options =>
+{
+    options.BinaryFolder = ffmpegBinaryFolder;
+});
 string connectionString =
     builder.Configuration.GetConnectionString(
         "DetectorEstafas")
@@ -73,6 +81,10 @@ builder.Services.Configure<TranscripcionOptions>(
 builder.Services.AddSingleton<
     ITranscriptorAudioService,
     WhisperTranscriptorAudioService>();
+
+builder.Services.AddSingleton<
+    IAudioNormalizadorService,
+    FfmpegAudioNormalizadorService>();
 
 builder.Services.Configure<AudioOptions>(
     builder.Configuration.GetSection(

@@ -1,0 +1,50 @@
+@model DetectorEstafas.Web.Models.AnalisisRegistro
+
+@{
+    ViewData["Title"] = "Resultado compartido";
+    ViewData["DisableGoogleAnalytics"] = true;
+
+    string claseRiesgo = Model.NivelRiesgo.ToString().ToLowerInvariant();
+}
+
+<section class="shared-result-page">
+    <div class="container">
+        <div class="shared-result-card shared-result-card--@claseRiesgo">
+            <span class="section-label">Resultado compartido</span>
+
+            <h1>Riesgo @Model.NivelRiesgo</h1>
+
+            <div class="shared-result-score">
+                <strong>@Model.Puntaje</strong>
+                <span>/ 100</span>
+            </div>
+
+            <dl class="shared-result-details">
+                <div>
+                    <dt>Tipo analizado</dt>
+                    <dd>@Model.TipoContenido</dd>
+                </div>
+                <div>
+                    <dt>Señales detectadas</dt>
+                    <dd>@Model.CantidadSenales</dd>
+                </div>
+                <div>
+                    <dt>Fecha</dt>
+                    <dd>@Model.FechaUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+                </div>
+            </dl>
+
+            <p class="shared-result-privacy">
+                Por privacidad, este enlace no incluye el mensaje, enlace, teléfono,
+                imagen, audio ni transcripción originales.
+            </p>
+
+            <a asp-controller="Analisis"
+               asp-action="Index"
+               asp-fragment="analizador"
+               class="btn btn-primary">
+                Analizar otro contenido
+            </a>
+        </div>
+    </div>
+</section>
