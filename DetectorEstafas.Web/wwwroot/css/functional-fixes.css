@@ -685,3 +685,116 @@ textarea.form-control-custom {
         width: 100%;
     }
 }
+@media (max-width: 480px) {
+    .site-header .navbar {
+        min-height: 62px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+    .site-header .container {
+        flex-wrap: nowrap;
+        min-width: 0;
+    }
+
+    .navbar-brand {
+        min-width: 0;
+        max-width: 100%;
+        gap: 8px;
+        font-size: 0.88rem;
+        white-space: nowrap;
+    }
+
+    .brand-icon {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+    }
+
+        .brand-icon svg {
+            width: 21px;
+            height: 21px;
+        }
+
+    .brand-text {
+        display: block;
+        white-space: nowrap;
+    }
+}
+.install-label-short {
+    display: none;
+}
+
+@media (max-width: 480px) {
+
+    .site-header .navbar {
+        min-height: 60px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+        .site-header .navbar .container {
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+    .navbar-brand {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-right: 0;
+        gap: 8px;
+        font-size: 0.82rem;
+    }
+
+    .brand-icon {
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+    }
+
+        .brand-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    .brand-text {
+        display: inline-block;
+        max-width: none;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+
+    .header-actions {
+        flex: 0 0 auto;
+        min-width: 0;
+        margin-left: auto;
+    }
+
+    .btn-install-app {
+        width: auto;
+        max-width: none;
+        min-height: 38px;
+        padding: 6px 10px;
+        font-size: 0.76rem;
+        white-space: nowrap;
+    }
+
+    .install-label-full {
+        display: none;
+    }
+
+    .install-label-short {
+        display: inline;
+    }
+}
+.field-footer {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+    .field-footer > span:last-child {
+        margin-right: auto;
+    }

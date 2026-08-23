@@ -1423,7 +1423,10 @@ input {
 .community-report-button--registered {
     background: var(--color-success);
 }
-
+    .community-report-button--registered:disabled {
+        cursor: default;
+        opacity: 1;
+    }
     .community-report-button--registered:hover,
     .community-report-button--registered:focus {
         background: var(--color-success);

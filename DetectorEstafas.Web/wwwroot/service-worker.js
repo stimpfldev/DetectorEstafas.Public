@@ -1,4 +1,4 @@
-const CACHE_NAME = "detector-estafas-v6";
+const CACHE_NAME = "detector-estafas-v7";
 
 const STATIC_ASSETS = [
     "/offline.html",

@@ -212,19 +212,22 @@
                                    class="form-label-custom">
                                 Audio o grabación
                             </label>
-
-                            <input id="audio"
-                                   name="audio"
-                                   type="file"
-                                   accept="audio/*,.mp3,.wav"
-                                   class="form-control form-control-custom" />
+                            <button id="audio-elegir-archivo"
+        type="button"
+        class="btn btn-outline-secondary mb-2">
+    Elegir audio
+</button>
+           <input id="audio"
+       name="audio"
+       type="file"
+       hidden />
 
                             <div class="field-footer">
                                 <span class="text-danger">
                                     @Html.ValidationMessage("Audio")
                                 </span>
 
-                                <span>MP3 o WAV · máximo 10 MB · en móvil podés elegir un archivo o grabar</span>
+                               <span>MP3, WAV, OGG/OPUS, M4A o AAC · máximo 10 MB · en móvil podés elegir un archivo o grabar</span>
                             </div>
                         </div>
 
