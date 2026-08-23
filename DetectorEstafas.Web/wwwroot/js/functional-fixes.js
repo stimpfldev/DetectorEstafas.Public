@@ -1,11 +1,35 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+    normalizarHistorialDeFormularios();
     configurarSelectorTipoContenido();
     configurarCambioTipoContenido();
     mostrarErrorDeCarga();
     configurarCompartirResultadoCorregido();
 });
+
+function normalizarHistorialDeFormularios() {
+    if (!window.history || !window.history.replaceState) {
+        return;
+    }
+
+    const hayRespuestaDeFormulario =
+        document.getElementById("resultadoAnalisis") ||
+        document.querySelector(".capture-error") ||
+        document.querySelector(".capture-result") ||
+        document.querySelector(".audio-result");
+
+    if (!hayRespuestaDeFormulario) {
+        return;
+    }
+
+    const url = new URL(window.location.href);
+
+    window.history.replaceState(
+        { detectorEstafasResultado: true },
+        "",
+        `${url.pathname}${url.search}${url.hash}`);
+}
 
 function configurarSelectorTipoContenido() {
     const tipoSelect = document.getElementById("Tipo");
