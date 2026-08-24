@@ -1,23 +1,50 @@
 Producto: Detector de Estafas
-Versión: 2.1.0
-Etapa: Versión web/PWA comercial estabilizada
-Fecha de cierre: 2026-08-10
+Versión: 2.2.0
+Etapa: Versión web/PWA comercial preparada para publicación
+Fecha de cierre: 2026-08-24
 
 Alcance principal:
 - análisis de mensajes, enlaces, teléfonos y llamadas;
-- capturas con OCR local;
+- capturas PNG/JPEG con OCR local;
 - audios con transcripción local;
+- soporte de audio MP3, WAV, OGG, OPUS, M4A y AAC;
+- normalización de audio mediante FFmpeg antes de la transcripción;
 - evaluación opcional mediante IA externa;
 - registro y confirmación de correo;
-- PWA responsive instalable en Android y compatible con instalación en iPhone/iPad;
+- PWA responsive instalable;
+- funcionamiento móvil validado en Android;
+- compatibilidad web/PWA preparada para iPhone/iPad, pendiente de validación física;
 - API comercial v1 con planes Prueba, Starter, Growth y A medida;
-- prueba de 14 días y cuota diaria configurable;
-- administración de plan, cuota, habilitación y revocación de claves;
-- protección transaccional del consumo diario;
+- plan Prueba de 14 días;
+- cuotas diarias o mensuales según el plan;
+- administración de clientes, planes, cuotas, habilitación y revocación de claves;
+- protección transaccional del consumo;
+- headers de límite, restante, período y reinicio en la API;
 - dashboard administrativo protegido;
+- contacto configurable;
+- resultados compartidos mediante vínculos protegidos y con vencimiento;
 - documentación de usuario y API comercial;
 - CI para build y pruebas automáticas;
 - seguridad, privacidad y documentación legal.
+
+Cambios 2.2.0:
+- ampliación del soporte de audio a MP3, WAV, OGG, OPUS, M4A y AAC;
+- incorporación de FFMpegCore y FFmpeg para validar y normalizar audios;
+- normalización a WAV PCM mono de 16 kHz antes de Whisper;
+- mejora del selector de archivos de audio en dispositivos móviles;
+- fallback de selección compatible con navegadores sin File System Access API;
+- validación funcional de los nuevos formatos de audio en Android;
+- corrección de navegación al refrescar después de procesar audio o captura;
+- mejoras funcionales y visuales del analizador principal;
+- recalibración de señales y umbrales de riesgo;
+- nuevas regresiones automatizadas para niveles Bajo, Medio y Alto;
+- mejoras de RDAP para dominios .ar;
+- correcciones de PWA y Service Worker;
+- restauración y validación de resultados compartidos;
+- validación de autenticación y cuotas de la API comercial;
+- validación de headers de rate limit y consumo;
+- validación del dashboard administrativo;
+- validación del canal de contacto.
 
 Cambios 2.1.0:
 - reemplazo del plan Comercial genérico por Starter, Growth y A medida;
@@ -28,30 +55,38 @@ Cambios 2.1.0:
 - control de consumo mensual sobre registros diarios persistidos;
 - headers de cuota con período y fecha de reinicio;
 - dashboard administrativo actualizado para los nuevos planes;
-- migración de datos existentes y preservación de consumos históricos;
-- ampliación de la suite automatizada a 47 pruebas.
+- migración de datos existentes y preservación de consumos históricos.
+
 Correcciones 2.0.2:
 - mejora del análisis de llamadas transcritas;
 - detección ampliada de bloqueo, suspensión y variantes equivalentes;
 - detección de solicitudes de códigos, credenciales y datos de acceso;
 - mayor tolerancia a transcripciones reales de voz;
-- incorporación de 2 pruebas automatizadas específicas para llamadas;
-- validación funcional del caso real que previamente clasificaba incorrectamente como riesgo bajo.
+- pruebas automatizadas específicas para llamadas.
 
 Correcciones 2.0.1:
 - restauración de HSTS y manejo de excepciones de producción;
 - eliminación de middleware duplicado;
 - registro correcto del servicio SMTP y rate limit de registro;
 - assets PWA completos;
-- asistencia de instalación para iOS;
-- administración real del pasaje Prueba → Comercial;
+- administración del ciclo de clientes API;
 - expiración de prueba;
 - robustez de cuotas API ante concurrencia;
 - actualización de documentación de seguridad.
 
 Validación:
 - compilación local aprobada;
-- suite automatizada aprobada;
-- 47 pruebas automatizadas definidas;
-- validación final de GitHub Actions pendiente hasta publicar el commit 2.0.2.
+- suite automatizada completa aprobada;
+- validaciones funcionales principales aprobadas;
+- funcionamiento de audio AAC, OGG y M4A validado en Android;
+- autenticación y cuotas de API validadas;
+- dashboard administrativo validado;
+- contacto validado;
+- prueba física en iPhone/iPad pendiente;
+- validación final de GitHub Actions correspondiente a 2.2.0 pendiente del commit de release.
 
+Fuera del alcance nativo:
+- aplicación Android/iOS nativa distribuida por stores;
+- extensión de navegador;
+- inicio de sesión público e historial personal;
+- facturación automática.

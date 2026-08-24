@@ -2,7 +2,7 @@
 
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
-**Versión estable actual: 2.1.0.** 
+**Versión estable actual: 2.2.0.**
 
 El repositorio publica código fuente para revisión técnica bajo una licencia propietaria de código visible. La ejecución productiva, explotación comercial, redistribución y publicación de derivados requieren autorización escrita.
 
@@ -23,7 +23,7 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Dashboard interno para administración de clientes API.
 - Métricas, feedback y reportes comunitarios sin guardar el contenido analizado.
 - CI automático con build y pruebas mediante GitHub Actions.
-- 47 pruebas automatizadas validadas.
+- Suite automatizada validada.
 
 ## Vista del producto
 
@@ -76,6 +76,7 @@ Entrada del usuario
 - SQL Server LocalDB o SQL Server.
 - Visual Studio compatible con .NET 10 o CLI de .NET.
 - PowerShell para preparar los modelos locales.
+- FFmpeg y ffprobe instalados localmente para validación y normalización de audio.
 
 ## Puesta en marcha local
 
@@ -93,6 +94,20 @@ powershell -ExecutionPolicy Bypass -File .\Scripts\Preparar-Whisper.ps1
 ```
 
 Los modelos no se incluyen en el repositorio público por tamaño y licencia de distribución. Deben descargarse desde sus fuentes oficiales mediante los scripts.
+
+### Configuración de FFmpeg
+
+La aplicación requiere `ffmpeg` y `ffprobe` para validar y normalizar los audios antes de la transcripción.
+
+La ubicación de los ejecutables no debe guardarse en el repositorio. Durante desarrollo puede configurarse mediante User Secrets:
+
+```powershell
+dotnet user-secrets set "FFmpeg:BinaryFolder" "C:\RUTA\FFmpeg" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
+```
+
+La carpeta configurada debe contener `ffmpeg.exe` y `ffprobe.exe`.
+
+En producción, `FFmpeg:BinaryFolder` debe configurarse mediante la configuración segura del hosting.
 
 3. Configurar la cadena de conexión en un archivo local no versionado o mediante variables de entorno.
 
@@ -134,7 +149,7 @@ La configuración pública de referencia está en:
 DetectorEstafas.Web/appsettings.Public.example.json
 ```
 
-## Uso y operación
+## Documentación
 
 - [Guía de usuario](docs/USER-GUIDE.md)
 - [Guía de API comercial](docs/COMMERCIAL-API.md)
@@ -170,7 +185,7 @@ powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Verificar-Repositorio-Publico.ps1
 ```
 
-También debe completarse [docs/RELEASE-CHECKLIST-2.1.0.md](docs/RELEASE-CHECKLIST-2.1.0.md).
+También debe completarse [docs/RELEASE-CHECKLIST-2.2.0.md](docs/RELEASE-CHECKLIST-2.2.0.md).
 
 
 ## Licencia
@@ -181,7 +196,7 @@ Los componentes de terceros conservan sus propias licencias. Ver `DetectorEstafa
 
 ## Versión y cambios
 
-Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance y las correcciones de la versión 2.0.1.
+Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance y las correcciones de la versión 2.2.0.
 
 ## Autor
 
