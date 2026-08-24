@@ -2,7 +2,7 @@
 
 ## Versiones cubiertas
 
-La versión estable vigente, **2.1.0**, y la rama principal reciben correcciones de seguridad. Las versiones anteriores pueden no recibir correcciones.
+La versión estable vigente, **2.2.0**, y la rama principal reciben correcciones de seguridad. Las versiones anteriores pueden no recibir correcciones.
 
 ## Cómo reportar una vulnerabilidad
 

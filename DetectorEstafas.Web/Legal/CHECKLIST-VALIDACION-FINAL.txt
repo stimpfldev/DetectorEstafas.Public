@@ -1,35 +1,46 @@
-DETECTOR DE ESTAFAS 2.1.0
+DETECTOR DE ESTAFAS 2.2.0
 CHECKLIST DE VALIDACIÓN FINAL — ETAPA 2
-Fecha: 2026-08-09
+Fecha: 2026-08-24
 
 A. COMPILACIÓN Y PRUEBAS
 [ ] Restauración NuGet sin errores.
 [ ] No existen paquetes preview.
 [ ] No existen dependencias vulnerables informadas por dotnet list package.
 [ ] Compilación Release sin errores.
-[ ] 40 de 40 pruebas automáticas aprobadas.
+[ ] Todas las pruebas automatizadas aprobadas.
 [ ] Migraciones aplicadas sobre una base de validación.
 
 B. ANÁLISIS BASE
 [ ] Mensajes, enlaces, teléfonos y llamadas siguen funcionando.
 [ ] Puntaje, nivel, señales y recomendaciones se muestran correctamente.
-[ ] RDAP no bloquea el resultado principal.
+[ ] Escenarios de riesgo Bajo, Medio y Alto funcionan correctamente.
+[ ] RDAP .ar funciona y no bloquea el resultado principal.
 [ ] Métricas, feedback y reportes no almacenan el contenido analizado.
 
 C. CAPTURAS Y OCR
 [ ] PNG/JPEG válidos se aceptan.
 [ ] Extensiones manipuladas y archivos demasiado grandes se rechazan.
-[ ] OCR extrae texto y reutiliza el motor local.
+[ ] OCR extrae texto correctamente.
 [ ] La captura temporal se elimina.
 [ ] La imagen y el texto extraído no se guardan por defecto.
+[ ] Refresh posterior al procesamiento no reenvía el archivo.
 
 D. AUDIO Y TRANSCRIPCIÓN
-[ ] MP3/WAV válidos se aceptan.
+[ ] MP3 válido se acepta.
+[ ] WAV válido se acepta.
+[ ] OGG válido se acepta.
+[ ] OPUS válido se acepta.
+[ ] M4A válido se acepta.
+[ ] AAC válido se acepta.
+[ ] ffprobe valida que el archivo contenga audio real.
+[ ] FFmpeg normaliza el audio antes de la transcripción.
 [ ] Archivos manipulados y demasiado grandes se rechazan.
-[ ] Grabación desde navegador funciona con consentimiento.
+[ ] Selector de archivos funciona en Android.
+[ ] Fallback mediante selector estándar está disponible para navegadores compatibles.
 [ ] Transcripción local y análisis funcionan.
-[ ] El audio temporal se elimina.
+[ ] Audio original y normalizado temporal se eliminan.
 [ ] Audio y transcripción no se guardan por defecto.
+[ ] Refresh posterior al procesamiento no reenvía el archivo.
 
 E. IA EXTERNA
 [ ] Permanece deshabilitada sin configuración explícita.
@@ -42,8 +53,9 @@ F. REGISTRO Y CORREO
 [ ] Registro exige privacidad y condiciones.
 [ ] Correo duplicado se rechaza.
 [ ] Confirmación de correo usa token de Identity.
-[ ] No existe inicio de sesión público en 2.1.0.
+[ ] No existe inicio de sesión público en 2.2.0.
 [ ] Contraseñas son administradas por ASP.NET Core Identity.
+[ ] Configuración SMTP productiva permanece fuera del repositorio.
 
 G. IDENTIFICACIÓN TELEFÓNICA
 [ ] Líneas oficiales conocidas muestran fuente y confianza.
@@ -52,49 +64,80 @@ G. IDENTIFICACIÓN TELEFÓNICA
 
 H. PWA Y MÓVIL
 [ ] Interfaz responsive sin desplazamiento horizontal accidental.
-[ ] Instalación PWA funciona.
+[ ] Manifest configurado.
+[ ] Service Worker configurado.
+[ ] Instalación PWA funciona en Android.
 [ ] Compartir texto y enlaces funciona.
 [ ] Captura y audio móvil usan los flujos seguros existentes.
 [ ] Página offline disponible.
+[ ] Compatibilidad para iPhone/iPad implementada.
+[ ] Prueba física definitiva en iPhone/iPad pendiente.
 
-I. API COMERCIAL
+I. RESULTADOS COMPARTIDOS
+[ ] Enlace compartido válido muestra el resultado correspondiente.
+[ ] Token inválido es rechazado.
+[ ] Token vencido es rechazado.
+[ ] El resultado compartido no expone datos privados adicionales.
+[ ] Las páginas compartidas respetan la configuración de indexación prevista.
+
+J. API COMERCIAL
 [ ] OpenAPI disponible en /openapi/v1.json.
 [ ] Solicitud válida devuelve análisis estructurado.
 [ ] Sin API key devuelve 401.
 [ ] Clave revocada o cliente deshabilitado devuelve 401.
+[ ] Prueba vencida devuelve 403.
 [ ] Cuota agotada devuelve 429.
 [ ] Claves completas no se guardan en SQL Server.
 [ ] Hash de clave ocupa 32 bytes.
-[ ] Consumo diario se registra.
+[ ] Consumo se registra correctamente.
 [ ] Plan Prueba expira a los 14 días.
-[ ] El cambio Prueba → Comercial funciona desde administración.
+[ ] Starter aplica cuota de 5.000 análisis mensuales.
+[ ] Growth aplica cuota de 25.000 análisis mensuales.
+[ ] Plan A medida admite cuota configurable.
 [ ] El consumo concurrente está protegido transaccionalmente.
+[ ] Headers X-RateLimit-Limit, Remaining, Period y Reset son correctos.
 
-J. DASHBOARD ADMINISTRATIVO
+K. DASHBOARD ADMINISTRATIVO
 [ ] Está deshabilitado sin configuración explícita.
 [ ] Requiere secreto administrativo.
 [ ] Acceso tiene rate limit.
 [ ] Cookie es Secure, HttpOnly y SameSite=Strict.
 [ ] Respuestas usan no-store.
 [ ] No se muestra ninguna clave completa.
+[ ] Clientes, planes, cuotas y estado se muestran correctamente.
 
-K. REPOSITORIO Y LEGAL
-[ ] Preparar-Repositorio-Publico.ps1 fue ejecutado.
+L. CONTACTO
+[ ] Contacto permanece oculto cuando no está configurado.
+[ ] Contacto se muestra cuando MostrarEmail está habilitado.
+[ ] El enlace abre correctamente el cliente de correo.
+[ ] El correo productivo no está hardcodeado en el repositorio.
+
+M. REPOSITORIO Y LEGAL
+[ ] Preparar-Repositorio-Publico.ps1 fue ejecutado cuando corresponde.
 [ ] Verificar-Repositorio-Publico.ps1 fue aprobado.
 [ ] No existen secretos, modelos, binarios, .vs, bin, obj, artifacts ni .user versionados.
+[ ] FFmpeg y ffprobe no están versionados como binarios.
+[ ] No existe una ruta local de FFmpeg versionada.
 [ ] README, LICENSE, SECURITY, CONTRIBUTING y RELEASE-NOTES están presentes.
-[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.1.0.
+[ ] Privacidad, condiciones y THIRD-PARTY-NOTICES coinciden con 2.2.0.
+[ ] FFMpegCore y FFmpeg están documentados en THIRD-PARTY-NOTICES.
 [ ] Historial Git revisado y secretos antiguos rotados si correspondía.
 
-L. RELEASE
-[ ] VERSION.txt declara 2.1.0.
-[ ] El proyecto declara Version 2.1.0.
+N. RELEASE
+[ ] VERSION.txt declara 2.2.0.
+[ ] El proyecto declara Version 2.2.0.
+[ ] README declara 2.2.0 como versión vigente.
+[ ] SECURITY.md declara 2.2.0 como versión vigente.
+[ ] RELEASE-NOTES incluye 2.2.0.
+[ ] RELEASE-CHECKLIST-2.2.0.md existe.
 [ ] Publicación Release limpia generada.
 [ ] Aplicación publicada inicia y accede a SQL Server.
+[ ] FFmpeg:BinaryFolder configurado en producción.
 [ ] Archivos legales y VERSION.txt están en la publicación.
 [ ] ZIP y SHA-256 generados.
 [ ] Commit final creado.
-[ ] Tag v2.1.0 creado y verificado.
+[ ] GitHub Actions aprobado.
+[ ] Tag v2.2.0 creado y verificado.
 
 RESULTADO FINAL
-[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.1.0.
+[ ] ETAPA 2 APROBADA Y CERRADA — DETECTOR DE ESTAFAS 2.2.0.

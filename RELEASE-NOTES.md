@@ -1,3 +1,61 @@
+# Detector de Estafas 2.2.0
+
+Fecha de cierre: 24 de agosto de 2026.
+
+## Objetivo
+
+Cerrar la etapa funcional previa a publicación, incorporando mejoras de compatibilidad móvil, procesamiento de audio, validación funcional, API comercial y estabilidad general de la aplicación web/PWA.
+
+## Cambios principales
+
+- Ampliado el soporte de audio a MP3, WAV, OGG, OPUS, M4A y AAC.
+- Incorporados FFMpegCore y FFmpeg para inspección y normalización de audio.
+- Los audios se normalizan a WAV PCM de 16 bits, mono y 16 kHz antes de la transcripción con Whisper.
+- Mejorado el selector de archivos de audio en Android.
+- Incorporado fallback mediante selector estándar para navegadores sin File System Access API.
+- Corregida la navegación al refrescar después de procesar capturas o audios.
+- Mejorada la interfaz principal y el comportamiento responsive.
+- Recalibrados puntajes y umbrales del motor de detección para reducir clasificaciones de riesgo insuficientes.
+- Agregadas regresiones automatizadas para escenarios de riesgo Bajo, Medio y Alto.
+- Mejorada la detección de transferencias urgentes, bloqueo de cuentas, credenciales y solicitudes asociadas a entidades financieras.
+- Mejoradas las consultas RDAP para dominios `.ar`.
+- Corregidos y validados los resultados compartidos mediante vínculos protegidos y con vencimiento.
+- Revisado el comportamiento PWA y Service Worker.
+- Validada la autenticación de la API comercial.
+- Validados consumo, cuotas y headers de rate limit de la API.
+- Validado el dashboard administrativo.
+- Validado el canal de contacto configurable.
+
+## Validación
+
+- Compilación local aprobada.
+- Suite automatizada completa aprobada.
+- MP3 y WAV validados.
+- AAC, OGG y M4A validados.
+- Selección de audio mediante Android validada.
+- API comercial con autenticación válida e inválida validada.
+- Headers de límite, restante, período y reinicio validados.
+- Dashboard administrativo validado visual y funcionalmente.
+- Contacto configurable validado.
+- Repositorio público revisado sin secretos de desarrollo publicados.
+- Prueba física en iPhone/iPad pendiente por falta de dispositivo.
+- Validación final de GitHub Actions correspondiente a 2.2.0 pendiente del commit de release.
+
+## Compatibilidad
+
+- Web responsive.
+- PWA instalable.
+- Android validado.
+- Compatibilidad para iPhone/iPad implementada, pendiente de prueba física.
+- .NET 10.
+- SQL Server.
+- API REST v1.
+
+## Publicación
+
+La configuración específica de producción —hosting, dominio, HTTPS, SMTP, cadena de conexión y secretos— se realizará durante la etapa de publicación y se mantendrá fuera del repositorio.
+
+---
 # Detector de Estafas 2.1.0
 
 Fecha de cierre: 10 de agosto de 2026.
