@@ -23,7 +23,7 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Dashboard interno para administración de clientes API.
 - Métricas, feedback y reportes comunitarios sin guardar el contenido analizado.
 - CI automático con build y pruebas mediante GitHub Actions.
-- Suite automatizada validada..
+- Suite automatizada validada.
 
 ## Vista del producto
 
@@ -102,8 +102,12 @@ La aplicación requiere `ffmpeg` y `ffprobe` para validar y normalizar los audio
 La ubicación de los ejecutables no debe guardarse en el repositorio. Durante desarrollo puede configurarse mediante User Secrets:
 
 ```powershell
-dotnet user-secrets set "FFmpeg:BinaryFolder" "C:\Tools\FFmpeg" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
+dotnet user-secrets set "FFmpeg:BinaryFolder" "C:\RUTA\FFmpeg" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
+```
 
+La carpeta configurada debe contener `ffmpeg.exe` y `ffprobe.exe`.
+
+En producción, `FFmpeg:BinaryFolder` debe configurarse mediante la configuración segura del hosting.
 
 3. Configurar la cadena de conexión en un archivo local no versionado o mediante variables de entorno.
 
