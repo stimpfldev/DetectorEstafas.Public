@@ -7,7 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NAudio.Wave;
-
+using FFMpegCore;
 namespace DetectorEstafas.Tests.Services.Audios;
 
 [TestClass]
@@ -16,6 +16,19 @@ public class AudioTemporalServiceTests
     [TestMethod]
     public async Task ProcesarAsync_WavValido_AceptaYEliminaTemporal()
     {
+        string? ffmpegBinaryFolder =
+    Environment.GetEnvironmentVariable("FFMPEG_BINARY_FOLDER");
+
+        if (string.IsNullOrWhiteSpace(ffmpegBinaryFolder))
+        {
+            Assert.Inconclusive(
+                "No se configuró FFMPEG_BINARY_FOLDER.");
+        }
+
+        GlobalFFOptions.Configure(options =>
+        {
+            options.BinaryFolder = ffmpegBinaryFolder;
+        });
         byte[] contenido;
 
         using (var memoria = new MemoryStream())
