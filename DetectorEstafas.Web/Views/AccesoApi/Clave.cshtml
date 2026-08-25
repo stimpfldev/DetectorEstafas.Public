@@ -1,10 +1,10 @@
 @model DetectorEstafas.Web.ViewModels.Planes.AccesoApiClaveViewModel
 @{
-    ViewData["Title"] = "API key";
+    ViewData["Title"] = "Clave de acceso";
 }
 
 <section class="container py-5" style="max-width: 720px;">
-    <h1>Tu API key</h1>
+    <h1>Tu clave de acceso</h1>
 
     @if (Model.InvalidaOExpirada)
     {
@@ -31,20 +31,20 @@
         </div>
 
         <p>
-            Usala en el header <code>X-Api-Key</code> al llamar a <code>POST /api/v1/analisis</code>.
+            Guardala en un lugar seguro. Si vas a integrar Detector de Estafas con otro sistema, usala como <code>X-Api-Key</code> al llamar a <code>POST /api/v1/analisis</code>.
         </p>
     }
     else
     {
         <p>
-            Por seguridad, la API key se muestra una sola vez. Presioná el botón cuando estés listo para copiarla y guardarla.
+            Por seguridad, la clave de acceso se muestra una sola vez. Presioná el botón cuando estés listo para copiarla y guardarla.
         </p>
 
         <form method="post">
             @Html.AntiForgeryToken()
             <input asp-for="Token" type="hidden" />
             <button type="submit" class="btn btn-primary">
-                Mostrar API key
+                Mostrar clave de acceso
             </button>
         </form>
     }
