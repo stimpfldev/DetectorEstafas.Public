@@ -1,0 +1,96 @@
+@using DetectorEstafas.Web.Models.ApiComercial
+@{
+    ViewData["Title"] = "Planes";
+}
+
+<section class="container py-5">
+    <div class="text-center mb-5">
+        <h1>Planes de API</h1>
+        <p class="lead">
+            Probá la API sin costo y escalá solamente cuando necesites más capacidad.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+            <article class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4">Prueba</h2>
+                    <div class="display-6 mb-3">Gratis</div>
+                    <ul>
+                        <li>14 días</li>
+                        <li>@ApiPlanes.CuotaDiariaPrueba análisis por día</li>
+                        <li>API completa para evaluación</li>
+                    </ul>
+                    <a asp-action="Prueba"
+                       class="btn btn-outline-primary mt-auto">
+                        Probar gratis
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <article class="card h-100 shadow-sm border-primary">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4">Starter</h2>
+                    <div class="display-6 mb-1">USD @ApiPlanes.PrecioReferenciaUsdStarter</div>
+                    <p class="text-muted">por mes</p>
+                    <ul>
+                        <li>@ApiPlanes.CuotaMensualStarter.ToString("N0") análisis por mes</li>
+                        <li>API key individual</li>
+                        <li>Alta automática</li>
+                    </ul>
+                    <a asp-action="Suscripcion"
+                       asp-route-plan="@ApiPlanes.Starter"
+                       class="btn btn-primary mt-auto">
+                        Suscribirme
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <article class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4">Growth</h2>
+                    <div class="display-6 mb-1">USD @ApiPlanes.PrecioReferenciaUsdGrowth</div>
+                    <p class="text-muted">por mes</p>
+                    <ul>
+                        <li>@ApiPlanes.CuotaMensualGrowth.ToString("N0") análisis por mes</li>
+                        <li>API key individual</li>
+                        <li>Alta automática</li>
+                    </ul>
+                    <a asp-action="Suscripcion"
+                       asp-route-plan="@ApiPlanes.Growth"
+                       class="btn btn-primary mt-auto">
+                        Suscribirme
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <article class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h4">A medida</h2>
+                    <div class="display-6 mb-3">Consultar</div>
+                    <ul>
+                        <li>Cuota personalizada</li>
+                        <li>Condiciones comerciales personalizadas</li>
+                        <li>Atención directa</li>
+                    </ul>
+                    <a asp-controller="Contacto"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary mt-auto">
+                        Contactar
+                    </a>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <p class="small text-muted mt-4 text-center">
+        Los precios publicados son referencias comerciales en USD. El cobro mediante Mercado Pago se realiza en la moneda y monto configurados para la operación.
+    </p>
+</section>

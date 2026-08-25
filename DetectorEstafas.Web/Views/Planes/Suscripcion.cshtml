@@ -1,0 +1,67 @@
+@model DetectorEstafas.Web.ViewModels.Planes.SolicitudSuscripcionViewModel
+@using DetectorEstafas.Web.Models.ApiComercial
+@{
+    ViewData["Title"] = "Suscribirme";
+
+    int cuota = Model.Plan == ApiPlanes.Growth
+        ? ApiPlanes.CuotaMensualGrowth
+        : ApiPlanes.CuotaMensualStarter;
+
+    decimal precioUsd = Model.Plan == ApiPlanes.Growth
+        ? ApiPlanes.PrecioReferenciaUsdGrowth
+        : ApiPlanes.PrecioReferenciaUsdStarter;
+}
+
+<section class="container py-5" style="max-width: 720px;">
+    <h1>Plan @Model.Plan</h1>
+    <p class="lead">
+        USD @precioUsd / mes · @cuota.ToString("N0") análisis mensuales.
+    </p>
+
+    <form method="post" class="card card-body shadow-sm">
+        @Html.AntiForgeryToken()
+        <input asp-for="Plan" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" autocomplete="name" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autocomplete="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-2">
+            <input asp-for="AceptaPrivacidad" class="form-check-input" />
+            <label asp-for="AceptaPrivacidad" class="form-check-label">
+                Acepto la <a asp-controller="Legal" asp-action="Privacidad">política de privacidad</a>.
+            </label>
+            <span asp-validation-for="AceptaPrivacidad" class="text-danger d-block"></span>
+        </div>
+
+        <div class="form-check mb-4">
+            <input asp-for="AceptaCondiciones" class="form-check-input" />
+            <label asp-for="AceptaCondiciones" class="form-check-label">
+                Acepto las <a asp-controller="Legal" asp-action="Condiciones">condiciones de uso</a>.
+            </label>
+            <span asp-validation-for="AceptaCondiciones" class="text-danger d-block"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Continuar a Mercado Pago
+        </button>
+    </form>
+
+    <p class="small text-muted mt-3">
+        El medio de pago y las renovaciones se administran mediante Mercado Pago. La factura fiscal se emite por separado.
+    </p>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
