@@ -5,9 +5,9 @@
 
 <section class="container py-5">
     <div class="text-center mb-5">
-        <h1>Planes de API</h1>
+        <h1>Planes de análisis</h1>
         <p class="lead">
-            Probá la API sin costo y escalá solamente cuando necesites más capacidad.
+            Probá Detector de Estafas sin costo y elegí un plan solamente si necesitás más capacidad.
         </p>
     </div>
 
@@ -20,7 +20,7 @@
                     <ul>
                         <li>14 días</li>
                         <li>@ApiPlanes.CuotaDiariaPrueba análisis por día</li>
-                        <li>API completa para evaluación</li>
+                        <li>Acceso completo para evaluación</li>
                     </ul>
                     <a asp-action="Prueba"
                        class="btn btn-outline-primary mt-auto">
@@ -38,7 +38,7 @@
                     <p class="text-muted">por mes</p>
                     <ul>
                         <li>@ApiPlanes.CuotaMensualStarter.ToString("N0") análisis por mes</li>
-                        <li>API key individual</li>
+                        <li>Clave de acceso individual</li>
                         <li>Alta automática</li>
                     </ul>
                     <a asp-action="Suscripcion"
@@ -58,7 +58,7 @@
                     <p class="text-muted">por mes</p>
                     <ul>
                         <li>@ApiPlanes.CuotaMensualGrowth.ToString("N0") análisis por mes</li>
-                        <li>API key individual</li>
+                        <li>Clave de acceso individual</li>
                         <li>Alta automática</li>
                     </ul>
                     <a asp-action="Suscripcion"
@@ -76,7 +76,7 @@
                     <h2 class="h4">A medida</h2>
                     <div class="display-6 mb-3">Consultar</div>
                     <ul>
-                        <li>Cuota personalizada</li>
+                        <li>Capacidad personalizada</li>
                         <li>Condiciones comerciales personalizadas</li>
                         <li>Atención directa</li>
                     </ul>
@@ -88,6 +88,13 @@
                 </div>
             </article>
         </div>
+    </div>
+
+    <div class="card card-body bg-light border-0 mt-4">
+        <h2 class="h5">¿Sos desarrollador o empresa?</h2>
+        <p class="mb-0">
+            Los planes permiten integrar Detector de Estafas en otros sistemas mediante acceso técnico por API.
+        </p>
     </div>
 
     <p class="small text-muted mt-4 text-center">
