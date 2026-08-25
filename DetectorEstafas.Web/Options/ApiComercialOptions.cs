@@ -10,6 +10,8 @@ public sealed class ApiComercialOptions
 
     public int TrialDays { get; set; } = 14;
 
+    public int KeyDeliveryHours { get; set; } = 24;
+
     public List<ApiKeyOptions> Keys { get; set; } =
         new();
 }
