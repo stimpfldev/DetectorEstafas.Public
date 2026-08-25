@@ -9,13 +9,13 @@
     @if (Model.AccesoActivo)
     {
         <div class="alert alert-success">
-            Tu plan @Model.Plan está activo. Si se generó una nueva API key, recibirás por email un enlace temporal para verla una sola vez.
+            Tu plan @Model.Plan está activo. Si se generó una nueva clave de acceso, recibirás por email un enlace temporal para verla una sola vez.
         </div>
     }
     else
     {
         <div class="alert alert-info">
-            Estado actual: <strong>@Model.Estado</strong>. Mercado Pago puede demorar unos instantes en confirmar la operación. Cuando el pago quede aprobado, el alta de la API se realizará automáticamente.
+            Estado actual: <strong>@Model.Estado</strong>. Mercado Pago puede demorar unos instantes en confirmar la operación. Cuando el pago quede aprobado, tu acceso se activará automáticamente.
         </div>
     }
 
