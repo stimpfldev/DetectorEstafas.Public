@@ -49,7 +49,12 @@ public sealed class PlanesController : Controller
 
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return EsSolicitudAjax()
+                ? BadRequest(new
+                {
+                    mensaje = ObtenerPrimerErrorModelState()
+                })
+                : View(model);
         }
 
         ActivacionPruebaComercialResultado resultado =
@@ -62,18 +67,33 @@ public sealed class PlanesController : Controller
         if (!resultado.Exito ||
             string.IsNullOrWhiteSpace(resultado.TokenEntrega))
         {
+            string mensaje =
+                resultado.Mensaje ??
+                "No fue posible activar la prueba.";
+
+            if (EsSolicitudAjax())
+            {
+                return BadRequest(new { mensaje });
+            }
+
             ModelState.AddModelError(
                 string.Empty,
-                resultado.Mensaje ??
-                "No fue posible activar la prueba.");
+                mensaje);
 
             return View(model);
         }
 
-        return RedirectToAction(
+        string? redirectUrl = Url.Action(
             "Clave",
             "AccesoApi",
             new { token = resultado.TokenEntrega });
+
+        if (EsSolicitudAjax())
+        {
+            return Ok(new { redirectUrl });
+        }
+
+        return Redirect(redirectUrl!);
     }
 
     [HttpGet("suscripcion")]
@@ -124,7 +144,12 @@ public sealed class PlanesController : Controller
 
         if (!ModelState.IsValid)
         {
-            return View(model);
+            return EsSolicitudAjax()
+                ? BadRequest(new
+                {
+                    mensaje = ObtenerPrimerErrorModelState()
+                })
+                : View(model);
         }
 
         InicioSuscripcionComercialResultado resultado =
@@ -138,12 +163,28 @@ public sealed class PlanesController : Controller
         if (!resultado.Exito ||
             !EsUrlMercadoPagoSegura(resultado.UrlPago))
         {
+            string mensaje =
+                resultado.Mensaje ??
+                "No fue posible iniciar el pago.";
+
+            if (EsSolicitudAjax())
+            {
+                return BadRequest(new { mensaje });
+            }
+
             ModelState.AddModelError(
                 string.Empty,
-                resultado.Mensaje ??
-                "No fue posible iniciar el pago.");
+                mensaje);
 
             return View(model);
+        }
+
+        if (EsSolicitudAjax())
+        {
+            return Ok(new
+            {
+                redirectUrl = resultado.UrlPago
+            });
         }
 
         return Redirect(resultado.UrlPago!);
@@ -213,6 +254,24 @@ public sealed class PlanesController : Controller
                 "AceptaCondiciones",
                 "Debés aceptar las condiciones de uso.");
         }
+    }
+
+    private bool EsSolicitudAjax()
+    {
+        return string.Equals(
+            Request.Headers["X-Requested-With"],
+            "XMLHttpRequest",
+            StringComparison.OrdinalIgnoreCase);
+    }
+
+    private string ObtenerPrimerErrorModelState()
+    {
+        return ModelState.Values
+                   .SelectMany(value => value.Errors)
+                   .Select(error => error.ErrorMessage)
+                   .FirstOrDefault(message =>
+                       !string.IsNullOrWhiteSpace(message))
+               ?? "Revisá los datos ingresados.";
     }
 
     private string ObtenerBaseUrl()
