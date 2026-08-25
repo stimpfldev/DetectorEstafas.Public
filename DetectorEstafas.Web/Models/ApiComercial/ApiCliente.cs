@@ -6,6 +6,8 @@ public sealed class ApiCliente
 
     public string Nombre { get; set; } = string.Empty;
 
+    public string? Email { get; set; }
+
     public string Plan { get; set; } = ApiPlanes.Prueba;
 
     public int CuotaDiaria { get; set; } =
@@ -26,4 +28,7 @@ public sealed class ApiCliente
 
     public ICollection<ApiConsumoDiario> Consumos { get; set; } =
         new List<ApiConsumoDiario>();
+
+    public ICollection<SuscripcionComercial> Suscripciones { get; set; } =
+        new List<SuscripcionComercial>();
 }

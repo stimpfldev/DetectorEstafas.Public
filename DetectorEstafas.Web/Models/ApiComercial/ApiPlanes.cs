@@ -25,10 +25,13 @@ public static class ApiPlanes
     public const string Growth = "Growth";
     public const string AMedida = "A medida";
 
-    public const int CuotaDiariaPrueba = 200;
+    public const int CuotaDiariaPrueba = 20;
     public const int CuotaMensualStarter = 5_000;
     public const int CuotaMensualGrowth = 25_000;
     public const int CuotaMensualMaximaPersonalizada = 10_000_000;
+
+    public const decimal PrecioReferenciaUsdStarter = 29m;
+    public const decimal PrecioReferenciaUsdGrowth = 79m;
 
     public static IReadOnlyList<string> Todos { get; } =
         [Prueba, Starter, Growth, AMedida];
