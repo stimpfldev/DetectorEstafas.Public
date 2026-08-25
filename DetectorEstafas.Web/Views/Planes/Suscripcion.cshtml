@@ -18,11 +18,16 @@
         USD @precioUsd / mes · @cuota.ToString("N0") análisis mensuales.
     </p>
 
-    <form method="post" class="card card-body shadow-sm">
+    <form method="post"
+          class="card card-body shadow-sm"
+          data-commercial-form="true">
         @Html.AntiForgeryToken()
         <input asp-for="Plan" type="hidden" />
 
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="alert alert-danger mb-3"
+             data-commercial-error
+             hidden></div>
 
         <div class="mb-3">
             <label asp-for="Nombre" class="form-label"></label>
@@ -64,4 +69,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/comercial-form.js"
+            asp-append-version="true"></script>
 }
