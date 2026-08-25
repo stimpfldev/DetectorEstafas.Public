@@ -6,14 +6,16 @@ using DetectorEstafas.Web.Services.Api;
 using DetectorEstafas.Web.Services.Api.Administracion;
 using DetectorEstafas.Web.Services.Audios;
 using DetectorEstafas.Web.Services.Capturas;
+using DetectorEstafas.Web.Services.Comercial;
+using DetectorEstafas.Web.Services.Comercial.MercadoPago;
+using DetectorEstafas.Web.Services.Correo;
 using DetectorEstafas.Web.Services.InteligenciaArtificial;
 using DetectorEstafas.Web.Services.Telefonos;
+using FFMpegCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
-using DetectorEstafas.Web.Services.Correo;
-using FFMpegCore;
 
 WebApplicationBuilder builder =
     WebApplication.CreateBuilder(args);
@@ -52,6 +54,39 @@ builder.Services.AddOpenApi();
 
 builder.Services.Configure<ApiComercialOptions>(
     builder.Configuration.GetSection(ApiComercialOptions.SectionName));
+
+builder.Services.Configure<MercadoPagoOptions>(
+    builder.Configuration.GetSection(
+        MercadoPagoOptions.SectionName));
+
+builder.Services.AddHttpClient<
+    IMercadoPagoSuscripcionService,
+    MercadoPagoSuscripcionService>(httpClient =>
+    {
+        httpClient.BaseAddress =
+            new Uri("https://api.mercadopago.com/");
+        httpClient.Timeout =
+            TimeSpan.FromSeconds(15);
+    });
+
+builder.Services.AddSingleton<
+    IMercadoPagoWebhookSignatureValidator,
+    MercadoPagoWebhookSignatureValidator>();
+
+builder.Services.AddScoped<
+    IProvisionamientoApiComercialService,
+    ProvisionamientoApiComercialService>();
+
+builder.Services.AddScoped<
+    IComercializacionApiService,
+    ComercializacionApiService>();
+
+builder.Services.AddScoped<
+    ICorreoComercialService,
+    SmtpCorreoComercialService>();
+
+builder.Services.AddHostedService<
+    SuscripcionesVencidasHostedService>();
 
 builder.Services.Configure<ApiAdministracionOptions>(
     builder.Configuration.GetSection(ApiAdministracionOptions.SectionName));
@@ -265,19 +300,35 @@ builder.Services.AddRateLimiter(options =>
                     AutoReplenishment = true
                 });
         });
+
     options.AddPolicy(
-    "registro",
-    httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            httpContext.Connection.RemoteIpAddress?
-                .ToString() ?? "sin-ip",
-            _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(15),
-                QueueLimit = 0,
-                AutoReplenishment = true
-            }));
+        "registro",
+        httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                httpContext.Connection.RemoteIpAddress?
+                    .ToString() ?? "sin-ip",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(15),
+                    QueueLimit = 0,
+                    AutoReplenishment = true
+                }));
+
+    options.AddPolicy(
+        "comercial-alta",
+        httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                httpContext.Connection.RemoteIpAddress?
+                    .ToString() ?? "sin-ip",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(15),
+                    QueueLimit = 0,
+                    AutoReplenishment = true
+                }));
+
     options.AddPolicy(
         "admin-login",
         httpContext =>
@@ -448,6 +499,7 @@ app.MapGet(
             <?xml version="1.0" encoding="UTF-8"?>
             <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
               <url><loc>{escapedBaseUrl}/</loc></url>
+              <url><loc>{escapedBaseUrl}/planes</loc></url>
               <url><loc>{escapedBaseUrl}/Contacto</loc></url>
               <url><loc>{escapedBaseUrl}/Legal/Privacidad</loc></url>
               <url><loc>{escapedBaseUrl}/Legal/Condiciones</loc></url>
