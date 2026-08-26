@@ -11,13 +11,16 @@ public sealed class MercadoPagoSuscripcionService :
 {
     private readonly HttpClient _httpClient;
     private readonly MercadoPagoOptions _options;
+    private readonly ILogger<MercadoPagoSuscripcionService> _logger;
 
     public MercadoPagoSuscripcionService(
         HttpClient httpClient,
-        IOptions<MercadoPagoOptions> options)
+        IOptions<MercadoPagoOptions> options,
+        ILogger<MercadoPagoSuscripcionService> logger)
     {
         _httpClient = httpClient;
         _options = options.Value;
+        _logger = logger;
     }
 
     public async Task<MercadoPagoSuscripcionCreada>
@@ -60,6 +63,15 @@ public sealed class MercadoPagoSuscripcionService :
 
         if (!response.IsSuccessStatusCode)
         {
+            string detalle = await ObtenerDetalleErrorAsync(
+                response,
+                cancellationToken);
+
+            _logger.LogWarning(
+                "Mercado Pago rechazó la creación de la suscripción. HTTP {StatusCode}. {Detalle}",
+                (int)response.StatusCode,
+                detalle);
+
             throw new HttpRequestException(
                 $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al crear la suscripción.");
         }
@@ -227,6 +239,15 @@ public sealed class MercadoPagoSuscripcionService :
 
         if (!response.IsSuccessStatusCode)
         {
+            string detalle = await ObtenerDetalleErrorAsync(
+                response,
+                cancellationToken);
+
+            _logger.LogWarning(
+                "Mercado Pago rechazó la consulta del recurso. HTTP {StatusCode}. {Detalle}",
+                (int)response.StatusCode,
+                detalle);
+
             throw new HttpRequestException(
                 $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al consultar el recurso.");
         }
@@ -257,6 +278,74 @@ public sealed class MercadoPagoSuscripcionService :
         {
             throw new InvalidOperationException(
                 "Mercado Pago no está configurado.");
+        }
+    }
+
+    private static async Task<string> ObtenerDetalleErrorAsync(
+        HttpResponseMessage response,
+        CancellationToken cancellationToken)
+    {
+        string content = await response.Content.ReadAsStringAsync(
+            cancellationToken);
+
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return "Sin detalle adicional.";
+        }
+
+        try
+        {
+            using JsonDocument document = JsonDocument.Parse(content);
+            JsonElement root = document.RootElement;
+            List<string> partes = new();
+
+            AgregarDetalle(partes, root, "error");
+            AgregarDetalle(partes, root, "message");
+
+            if (root.TryGetProperty(
+                    "cause",
+                    out JsonElement cause) &&
+                cause.ValueKind == JsonValueKind.Array)
+            {
+                foreach (JsonElement item in cause.EnumerateArray().Take(3))
+                {
+                    string? code = ObtenerString(item, "code");
+                    string? description = ObtenerString(
+                        item,
+                        "description");
+
+                    if (!string.IsNullOrWhiteSpace(code) ||
+                        !string.IsNullOrWhiteSpace(description))
+                    {
+                        partes.Add(
+                            $"cause={code ?? "-"}: {description ?? "-"}");
+                    }
+                }
+            }
+
+            return partes.Count > 0
+                ? string.Join(" | ", partes)
+                : "Respuesta de error sin detalle reconocido.";
+        }
+        catch (JsonException)
+        {
+            const int maxLength = 500;
+            return content.Length <= maxLength
+                ? content
+                : content[..maxLength];
+        }
+    }
+
+    private static void AgregarDetalle(
+        List<string> partes,
+        JsonElement root,
+        string propertyName)
+    {
+        string? value = ObtenerString(root, propertyName);
+
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            partes.Add($"{propertyName}={value}");
         }
     }
 
