@@ -15,6 +15,8 @@ public sealed class SuscripcionComercial
     public string Estado { get; set; } =
         EstadosSuscripcionComercial.Pendiente;
 
+    public string? MercadoPagoPreapprovalPlanId { get; set; }
+
     public string? MercadoPagoPreapprovalId { get; set; }
 
     public string? MercadoPagoInitPoint { get; set; }
