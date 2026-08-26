@@ -23,9 +23,11 @@ public sealed class MercadoPagoSuscripcionService :
         _logger = logger;
     }
 
-    public async Task<MercadoPagoPlanSuscripcionCreado>
-        CrearPlanPendienteAsync(
+    public async Task<MercadoPagoSuscripcionCreada>
+        CrearPendienteAsync(
+            string email,
             string plan,
+            string referenciaExterna,
             decimal monto,
             string moneda,
             string backUrl,
@@ -36,6 +38,8 @@ public sealed class MercadoPagoSuscripcionService :
         object payload = new
         {
             reason = $"Detector de Estafas - Plan {plan}",
+            external_reference = referenciaExterna,
+            payer_email = email,
             auto_recurring = new
             {
                 frequency = 1,
@@ -43,11 +47,12 @@ public sealed class MercadoPagoSuscripcionService :
                 transaction_amount = monto,
                 currency_id = moneda
             },
-            back_url = backUrl
+            back_url = backUrl,
+            status = "pending"
         };
 
         using HttpRequestMessage request =
-            CrearRequest(HttpMethod.Post, "preapproval_plan");
+            CrearRequest(HttpMethod.Post, "preapproval");
 
         request.Content = JsonContent.Create(payload);
 
@@ -63,12 +68,12 @@ public sealed class MercadoPagoSuscripcionService :
                 cancellationToken);
 
             _logger.LogWarning(
-                "Mercado Pago rechazó la creación del plan de suscripción. HTTP {StatusCode}. {Detalle}",
+                "Mercado Pago rechazó la creación de la suscripción. HTTP {StatusCode}. {Detalle}",
                 (int)response.StatusCode,
                 detalle);
 
             throw new HttpRequestException(
-                $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al crear el plan de suscripción.");
+                $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al crear la suscripción.");
         }
 
         using JsonDocument document =
@@ -81,16 +86,19 @@ public sealed class MercadoPagoSuscripcionService :
 
         string id = ObtenerString(root, "id")
             ?? throw new InvalidOperationException(
-                "Mercado Pago no devolvió el ID del plan de suscripción.");
+                "Mercado Pago no devolvió el ID de suscripción.");
 
         string initPoint = ObtenerString(root, "init_point")
             ?? throw new InvalidOperationException(
                 "Mercado Pago no devolvió el enlace de pago.");
 
-        return new MercadoPagoPlanSuscripcionCreado(
+        return new MercadoPagoSuscripcionCreada(
             id,
             initPoint,
-            ObtenerString(root, "status") ?? "active");
+            ObtenerString(root, "status") ?? "pending",
+            ObtenerString(root, "external_reference")
+                ?? referenciaExterna,
+            ObtenerFecha(root, "next_payment_date"));
     }
 
     public async Task<MercadoPagoSuscripcionDetalle?>
@@ -123,7 +131,6 @@ public sealed class MercadoPagoSuscripcionService :
                 ObtenerString(root, "status") ?? string.Empty,
                 ObtenerString(root, "external_reference")
                     ?? string.Empty,
-                ObtenerString(root, "preapproval_plan_id"),
                 ObtenerFecha(root, "next_payment_date"));
         }
     }
