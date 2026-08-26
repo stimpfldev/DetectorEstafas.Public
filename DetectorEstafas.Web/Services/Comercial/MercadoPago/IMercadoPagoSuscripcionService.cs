@@ -1,15 +1,16 @@
 namespace DetectorEstafas.Web.Services.Comercial.MercadoPago;
 
-public sealed record MercadoPagoPlanSuscripcionCreado(
+public sealed record MercadoPagoSuscripcionCreada(
     string Id,
     string InitPoint,
-    string Estado);
+    string Estado,
+    string ReferenciaExterna,
+    DateTime? ProximaRenovacionUtc);
 
 public sealed record MercadoPagoSuscripcionDetalle(
     string Id,
     string Estado,
     string ReferenciaExterna,
-    string? PreapprovalPlanId,
     DateTime? ProximaRenovacionUtc);
 
 public sealed record MercadoPagoPagoAutorizadoDetalle(
@@ -27,8 +28,10 @@ public sealed record MercadoPagoPagoDetalle(
 
 public interface IMercadoPagoSuscripcionService
 {
-    Task<MercadoPagoPlanSuscripcionCreado> CrearPlanPendienteAsync(
+    Task<MercadoPagoSuscripcionCreada> CrearPendienteAsync(
+        string email,
         string plan,
+        string referenciaExterna,
         decimal monto,
         string moneda,
         string backUrl,
