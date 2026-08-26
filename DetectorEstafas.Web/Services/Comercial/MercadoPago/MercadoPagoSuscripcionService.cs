@@ -35,11 +35,12 @@ public sealed class MercadoPagoSuscripcionService :
     {
         ValidarConfiguracion();
 
+        // Para el checkout hospedado de Suscripciones no enviamos payer_email.
+        // Creamos un plan individual por solicitud y Mercado Pago identifica
+        // al pagador cuando inicia sesión en su checkout.
         object payload = new
         {
             reason = $"Detector de Estafas - Plan {plan}",
-            external_reference = referenciaExterna,
-            payer_email = email,
             auto_recurring = new
             {
                 frequency = 1,
@@ -47,12 +48,11 @@ public sealed class MercadoPagoSuscripcionService :
                 transaction_amount = monto,
                 currency_id = moneda
             },
-            back_url = backUrl,
-            status = "pending"
+            back_url = backUrl
         };
 
         using HttpRequestMessage request =
-            CrearRequest(HttpMethod.Post, "preapproval");
+            CrearRequest(HttpMethod.Post, "preapproval_plan");
 
         request.Content = JsonContent.Create(payload);
 
@@ -68,12 +68,12 @@ public sealed class MercadoPagoSuscripcionService :
                 cancellationToken);
 
             _logger.LogWarning(
-                "Mercado Pago rechazó la creación de la suscripción. HTTP {StatusCode}. {Detalle}",
+                "Mercado Pago rechazó la creación del plan de suscripción. HTTP {StatusCode}. {Detalle}",
                 (int)response.StatusCode,
                 detalle);
 
             throw new HttpRequestException(
-                $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al crear la suscripción.");
+                $"Mercado Pago devolvió HTTP {(int)response.StatusCode} al crear el plan de suscripción.");
         }
 
         using JsonDocument document =
@@ -86,19 +86,18 @@ public sealed class MercadoPagoSuscripcionService :
 
         string id = ObtenerString(root, "id")
             ?? throw new InvalidOperationException(
-                "Mercado Pago no devolvió el ID de suscripción.");
+                "Mercado Pago no devolvió el ID del plan de suscripción.");
 
         string initPoint = ObtenerString(root, "init_point")
             ?? throw new InvalidOperationException(
-                "Mercado Pago no devolvió el enlace de pago.");
+                "Mercado Pago no devolvió el enlace de suscripción.");
 
         return new MercadoPagoSuscripcionCreada(
             id,
             initPoint,
-            ObtenerString(root, "status") ?? "pending",
-            ObtenerString(root, "external_reference")
-                ?? referenciaExterna,
-            ObtenerFecha(root, "next_payment_date"));
+            ObtenerString(root, "status") ?? "active",
+            referenciaExterna,
+            null);
     }
 
     public async Task<MercadoPagoSuscripcionDetalle?>
@@ -106,33 +105,26 @@ public sealed class MercadoPagoSuscripcionService :
             string preapprovalId,
             CancellationToken cancellationToken)
     {
+        // El identificador persistido durante el checkout es el ID del plan.
+        // Cuando recibimos un webhook, Mercado Pago envía el ID real de la
+        // suscripción. En ambos casos devolvemos como correlación el ID del
+        // plan, que es único para nuestra solicitud comercial.
         JsonDocument? document = await ObtenerJsonAsync(
             $"preapproval/{Uri.EscapeDataString(preapprovalId)}",
             cancellationToken);
 
-        if (document is null)
+        if (document is not null)
         {
-            return null;
-        }
-
-        using (document)
-        {
-            JsonElement root = document.RootElement;
-
-            string? id = ObtenerString(root, "id");
-
-            if (string.IsNullOrWhiteSpace(id))
+            using (document)
             {
-                return null;
+                JsonElement root = document.RootElement;
+                return CrearDetalleSuscripcion(root);
             }
-
-            return new MercadoPagoSuscripcionDetalle(
-                id,
-                ObtenerString(root, "status") ?? string.Empty,
-                ObtenerString(root, "external_reference")
-                    ?? string.Empty,
-                ObtenerFecha(root, "next_payment_date"));
         }
+
+        return await BuscarSuscripcionPorPlanAsync(
+            preapprovalId,
+            cancellationToken);
     }
 
     public async Task<MercadoPagoPagoAutorizadoDetalle?>
@@ -154,13 +146,25 @@ public sealed class MercadoPagoSuscripcionService :
             JsonElement root = document.RootElement;
 
             string? id = ObtenerString(root, "id");
-            string? preapprovalId =
+            string? preapprovalIdReal =
                 ObtenerString(root, "preapproval_id");
 
             if (string.IsNullOrWhiteSpace(id) ||
-                string.IsNullOrWhiteSpace(preapprovalId))
+                string.IsNullOrWhiteSpace(preapprovalIdReal))
             {
                 return null;
+            }
+
+            string correlacion = preapprovalIdReal;
+
+            MercadoPagoSuscripcionDetalle? suscripcion =
+                await ObtenerSuscripcionAsync(
+                    preapprovalIdReal,
+                    cancellationToken);
+
+            if (suscripcion is not null)
+            {
+                correlacion = suscripcion.Id;
             }
 
             string? paymentStatus = null;
@@ -176,7 +180,7 @@ public sealed class MercadoPagoSuscripcionService :
 
             return new MercadoPagoPagoAutorizadoDetalle(
                 id,
-                preapprovalId,
+                correlacion,
                 ObtenerString(root, "external_reference")
                     ?? string.Empty,
                 paymentStatus,
@@ -215,6 +219,86 @@ public sealed class MercadoPagoSuscripcionService :
                     ?? string.Empty,
                 ObtenerFecha(root, "date_approved"));
         }
+    }
+
+    private async Task<MercadoPagoSuscripcionDetalle?>
+        BuscarSuscripcionPorPlanAsync(
+            string planId,
+            CancellationToken cancellationToken)
+    {
+        JsonDocument? document = await ObtenerJsonAsync(
+            $"preapproval/search?preapproval_plan_id={Uri.EscapeDataString(planId)}",
+            cancellationToken);
+
+        if (document is null)
+        {
+            return null;
+        }
+
+        using (document)
+        {
+            JsonElement root = document.RootElement;
+
+            if (!root.TryGetProperty(
+                    "results",
+                    out JsonElement results) ||
+                results.ValueKind != JsonValueKind.Array)
+            {
+                return null;
+            }
+
+            JsonElement? elegido = null;
+
+            foreach (JsonElement item in results.EnumerateArray())
+            {
+                if (elegido is null)
+                {
+                    elegido = item;
+                }
+
+                string estado =
+                    ObtenerString(item, "status") ?? string.Empty;
+
+                if (string.Equals(
+                        estado,
+                        "authorized",
+                        StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(
+                        estado,
+                        "paused",
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    elegido = item;
+                    break;
+                }
+            }
+
+            return elegido.HasValue
+                ? CrearDetalleSuscripcion(elegido.Value)
+                : null;
+        }
+    }
+
+    private static MercadoPagoSuscripcionDetalle?
+        CrearDetalleSuscripcion(JsonElement root)
+    {
+        string? idReal = ObtenerString(root, "id");
+
+        if (string.IsNullOrWhiteSpace(idReal))
+        {
+            return null;
+        }
+
+        string correlacion =
+            ObtenerString(root, "preapproval_plan_id")
+            ?? idReal;
+
+        return new MercadoPagoSuscripcionDetalle(
+            correlacion,
+            ObtenerString(root, "status") ?? string.Empty,
+            ObtenerString(root, "external_reference")
+                ?? string.Empty,
+            ObtenerFecha(root, "next_payment_date"));
     }
 
     private async Task<JsonDocument?> ObtenerJsonAsync(
