@@ -1,3 +1,60 @@
+# Detector de Estafas 2.3.0
+
+Fecha de cierre técnico: 27 de agosto de 2026.
+
+## Objetivo
+
+Cerrar la automatización comercial de la API para que los planes Starter y Growth puedan completar alta, pago, activación, entrega de acceso y cambios de estado sin intervención manual, manteniendo los secretos fuera del repositorio.
+
+## Cambios principales
+
+- Integradas suscripciones recurrentes Starter y Growth con Mercado Pago.
+- Incorporada persistencia de suscripciones comerciales y eventos de webhook.
+- Agregada validación HMAC SHA-256 de webhooks mediante `x-signature`, `x-request-id` y `data.id`.
+- Implementado procesamiento idempotente de eventos para evitar duplicar clientes, activaciones y entregas.
+- Pago aprobado activa automáticamente la suscripción y provisiona el cliente API.
+- Pago rechazado cambia la suscripción a `Impaga` y abre un período de gracia configurable.
+- Vencido el período de gracia, la suscripción pasa a `Suspendida` y el cliente API se deshabilita.
+- La cancelación conserva el acceso hasta la fecha final informada y luego lo deshabilita.
+- Incorporada entrega temporal y de un solo uso de la API key.
+- Prevenida la activación duplicada del plan Prueba.
+- Cuota del plan Prueba ajustada a 20 análisis por día durante 14 días.
+- Incorporadas regresiones automatizadas para prueba duplicada, firma válida/inválida, rechazo, gracia, cancelación, Growth e idempotencia.
+- Corregido el validador del repositorio público para aceptar placeholders explícitos y diferenciar assets locales ignorados de archivos trackeados.
+- Retirado el logging diagnóstico temporal utilizado durante la validación del webhook.
+
+## Validación
+
+- Suscripción Starter creada y cobro de prueba aprobado mediante Mercado Pago.
+- Webhook firmado procesado correctamente con HTTP `200`.
+- Suscripción confirmada como `Activa` en SQL Server.
+- Cliente Starter habilitado y asociado a la suscripción.
+- Entrega one-time de API key creada.
+- Próxima renovación registrada.
+- Idempotencia validada repitiendo el mismo webhook: no aumentaron eventos, clientes ni entregas.
+- Build Release aprobado.
+- Suite automatizada: 62/62 pruebas correctas, 0 errores, 0 omitidas.
+- Validación de seguridad aprobada con `SECURITY VALIDATION PASSED`.
+- Revisión de dependencias vulnerables sin bloqueo.
+- Secretos reales no publicados en archivos versionados.
+
+## Publicación diferida
+
+Quedan fuera de este cierre técnico y se resolverán al publicar:
+
+- hosting productivo;
+- dominio productivo;
+- HTTPS productivo;
+- SMTP productivo;
+- cadena de conexión productiva;
+- Access Token y Webhook Secret productivos definitivos;
+- precios comerciales definitivos;
+- smoke test productivo;
+- publicaciones en sitio personal y LinkedIn.
+
+La prueba física definitiva en iPhone/iPad continúa pendiente por falta de dispositivo y no invalida las funcionalidades verificadas en las demás plataformas.
+
+---
 # Detector de Estafas 2.2.0
 
 Fecha de cierre: 24 de agosto de 2026.
