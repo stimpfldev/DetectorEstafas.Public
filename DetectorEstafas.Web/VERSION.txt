@@ -1,7 +1,7 @@
 Producto: Detector de Estafas
-Versión: 2.2.0
-Etapa: Versión web/PWA comercial preparada para publicación
-Fecha de cierre: 2026-08-24
+Versión: 2.3.0
+Etapa: Automatización comercial preparada para cierre técnico previo a publicación
+Fecha de cierre: 2026-08-27
 
 Alcance principal:
 - análisis de mensajes, enlaces, teléfonos y llamadas;
@@ -15,9 +15,16 @@ Alcance principal:
 - funcionamiento móvil validado en Android;
 - compatibilidad web/PWA preparada para iPhone/iPad, pendiente de validación física;
 - API comercial v1 con planes Prueba, Starter, Growth y A medida;
-- plan Prueba de 14 días;
-- cuotas diarias o mensuales según el plan;
+- plan Prueba de 14 días y 20 análisis por día;
+- Starter con 5.000 análisis mensuales;
+- Growth con 25.000 análisis mensuales;
 - administración de clientes, planes, cuotas, habilitación y revocación de claves;
+- suscripciones Starter/Growth integradas con Mercado Pago;
+- validación de firma de webhooks de Mercado Pago;
+- procesamiento idempotente de webhooks;
+- activación automática de acceso luego de pago aprobado;
+- período de gracia, suspensión y cancelación automatizados;
+- entrega one-time de API key mediante token temporal;
 - protección transaccional del consumo;
 - headers de límite, restante, período y reinicio en la API;
 - dashboard administrativo protegido;
@@ -26,6 +33,23 @@ Alcance principal:
 - documentación de usuario y API comercial;
 - CI para build y pruebas automáticas;
 - seguridad, privacidad y documentación legal.
+
+Cambios 2.3.0:
+- automatización del alta comercial para Starter y Growth;
+- integración de suscripciones recurrentes con Mercado Pago;
+- persistencia de suscripciones y eventos comerciales;
+- activación automática del cliente API ante pago aprobado;
+- pago rechazado pasa la suscripción a estado Impaga y abre período de gracia configurable;
+- suspensión automática al vencer el período de gracia;
+- cancelación con mantenimiento del acceso hasta la fecha final informada;
+- deshabilitación automática al finalizar el acceso cancelado;
+- validación HMAC SHA-256 de webhooks de Mercado Pago;
+- idempotencia de webhooks para evitar duplicar activaciones, clientes o entregas;
+- entrega temporal y de un solo uso de la API key;
+- prevención de activación duplicada del plan Prueba;
+- plan Prueba ajustado a 20 análisis por día;
+- nuevos tests de regresión comercial para Prueba, Starter/Growth, firma, rechazo, gracia, cancelación e idempotencia;
+- mejora del validador de repositorio público para distinguir assets locales ignorados y placeholders de configuración.
 
 Cambios 2.2.0:
 - ampliación del soporte de audio a MP3, WAV, OGG, OPUS, M4A y AAC;
@@ -48,7 +72,7 @@ Cambios 2.2.0:
 
 Cambios 2.1.0:
 - reemplazo del plan Comercial genérico por Starter, Growth y A medida;
-- Prueba fijada en 200 análisis por día durante 14 días;
+- Prueba originalmente fijada en 200 análisis por día durante 14 días;
 - Starter con 5.000 análisis mensuales;
 - Growth con 25.000 análisis mensuales;
 - cuota mensual configurable para A medida;
@@ -74,19 +98,25 @@ Correcciones 2.0.1:
 - robustez de cuotas API ante concurrencia;
 - actualización de documentación de seguridad.
 
-Validación:
-- compilación local aprobada;
-- suite automatizada completa aprobada;
-- validaciones funcionales principales aprobadas;
-- funcionamiento de audio AAC, OGG y M4A validado en Android;
-- autenticación y cuotas de API validadas;
-- dashboard administrativo validado;
-- contacto validado;
+Validación 2.3.0:
+- pago Starter de prueba aprobado en Mercado Pago;
+- activación local de la suscripción validada con webhook firmado;
+- suscripción Activa, cliente Starter habilitado y entrega de clave confirmados en SQL Server;
+- idempotencia validada repitiendo el mismo webhook sin duplicar eventos, clientes ni entregas;
+- compilación Release aprobada;
+- suite automatizada 62/62 aprobada;
+- validación de seguridad del repositorio aprobada;
+- paquetes vulnerables sin bloqueo;
 - prueba física en iPhone/iPad pendiente;
-- validación final de GitHub Actions correspondiente a 2.2.0 pendiente del commit de release.
+- validación final de GitHub Actions correspondiente a 2.3.0 pendiente del PR/merge final.
 
-Fuera del alcance nativo:
+Fuera del cierre técnico actual:
+- hosting productivo;
+- dominio productivo;
+- SMTP productivo;
+- credenciales y secretos productivos definitivos;
+- precios comerciales definitivos;
+- publicación en sitio personal y LinkedIn;
 - aplicación Android/iOS nativa distribuida por stores;
 - extensión de navegador;
-- inicio de sesión público e historial personal;
-- facturación automática.
+- inicio de sesión público e historial personal.
