@@ -32,6 +32,15 @@ public class DetectorEstafasDbContext :
     public DbSet<ApiConsumoDiario> ApiConsumosDiarios =>
         Set<ApiConsumoDiario>();
 
+    public DbSet<SuscripcionComercial> SuscripcionesComerciales =>
+        Set<SuscripcionComercial>();
+
+    public DbSet<WebhookComercialEvento> WebhookComercialEventos =>
+        Set<WebhookComercialEvento>();
+
+    public DbSet<ApiClaveEntrega> ApiClaveEntregas =>
+        Set<ApiClaveEntrega>();
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder)
     {
@@ -147,6 +156,9 @@ public class DetectorEstafasDbContext :
                 .HasMaxLength(100)
                 .IsRequired();
 
+            entity.Property(item => item.Email)
+                .HasMaxLength(254);
+
             entity.Property(item => item.Plan)
                 .HasMaxLength(40)
                 .IsRequired();
@@ -162,6 +174,10 @@ public class DetectorEstafasDbContext :
 
             entity.HasIndex(item => item.Nombre)
                 .IsUnique();
+
+            entity.HasIndex(item => item.Email)
+                .IsUnique()
+                .HasFilter("[Email] IS NOT NULL");
         });
 
         modelBuilder.Entity<ApiClave>(entity =>
@@ -230,6 +246,159 @@ public class DetectorEstafasDbContext :
                 item.FechaUtc
             })
             .IsUnique();
+        });
+
+        modelBuilder.Entity<SuscripcionComercial>(entity =>
+        {
+            entity.ToTable("SuscripcionesComerciales");
+            entity.HasKey(item => item.SuscripcionComercialId);
+
+            entity.Property(item => item.Nombre)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(item => item.Email)
+                .HasMaxLength(254)
+                .IsRequired();
+
+            entity.Property(item => item.Plan)
+                .HasMaxLength(40)
+                .IsRequired();
+
+            entity.Property(item => item.Estado)
+                .HasMaxLength(30)
+                .IsRequired();
+
+            entity.Property(item => item.MercadoPagoPreapprovalId)
+                .HasMaxLength(100);
+
+            entity.Property(item => item.MercadoPagoInitPoint)
+                .HasMaxLength(1000);
+
+            entity.Property(item => item.Monto)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
+            entity.Property(item => item.Moneda)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsRequired();
+
+            entity.Property(item => item.FechaCreacionUtc)
+                .HasColumnType("datetime2(0)")
+                .IsRequired();
+
+            entity.Property(item => item.FechaActualizacionUtc)
+                .HasColumnType("datetime2(0)")
+                .IsRequired();
+
+            entity.Property(item => item.FechaUltimoPagoUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.Property(item => item.ProximaRenovacionUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.Property(item => item.PeriodoGraciaHastaUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.Property(item => item.FechaCancelacionUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.Property(item => item.FechaFinAccesoUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.HasOne(item => item.Cliente)
+                .WithMany(item => item.Suscripciones)
+                .HasForeignKey(item => item.ApiClienteId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(item => item.ReferenciaPublica)
+                .IsUnique();
+
+            entity.HasIndex(item => item.MercadoPagoPreapprovalId)
+                .IsUnique()
+                .HasFilter("[MercadoPagoPreapprovalId] IS NOT NULL");
+
+            entity.HasIndex(item => new
+            {
+                item.Email,
+                item.Estado
+            });
+        });
+
+        modelBuilder.Entity<WebhookComercialEvento>(entity =>
+        {
+            entity.ToTable("WebhookComercialEventos");
+            entity.HasKey(item => item.WebhookComercialEventoId);
+
+            entity.Property(item => item.Proveedor)
+                .HasMaxLength(40)
+                .IsRequired();
+
+            entity.Property(item => item.EventoProveedorId)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(item => item.Tipo)
+                .HasMaxLength(80)
+                .IsRequired();
+
+            entity.Property(item => item.RecursoId)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(item => item.Accion)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(item => item.FechaProcesadoUtc)
+                .HasColumnType("datetime2(0)")
+                .IsRequired();
+
+            entity.HasOne(item => item.Suscripcion)
+                .WithMany(item => item.Eventos)
+                .HasForeignKey(item => item.SuscripcionComercialId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(item => new
+            {
+                item.Proveedor,
+                item.EventoProveedorId
+            })
+            .IsUnique();
+        });
+
+        modelBuilder.Entity<ApiClaveEntrega>(entity =>
+        {
+            entity.ToTable("ApiClaveEntregas");
+            entity.HasKey(item => item.ApiClaveEntregaId);
+
+            entity.Property(item => item.TokenHash)
+                .HasColumnType("binary(32)")
+                .IsRequired();
+
+            entity.Property(item => item.ClaveProtegida)
+                .HasMaxLength(1000)
+                .IsRequired();
+
+            entity.Property(item => item.FechaCreacionUtc)
+                .HasColumnType("datetime2(0)")
+                .IsRequired();
+
+            entity.Property(item => item.FechaExpiracionUtc)
+                .HasColumnType("datetime2(0)")
+                .IsRequired();
+
+            entity.Property(item => item.FechaConsumoUtc)
+                .HasColumnType("datetime2(0)");
+
+            entity.HasOne(item => item.Clave)
+                .WithMany(item => item.Entregas)
+                .HasForeignKey(item => item.ApiClaveId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(item => item.TokenHash)
+                .IsUnique();
         });
     }
 }

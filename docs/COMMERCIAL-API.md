@@ -55,31 +55,74 @@ La clave completa no se almacena en SQL Server: se conserva su hash para validac
 
 Las claves pueden revocarse desde el dashboard administrativo.
 
+En altas automáticas, la clave se entrega mediante un token temporal de un solo uso. Una entrega consumida o vencida no vuelve a revelar la clave.
+
 ## Planes y cuotas
 
 ### Prueba
 
 - duración: 14 días desde la creación del cliente;
-- límite: 200 análisis por día;
+- límite: 20 análisis por día;
 - período de cuota: diario UTC;
+- no se habilita una segunda prueba para el mismo acceso ya provisionado;
 - al vencer devuelve HTTP `403` con código `prueba_expirada`.
 
 ### Starter
 
 - límite: 5.000 análisis por mes;
 - período de cuota: mensual UTC;
-- no tiene vencimiento automático de prueba.
+- alta comercial preparada para suscripción recurrente mediante Mercado Pago.
 
 ### Growth
 
 - límite: 25.000 análisis por mes;
 - período de cuota: mensual UTC;
-- no tiene vencimiento automático de prueba.
+- alta comercial preparada para suscripción recurrente mediante Mercado Pago.
 
 ### A medida
 
 - cuota mensual configurable desde administración;
 - destinado a necesidades superiores o condiciones comerciales personalizadas.
+
+## Automatización comercial
+
+La versión 2.3.0 incorpora el ciclo de suscripción para Starter y Growth.
+
+Flujo principal:
+
+```text
+Solicitud de suscripción
+→ Mercado Pago
+→ webhook firmado
+→ validación de firma
+→ procesamiento idempotente
+→ actualización de estado
+→ provisionamiento de cliente API
+→ entrega one-time de API key
+```
+
+Estados relevantes:
+
+- pago aprobado: suscripción `Activa` y cliente API habilitado;
+- pago rechazado: suscripción `Impaga` y comienzo de período de gracia;
+- gracia vencida: suscripción `Suspendida` y cliente API deshabilitado;
+- cancelación: se conserva acceso hasta la fecha final informada y luego se deshabilita.
+
+Los eventos de webhook se persisten para impedir que un mismo evento vuelva a crear clientes, activaciones o entregas.
+
+## Webhook de Mercado Pago
+
+Endpoint:
+
+```text
+POST /webhooks/mercadopago
+```
+
+La firma se valida mediante los headers `x-signature`, `x-request-id` y el identificador `data.id`, usando el `WebhookSecret` configurado fuera del repositorio.
+
+Un webhook con firma inválida devuelve HTTP `401`.
+
+Un evento válido ya procesado devuelve respuesta correcta sin duplicar efectos.
 
 ## Períodos de consumo
 
@@ -149,11 +192,25 @@ El secreto administrativo debe mantenerse fuera del repositorio mediante User Se
 
 | HTTP | Significado |
 |---:|---|
-| 200 | Análisis realizado |
+| 200 | Análisis o webhook procesado |
 | 400 | Solicitud inválida |
-| 401 | API key inválida o ausente |
+| 401 | API key o firma de webhook inválida/ausente |
 | 403 | Prueba vencida o cliente no autorizado |
 | 429 | Rate limit o cuota agotada |
+
+## Configuración sensible
+
+Mantener fuera del repositorio:
+
+```text
+MercadoPago:AccessToken
+MercadoPago:WebhookSecret
+ApiAdministracion:Secret
+Correo:Password
+ConnectionStrings:DetectorEstafas
+```
+
+En desarrollo utilizar User Secrets. En producción utilizar variables de entorno o un gestor de secretos del hosting.
 
 ## Producción
 
@@ -162,6 +219,9 @@ Requisitos mínimos:
 - HTTPS;
 - SQL Server persistente;
 - secretos fuera de archivos versionados;
+- webhook público estable de Mercado Pago;
 - configuración administrativa segura;
 - monitoreo de errores y consumo;
 - backup de base de datos.
+
+Hosting, dominio, SMTP productivo, secretos productivos y precios definitivos se configuran en la etapa de publicación, no forman parte del cierre técnico 2.3.0.

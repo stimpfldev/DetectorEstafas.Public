@@ -1,0 +1,60 @@
+@model DetectorEstafas.Web.ViewModels.Planes.SolicitudPruebaViewModel
+@using DetectorEstafas.Web.Models.ApiComercial
+@{
+    ViewData["Title"] = "Prueba gratuita";
+}
+
+<section class="container py-5" style="max-width: 720px;">
+    <h1>Prueba gratuita</h1>
+    <p>
+        Tenés 14 días con hasta @ApiPlanes.CuotaDiariaPrueba análisis por día.
+    </p>
+
+    <form method="post"
+          class="card card-body shadow-sm"
+          data-commercial-form="true">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="alert alert-danger mb-3"
+             data-commercial-error
+             hidden></div>
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" autocomplete="name" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" autocomplete="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-2">
+            <input asp-for="AceptaPrivacidad" class="form-check-input" />
+            <label asp-for="AceptaPrivacidad" class="form-check-label">
+                Acepto la <a asp-controller="Legal" asp-action="Privacidad">política de privacidad</a>.
+            </label>
+            <span asp-validation-for="AceptaPrivacidad" class="text-danger d-block"></span>
+        </div>
+
+        <div class="form-check mb-4">
+            <input asp-for="AceptaCondiciones" class="form-check-input" />
+            <label asp-for="AceptaCondiciones" class="form-check-label">
+                Acepto las <a asp-controller="Legal" asp-action="Condiciones">condiciones de uso</a>.
+            </label>
+            <span asp-validation-for="AceptaCondiciones" class="text-danger d-block"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Activar prueba
+        </button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/comercial-form.js"
+            asp-append-version="true"></script>
+}

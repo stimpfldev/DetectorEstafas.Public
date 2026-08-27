@@ -17,4 +17,7 @@ public sealed class ApiClave
     public DateTime? FechaRevocacionUtc { get; set; }
 
     public ApiCliente Cliente { get; set; } = null!;
+
+    public ICollection<ApiClaveEntrega> Entregas { get; set; } =
+        new List<ApiClaveEntrega>();
 }

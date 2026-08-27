@@ -1,0 +1,25 @@
+@model DetectorEstafas.Web.ViewModels.Planes.RetornoSuscripcionViewModel
+@{
+    ViewData["Title"] = "Estado de suscripción";
+}
+
+<section class="container py-5" style="max-width: 720px;">
+    <h1>Estado de suscripción</h1>
+
+    @if (Model.AccesoActivo)
+    {
+        <div class="alert alert-success">
+            Tu plan @Model.Plan está activo. Si se generó una nueva clave de acceso, recibirás por email un enlace temporal para verla una sola vez.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Estado actual: <strong>@Model.Estado</strong>. Mercado Pago puede demorar unos instantes en confirmar la operación. Cuando el pago quede aprobado, tu acceso se activará automáticamente.
+        </div>
+    }
+
+    <a asp-action="Index" class="btn btn-outline-primary">
+        Volver a planes
+    </a>
+</section>

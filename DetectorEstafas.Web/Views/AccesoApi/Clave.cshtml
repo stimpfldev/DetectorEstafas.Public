@@ -1,0 +1,51 @@
+@model DetectorEstafas.Web.ViewModels.Planes.AccesoApiClaveViewModel
+@{
+    ViewData["Title"] = "Clave de acceso";
+}
+
+<section class="container py-5" style="max-width: 720px;">
+    <h1>Tu clave de acceso</h1>
+
+    @if (Model.InvalidaOExpirada)
+    {
+        <div class="alert alert-danger">
+            El enlace no es válido, ya fue utilizado o expiró. Contactá a soporte si necesitás regenerar la clave.
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.ApiKey))
+    {
+        <div class="alert alert-warning">
+            Copiá esta clave ahora. No volverá a mostrarse.
+        </div>
+
+        <div class="input-group mb-3">
+            <input id="apiKeyValue"
+                   class="form-control font-monospace"
+                   value="@Model.ApiKey"
+                   readonly />
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    onclick="navigator.clipboard.writeText(document.getElementById('apiKeyValue').value)">
+                Copiar
+            </button>
+        </div>
+
+        <p>
+            Guardala en un lugar seguro. Si vas a integrar Detector de Estafas con otro sistema, usala como <code>X-Api-Key</code> al llamar a <code>POST /api/v1/analisis</code>.
+        </p>
+    }
+    else
+    {
+        <p>
+            Por seguridad, la clave de acceso se muestra una sola vez. Presioná el botón cuando estés listo para copiarla y guardarla.
+        </p>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="Token" type="hidden" />
+            <button type="submit" class="btn btn-primary">
+                Mostrar clave de acceso
+            </button>
+        </form>
+    }
+</section>

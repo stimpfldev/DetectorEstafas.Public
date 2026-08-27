@@ -80,7 +80,7 @@ var disableGoogleAnalytics =
           asp-append-version="true" />
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="site-header">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
@@ -113,11 +113,11 @@ var disableGoogleAnalytics =
         </nav>
     </header>
 
-    <main>
+    <main class="flex-grow-1">
         @RenderBody()
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer mt-auto">
         <div class="container">
             <div class="footer-content">
                 <div>
