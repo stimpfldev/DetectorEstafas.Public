@@ -2,7 +2,7 @@
 
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
-**Versión estable actual: 2.2.0.**
+**Versión estable actual: 2.3.0.**
 
 El repositorio publica código fuente para revisión técnica bajo una licencia propietaria de código visible. La ejecución productiva, explotación comercial, redistribución y publicación de derivados requieren autorización escrita.
 
@@ -19,7 +19,11 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Catálogo de teléfonos oficiales y fuentes públicas verificadas.
 - PWA responsive instalable y preparada para uso móvil.
 - API comercial versionada con API keys, planes, cuotas diarias/mensuales y consumo persistido.
-- Plan de prueba de 14 días y plan comercial administrable.
+- Plan Prueba de 14 días con 20 análisis por día.
+- Starter con 5.000 análisis mensuales y Growth con 25.000 análisis mensuales.
+- Suscripciones Starter/Growth integradas con Mercado Pago.
+- Webhooks firmados e idempotentes para activación, rechazo, gracia, suspensión y cancelación.
+- Entrega temporal y de un solo uso de API keys para altas comerciales.
 - Dashboard interno para administración de clientes API.
 - Métricas, feedback y reportes comunitarios sin guardar el contenido analizado.
 - CI automático con build y pruebas mediante GitHub Actions.
@@ -44,6 +48,7 @@ Interfaz web/PWA responsive con análisis explicable para distintos tipos de con
 |---|---|
 | <img src="docs/images/04-audio.png" alt="Análisis de audio transcripto"> | <img src="docs/images/05-api-admin.png" alt="Dashboard de API comercial"> |
 | **Transcripción local seguida del motor de análisis.** | **Gestión de clientes, planes, cuotas y API keys.** |
+
 ## Privacidad por diseño
 
 Por defecto no se almacenan mensajes, enlaces completos, teléfonos, imágenes, audios ni transcripciones. Los archivos se procesan temporalmente y se eliminan al finalizar. La evaluación con IA externa es opcional y requiere consentimiento explícito.
@@ -68,6 +73,17 @@ Entrada del usuario
 → evaluación opcional de IA
 → resultado separado y explicable
 → métrica sin contenido
+```
+
+Flujo comercial 2.3.0:
+
+```text
+Solicitud Starter/Growth
+→ Mercado Pago
+→ webhook firmado
+→ procesamiento idempotente
+→ activación del cliente API
+→ entrega one-time de API key
 ```
 
 ## Requisitos de desarrollo
@@ -141,6 +157,8 @@ Ejemplo:
 dotnet user-secrets init --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
 dotnet user-secrets set "InteligenciaArtificial:ApiKey" "REEMPLAZAR" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
 dotnet user-secrets set "ApiAdministracion:Secret" "REEMPLAZAR" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
+dotnet user-secrets set "MercadoPago:AccessToken" "REEMPLAZAR" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
+dotnet user-secrets set "MercadoPago:WebhookSecret" "REEMPLAZAR" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
 ```
 
 La configuración pública de referencia está en:
@@ -170,6 +188,12 @@ POST /api/v1/analisis
 Header: X-Api-Key
 ```
 
+Webhook comercial:
+
+```text
+POST /webhooks/mercadopago
+```
+
 Las claves completas no se almacenan en SQL Server; se conserva su hash para validación.
 
 ## Seguridad
@@ -183,10 +207,10 @@ Antes de publicar una nueva versión debe ejecutarse:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Preparar-Repositorio-Publico.ps1
 powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Verificar-Repositorio-Publico.ps1
+powershell -ExecutionPolicy Bypass -File .\DetectorEstafas.Web\Scripts\Validar-Seguridad-Etapa2.ps1
 ```
 
-También debe completarse [docs/RELEASE-CHECKLIST-2.2.0.md](docs/RELEASE-CHECKLIST-2.2.0.md).
-
+También debe completarse [docs/RELEASE-CHECKLIST-2.3.0.md](docs/RELEASE-CHECKLIST-2.3.0.md).
 
 ## Licencia
 
@@ -196,7 +220,7 @@ Los componentes de terceros conservan sus propias licencias. Ver `DetectorEstafa
 
 ## Versión y cambios
 
-Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance y las correcciones de la versión 2.2.0.
+Ver [RELEASE-NOTES.md](RELEASE-NOTES.md) para el alcance y las correcciones de la versión 2.3.0.
 
 ## Autor
 
