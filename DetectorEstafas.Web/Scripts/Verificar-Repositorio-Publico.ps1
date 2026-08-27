@@ -8,7 +8,7 @@ $findings = @()
 $patterns = @(
     @{ Name = "OpenAI API key"; Regex = "sk-[A-Za-z0-9_-]{20,}" },
     @{ Name = "Private key"; Regex = "-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----" },
-    @{ Name = "Configured secret"; Regex = '"(ApiKey|Secret|Password)"\s*:\s*"(?!(REEMPLAZAR|UNA-CLAVE)[^"]*)[^"\r\n]+"' },
+    @{ Name = "Configured secret"; Regex = '"(ApiKey|Secret|Password)"\s*:\s*"(?!(REEMPLAZAR|UNA-CLAVE|<CONFIGURAR_EXTERNAMENTE)[^"]*)[^"\r\n]+"' },
     @{ Name = "Connection password"; Regex = "(?i)(Password|Pwd)\s*=\s*[^;\s]+" }
 )
 
@@ -18,7 +18,8 @@ $excludedExtensions = @(
 )
 
 # bin, obj, .vs and artifacts are generated locally and are ignored here.
-# If any of them are tracked by Git, the Git check below will report them.
+# Local runtime assets such as *.user, OCR and Whisper models are allowed
+# when ignored by Git. The tracked-file check below rejects them if committed.
 $sourceFiles = Get-ChildItem -Path . -Recurse -File | Where-Object {
     $_.FullName -notmatch "\\(bin|obj|\.vs|artifacts|\.git)\\" -and
     $excludedExtensions -notcontains $_.Extension.ToLowerInvariant()
@@ -35,35 +36,6 @@ foreach ($file in $sourceFiles) {
         if ($content -match $pattern.Regex) {
             $findings += "Possible $($pattern.Name): $($file.FullName)"
         }
-    }
-}
-
-$publishableFiles = Get-ChildItem -Path . -Recurse -File | Where-Object {
-    $_.FullName -notmatch "\\(bin|obj|\.vs|artifacts|\.git)\\"
-}
-
-foreach ($file in $publishableFiles) {
-    $isForbidden = $false
-    $extension = $file.Extension.ToLowerInvariant()
-
-    if ($file.Name -match "^(request\.json|secrets\.json)$") {
-        $isForbidden = $true
-    }
-    elseif (@(".pfx", ".p12", ".key", ".pem", ".user", ".suo") -contains $extension) {
-        $isForbidden = $true
-    }
-    elseif ($file.FullName -match "\\wwwroot\\.*\.(zip|7z|rar)$") {
-        $isForbidden = $true
-    }
-    elseif ($file.FullName -match "\\OcrData\\.*\.traineddata$") {
-        $isForbidden = $true
-    }
-    elseif ($file.FullName -match "\\WhisperModels\\.*\.bin$") {
-        $isForbidden = $true
-    }
-
-    if ($isForbidden) {
-        $findings += "File not publishable: $($file.FullName)"
     }
 }
 
