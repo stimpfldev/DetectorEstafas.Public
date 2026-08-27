@@ -12,16 +12,13 @@ public sealed class MercadoPagoWebhookController : ControllerBase
 {
     private readonly IMercadoPagoWebhookSignatureValidator _signatureValidator;
     private readonly IComercializacionApiService _comercializacion;
-    private readonly ILogger<MercadoPagoWebhookController> _logger;
 
     public MercadoPagoWebhookController(
         IMercadoPagoWebhookSignatureValidator signatureValidator,
-        IComercializacionApiService comercializacion,
-        ILogger<MercadoPagoWebhookController> logger)
+        IComercializacionApiService comercializacion)
     {
         _signatureValidator = signatureValidator;
         _comercializacion = comercializacion;
-        _logger = logger;
     }
 
     [HttpPost]
@@ -35,19 +32,10 @@ public sealed class MercadoPagoWebhookController : ControllerBase
         string? dataIdQuery =
             Request.Query["data.id"].FirstOrDefault();
 
-        bool firmaValida = _signatureValidator.EsValida(
-            xSignature,
-            xRequestId,
-            dataIdQuery);
-
-        _logger.LogInformation(
-            "Webhook Mercado Pago recibido. XSignature={TieneXSignature}, XRequestId={TieneXRequestId}, DataId={DataId}, FirmaValida={FirmaValida}",
-            !string.IsNullOrWhiteSpace(xSignature),
-            !string.IsNullOrWhiteSpace(xRequestId),
-            dataIdQuery ?? "<null>",
-            firmaValida);
-
-        if (!firmaValida)
+        if (!_signatureValidator.EsValida(
+                xSignature,
+                xRequestId,
+                dataIdQuery))
         {
             return Unauthorized();
         }
