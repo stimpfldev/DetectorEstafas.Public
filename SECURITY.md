@@ -2,7 +2,7 @@
 
 ## Versiones cubiertas
 
-La versión estable vigente, **2.2.0**, y la rama principal reciben correcciones de seguridad. Las versiones anteriores pueden no recibir correcciones.
+La versión estable vigente, **2.3.0**, y la rama principal reciben correcciones de seguridad. Las versiones anteriores pueden no recibir correcciones.
 
 ## Cómo reportar una vulnerabilidad
 
@@ -44,7 +44,7 @@ No se ofrece recompensa económica ni programa formal de bug bounty.
 
 Son especialmente relevantes los reportes relacionados con:
 
-- carga de imágenes o audios;
+- carga de imágenes;
 - traversal, ejecución o persistencia indebida de archivos;
 - fuga de contenido analizado;
 - autenticación por API key;
