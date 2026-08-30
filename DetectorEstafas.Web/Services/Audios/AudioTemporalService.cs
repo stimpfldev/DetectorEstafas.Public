@@ -49,6 +49,12 @@ public class AudioTemporalService : IAudioTemporalService
         IFormFile archivo,
         CancellationToken cancellationToken)
     {
+        if (!_options.Enabled)
+        {
+            throw new AudioInvalidoException(
+                "El análisis de audio no está disponible en este entorno.");
+        }
+
         ValidarMetadatos(archivo);
 
         string extension =
