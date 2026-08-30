@@ -14,6 +14,29 @@ namespace DetectorEstafas.Tests.Services.Audios;
 public class AudioTemporalServiceTests
 {
     [TestMethod]
+    public async Task ProcesarAsync_AudiosDeshabilitados_RechazaSinProcesar()
+    {
+        FormFile archivo = CrearArchivo(
+            [0x01],
+            "audio.wav",
+            "audio/wav");
+
+        AudioTemporalService service = CrearServicio(
+            $"DetectorEstafasTests/Audios/{Guid.NewGuid():N}",
+            enabled: false);
+
+        AudioInvalidoException exception =
+            await Assert.ThrowsExactlyAsync<AudioInvalidoException>(
+                () => service.ProcesarAsync(
+                    archivo,
+                    CancellationToken.None));
+
+        StringAssert.Contains(
+            exception.Message,
+            "no está disponible");
+    }
+
+    [TestMethod]
     public async Task ProcesarAsync_WavValido_AceptaYEliminaTemporal()
     {
         string? ffmpegBinaryFolder =
@@ -103,10 +126,13 @@ public class AudioTemporalServiceTests
                 CancellationToken.None));
     }
 
-    private static AudioTemporalService CrearServicio(string carpeta)
+    private static AudioTemporalService CrearServicio(
+        string carpeta,
+        bool enabled = true)
     {
         AudioOptions options = new()
         {
+            Enabled = enabled,
             MaxFileSizeBytes = 10 * 1024 * 1024,
             RetentionMinutes = 60,
             TemporaryFolderName = carpeta
