@@ -8,8 +8,7 @@ Detector de Estafas permite analizar de forma preventiva:
 - enlaces;
 - números telefónicos;
 - descripciones de llamadas;
-- capturas de pantalla mediante OCR;
-- audios mediante transcripción local.
+- capturas de pantalla mediante OCR.
 
 El resultado indica nivel de riesgo, puntaje, señales detectadas y recomendaciones. Es orientativo: no reemplaza la verificación por canales oficiales.
 
@@ -27,10 +26,6 @@ No ingreses contraseñas, códigos de autenticación, datos bancarios, documento
 ## Capturas
 
 La captura se procesa temporalmente para extraer texto mediante OCR. El archivo temporal se elimina al finalizar el procesamiento según la política configurada.
-
-## Audios
-
-El audio puede cargarse o grabarse desde un dispositivo compatible. La transcripción se realiza localmente cuando el servidor dispone del modelo configurado.
 
 ## Evaluación con IA
 
@@ -64,7 +59,7 @@ La PWA puede mostrar una página offline cuando no hay acceso a la red. Los aná
 
 ## Privacidad
 
-Por defecto no se guarda el contenido completo analizado. Las métricas almacenan datos funcionales mínimos y no el mensaje, enlace completo, teléfono, imagen, audio o transcripción.
+Por defecto no se guarda el contenido completo analizado. Las métricas almacenan datos funcionales mínimos y no el mensaje, enlace completo, teléfono o imagen.
 
 ## Qué hacer ante una señal de riesgo
 
