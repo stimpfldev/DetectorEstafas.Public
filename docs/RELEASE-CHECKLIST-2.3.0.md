@@ -21,6 +21,7 @@
 - [x] Logging diagnóstico temporal retirado.
 - [x] Build Release aprobado.
 - [x] Suite automatizada final: 62/62 correctas, 0 errores, 0 omitidas.
+- [x] Paquete de publicación SharkASP ajustado a las capacidades del hosting compartido.
 - [ ] GitHub Actions `CI / Build and test` aprobado para 2.3.0.
 
 ## Seguridad
@@ -31,7 +32,7 @@
 - [x] User Secrets utilizados para configuración local sensible.
 - [x] Contraseñas SMTP no publicadas.
 - [x] API keys no publicadas.
-- [x] OCR/Whisper locales ignorados por Git.
+- [x] Assets locales pesados ignorados por Git.
 - [x] `.csproj.user` ignorado por Git.
 - [x] Placeholders de producción diferenciados de secretos reales.
 - [x] Revisión de dependencias vulnerables ejecutada.
