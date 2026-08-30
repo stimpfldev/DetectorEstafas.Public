@@ -2,7 +2,7 @@
   "id": "/",
   "name": "AlertaEstafa",
   "short_name": "AlertaEstafa",
-  "description": "Analizá mensajes, enlaces, teléfonos, capturas y audios sospechosos antes de actuar.",
+  "description": "Analizá mensajes, enlaces, teléfonos y capturas sospechosas antes de actuar.",
   "lang": "es-AR",
   "start_url": "/?origen=pwa",
   "scope": "/",
@@ -30,13 +30,9 @@
           "accept": [
             "image/png",
             "image/jpeg",
-            "audio/mpeg",
-            "audio/wav",
             ".png",
             ".jpg",
-            ".jpeg",
-            ".mp3",
-            ".wav"
+            ".jpeg"
           ]
         }
       ]
