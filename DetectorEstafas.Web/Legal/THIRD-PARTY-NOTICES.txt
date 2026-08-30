@@ -1,11 +1,15 @@
 DETECTOR DE ESTAFAS
 THIRD-PARTY NOTICES
-Versión del documento: 2.2.0
-Última actualización: 2026-08-24
+Versión del documento: 2.3.0
+Última actualización: 2026-08-30
 
 Este producto utiliza componentes, modelos y servicios de terceros. Cada componente
 permanece sujeto a su propia licencia, condiciones y avisos de copyright. Este archivo
 no reemplaza los textos originales distribuidos por sus titulares.
+
+Esta variante de publicación para hosting compartido no incluye procesamiento de audio
+ni distribuye FFMpegCore, FFmpeg, ffprobe, NAudio, Whisper.net, Whisper.net.Runtime o
+modelos Whisper.
 
 1. MICROSOFT .NET / ASP.NET CORE / ENTITY FRAMEWORK CORE / IDENTITY
    Componentes utilizados:
@@ -48,61 +52,26 @@ no reemplaza los textos originales distribuidos por sus titulares.
    El modelo no debe incluirse automáticamente en el repositorio público; se obtiene
    mediante el script de preparación y debe verificarse su licencia en cada publicación.
 
-7. NAUDIO 2.3.0
-   Uso: lectura y conversión de audio para transcripción.
-   Licencia: MIT.
-   Titulares: Mark Heath y colaboradores.
+7. OPENAI API
+   Uso opcional: evaluación complementaria de IA cuando el usuario presta consentimiento.
+   Es un servicio externo sujeto a términos, políticas, disponibilidad, retención y
+   precios propios del proveedor. OpenAI no mantiene, representa ni patrocina este producto.
+   No se distribuye ninguna API key con el código.
 
-8. FFMPEGCORE 5.4.0
-   Uso: integración .NET para ejecutar FFmpeg y ffprobe durante la validación
-   y normalización de archivos de audio.
-   Licencia: MIT.
-   Proyecto: rosenbjerg/FFMpegCore.
-   FFMpegCore no incluye ni sustituye las licencias aplicables a los ejecutables
-   externos de FFmpeg.
+8. NIC ARGENTINA RDAP
+   Uso: consulta registral de nombres de dominio terminados en .ar.
+   Servicio externo sujeto a sus propias condiciones y disponibilidad.
+   NIC Argentina no mantiene, representa ni patrocina Detector de Estafas.
 
-9. FFMPEG / FFPROBE
-   Uso: inspección, validación y normalización de archivos de audio antes de
-   su transcripción.
-   Los ejecutables son componentes externos y no se incluyen en el repositorio.
-   La build utilizada durante desarrollo informa:
-   - FFmpeg n9.0.1-6-g9d4ca21220-20260823;
-   - GNU Lesser General Public License versión 3 o posterior.
-   Antes de distribuir binarios de FFmpeg junto con el producto se deberá
-   verificar nuevamente la licencia de la build concreta utilizada y conservar
-   los avisos y textos de licencia correspondientes.
-
-10. WHISPER.NET 1.9.1 Y WHISPER.NET.RUNTIME 1.9.1
-   Uso: integración local de transcripción.
-   Licencia indicada por el paquete: MIT.
-   Titulares: Sandro Hanea y colaboradores.
-
-11. MODELO GGML-BASE Y WHISPER.CPP
-   Uso: transcripción local de audio.
-   El archivo binario se descarga por separado y no debe incluirse automáticamente en
-   el repositorio público. Antes de distribuirlo se deben revisar la licencia del modelo,
-   las condiciones del proyecto de origen y los avisos aplicables.
-
-12. OPENAI API
-    Uso opcional: evaluación complementaria de IA cuando el usuario presta consentimiento.
-    Es un servicio externo sujeto a términos, políticas, disponibilidad, retención y
-    precios propios del proveedor. OpenAI no mantiene, representa ni patrocina este producto.
-    No se distribuye ninguna API key con el código.
-
-13. NIC ARGENTINA RDAP
-    Uso: consulta registral de nombres de dominio terminados en .ar.
-    Servicio externo sujeto a sus propias condiciones y disponibilidad.
-    NIC Argentina no mantiene, representa ni patrocina Detector de Estafas.
-
-14. FUENTES PÚBLICAS DE TELÉFONOS
-    El catálogo puede referenciar sitios oficiales u organizacionales para verificar
-    líneas públicas. Las marcas y denominaciones pertenecen a sus titulares. La inclusión
-    de una referencia no implica afiliación, patrocinio ni garantía permanente.
+9. FUENTES PÚBLICAS DE TELÉFONOS
+   El catálogo puede referenciar sitios oficiales u organizacionales para verificar
+   líneas públicas. Las marcas y denominaciones pertenecen a sus titulares. La inclusión
+   de una referencia no implica afiliación, patrocinio ni garantía permanente.
 
 OBLIGACIÓN DE REVISIÓN
 Antes de cada publicación o distribución:
 - comparar este documento con las versiones realmente restauradas y distribuidas;
 - conservar los textos de licencia exigidos por cada dependencia;
-- revisar licencias de modelos y archivos binarios por separado;
+- revisar licencias de modelos y archivos binarios por separado cuando corresponda;
 - actualizar servicios, enlaces, versiones y avisos;
 - no afirmar afiliación con terceros.
