@@ -1,24 +1,18 @@
-DETECTOR DE ESTAFAS 2.2.0
-CHECKLIST DE SEGURIDAD Y PRIVACIDAD - ETAPA 2
+DETECTOR DE ESTAFAS 2.3.0
+CHECKLIST DE SEGURIDAD Y PRIVACIDAD — PUBLICACIÓN WEB
+Fecha: 2026-08-30
 
 Repositorio y secretos
 [ ] Verificar-Repositorio-Publico.ps1 finaliza correctamente.
 [ ] No existen API keys, secretos administrativos, credenciales SMTP ni cadenas productivas versionadas.
-[ ] Los modelos OCR y Whisper no están incluidos en Git.
-[ ] FFmpeg y ffprobe no están incluidos como binarios en Git.
-[ ] La ruta local de FFmpeg no está versionada.
+[ ] Los assets locales pesados no están incluidos en Git.
 [ ] bin, obj, .vs, artifacts, archivos .user y request.json no están versionados.
 [ ] Se revisó el historial Git antes de hacerlo público.
 
 Archivos temporales
 [ ] PNG/JPEG válidos se procesan y se eliminan.
 [ ] Archivos con extensión manipulada se rechazan.
-[ ] MP3, WAV, OGG, OPUS, M4A y AAC válidos se procesan.
-[ ] El audio real es validado mediante ffprobe.
-[ ] Los audios se normalizan antes de la transcripción.
-[ ] Audios manipulados o demasiado grandes se rechazan.
-[ ] Archivos originales y normalizados temporales se eliminan.
-[ ] No se escriben imágenes, audios, OCR ni transcripciones en logs.
+[ ] No se escriben imágenes ni contenido OCR en logs.
 
 IA externa
 [ ] La IA permanece deshabilitada sin configuración explícita.
@@ -31,8 +25,8 @@ Registro y correo
 [ ] El registro exige condiciones y privacidad.
 [ ] El correo duplicado se rechaza.
 [ ] La confirmación usa token de Identity.
-[ ] No existe inicio de sesión público en esta versión.
 [ ] Las contraseñas son administradas por ASP.NET Core Identity.
+[ ] Credenciales SMTP productivas fuera del repositorio.
 
 API comercial
 [ ] Solicitud sin API key devuelve 401.
@@ -48,6 +42,13 @@ API comercial
 [ ] Los logs no contienen el cuerpo analizado ni la API key.
 [ ] Los headers de límite, restante, período y reinicio son coherentes con la cuota.
 
+Automatización comercial
+[ ] Access Token y Webhook Secret de Mercado Pago están fuera del repositorio.
+[ ] Firma HMAC SHA-256 se valida antes de procesar el evento.
+[ ] Webhooks repetidos se procesan de forma idempotente.
+[ ] Pago aprobado no puede duplicar clientes ni entregas.
+[ ] La API key completa se entrega mediante mecanismo temporal y one-time.
+
 Dashboard administrativo
 [ ] Está deshabilitado sin configuración explícita.
 [ ] El secreto se encuentra fuera del repositorio.
@@ -57,12 +58,11 @@ Dashboard administrativo
 [ ] La cookie es HttpOnly, Secure y SameSite=Strict.
 
 Dependencias y compilación
-[ ] dotnet list package --vulnerable --include-transitive no informa vulnerabilidades.
-[ ] FFMpegCore y demás dependencias coinciden con THIRD-PARTY-NOTICES.
-[ ] La licencia de la build de FFmpeg utilizada fue revisada.
+[ ] dotnet list package --vulnerable --include-transitive no informa vulnerabilidades bloqueantes.
+[ ] Dependencias incluidas coinciden con THIRD-PARTY-NOTICES.
 [ ] Compilación Release exitosa.
 [ ] Todas las pruebas automáticas pasan.
 [ ] Migraciones aplicadas sobre una base limpia de validación.
 
 Resultado final
-[ ] APROBADO PARA PUBLICACIÓN DE LA VERSIÓN 2.2.0.
+[ ] APROBADO PARA PUBLICACIÓN WEB DE LA VERSIÓN 2.3.0.
