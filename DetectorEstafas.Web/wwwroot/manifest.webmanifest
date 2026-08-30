@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Detector de Estafas",
-  "short_name": "Detector",
+  "name": "AlertaEstafa",
+  "short_name": "AlertaEstafa",
   "description": "Analizá mensajes, enlaces, teléfonos, capturas y audios sospechosos antes de actuar.",
   "lang": "es-AR",
   "start_url": "/?origen=pwa",
