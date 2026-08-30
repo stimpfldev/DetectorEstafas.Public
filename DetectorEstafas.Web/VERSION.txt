@@ -1,14 +1,11 @@
 Producto: Detector de Estafas
 Versión: 2.3.0
-Etapa: Automatización comercial preparada para cierre técnico previo a publicación
-Fecha de cierre: 2026-08-27
+Etapa: Automatización comercial y publicación web
+Fecha de actualización: 2026-08-30
 
 Alcance principal:
-- análisis de mensajes, enlaces, teléfonos y llamadas;
+- análisis de mensajes, enlaces, teléfonos y descripciones de llamadas;
 - capturas PNG/JPEG con OCR local;
-- audios con transcripción local;
-- soporte de audio MP3, WAV, OGG, OPUS, M4A y AAC;
-- normalización de audio mediante FFmpeg antes de la transcripción;
 - evaluación opcional mediante IA externa;
 - registro y confirmación de correo;
 - PWA responsive instalable;
@@ -49,16 +46,11 @@ Cambios 2.3.0:
 - prevención de activación duplicada del plan Prueba;
 - plan Prueba ajustado a 20 análisis por día;
 - nuevos tests de regresión comercial para Prueba, Starter/Growth, firma, rechazo, gracia, cancelación e idempotencia;
-- mejora del validador de repositorio público para distinguir assets locales ignorados y placeholders de configuración.
+- mejora del validador de repositorio público para distinguir assets locales ignorados y placeholders de configuración;
+- adaptación del paquete de publicación a las capacidades del hosting compartido.
 
 Cambios 2.2.0:
-- ampliación del soporte de audio a MP3, WAV, OGG, OPUS, M4A y AAC;
-- incorporación de FFMpegCore y FFmpeg para validar y normalizar audios;
-- normalización a WAV PCM mono de 16 kHz antes de Whisper;
-- mejora del selector de archivos de audio en dispositivos móviles;
-- fallback de selección compatible con navegadores sin File System Access API;
-- validación funcional de los nuevos formatos de audio en Android;
-- corrección de navegación al refrescar después de procesar audio o captura;
+- corrección de navegación al refrescar después de procesar capturas;
 - mejoras funcionales y visuales del analizador principal;
 - recalibración de señales y umbrales de riesgo;
 - nuevas regresiones automatizadas para niveles Bajo, Medio y Alto;
@@ -82,10 +74,9 @@ Cambios 2.1.0:
 - migración de datos existentes y preservación de consumos históricos.
 
 Correcciones 2.0.2:
-- mejora del análisis de llamadas transcritas;
+- mejora del análisis de descripciones de llamadas;
 - detección ampliada de bloqueo, suspensión y variantes equivalentes;
 - detección de solicitudes de códigos, credenciales y datos de acceso;
-- mayor tolerancia a transcripciones reales de voz;
 - pruebas automatizadas específicas para llamadas.
 
 Correcciones 2.0.1:
@@ -111,9 +102,7 @@ Validación 2.3.0:
 - validación final de GitHub Actions correspondiente a 2.3.0 pendiente del PR/merge final.
 
 Fuera del cierre técnico actual:
-- hosting productivo;
-- dominio productivo;
-- SMTP productivo;
+- HTTPS productivo;
 - credenciales y secretos productivos definitivos;
 - precios comerciales definitivos;
 - publicación en sitio personal y LinkedIn;
