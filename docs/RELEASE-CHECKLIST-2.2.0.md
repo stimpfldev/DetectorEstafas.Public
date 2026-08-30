@@ -5,16 +5,12 @@
 - [x] Versión del proyecto actualizada a 2.2.0.
 - [x] `VERSION.txt` actualizado.
 - [x] `RELEASE-NOTES.md` actualizado.
-- [x] Soporte MP3 y WAV validado.
-- [x] Soporte AAC, OGG y M4A validado en Android.
-- [x] Normalización de audio mediante FFmpeg validada.
-- [x] Refresh posterior a análisis de audio corregido y validado.
 - [x] Refresh posterior a análisis de captura corregido y validado.
 - [x] Autenticación de API comercial validada.
 - [x] Headers de rate limit validados.
 - [x] Dashboard administrativo validado.
 - [x] Canal de contacto validado.
-- [x] 41 de 42 validaciones funcionales completadas.
+- [x] Validaciones funcionales principales completadas.
 - [ ] Prueba física en iPhone/iPad.
 - [ ] Compilación final Release 2.2.0 aprobada.
 - [ ] Suite automatizada final aprobada.
@@ -26,21 +22,10 @@
 - [x] User Secrets utilizados para configuración local sensible.
 - [x] API keys no publicadas en archivos de configuración.
 - [x] Contraseñas SMTP no publicadas.
-- [x] Modelos OCR/Whisper excluidos del repositorio.
-- [x] Ruta local de FFmpeg eliminada de la configuración versionada.
+- [x] Assets locales pesados excluidos del repositorio.
 - [x] Configuración pública de ejemplo preparada.
 - [x] Revisión del repositorio sin referencias privadas de desarrollo.
 - [ ] Revisión final de secretos antes del commit de release.
-
-## Audio y FFmpeg
-
-- [x] FFMpegCore 5.4.0 incorporado.
-- [x] FFmpeg y ffprobe utilizados como dependencias externas.
-- [x] README documenta el requisito de FFmpeg.
-- [x] `appsettings.Public.example.json` incluye `FFmpeg:BinaryFolder`.
-- [x] FFmpeg no se incluye como binario en el repositorio.
-- [x] Licencia de la build de desarrollo verificada.
-- [x] `THIRD-PARTY-NOTICES.txt` actualizado con FFMpegCore y FFmpeg.
 
 ## PWA y dispositivos
 
@@ -48,8 +33,6 @@
 - [x] Service Worker configurado.
 - [x] Íconos PWA incluidos.
 - [x] Instalación y uso en Android validados.
-- [x] Selector de audio compatible con Android validado.
-- [x] Fallback de selector preparado para navegadores sin File System Access API.
 - [x] Compatibilidad web/PWA para iPhone/iPad implementada.
 - [ ] Validación física definitiva en iPhone/iPad.
 
@@ -74,7 +57,6 @@ Estos puntos se completarán durante la publicación productiva:
 
 - [ ] Hosting configurado.
 - [ ] Base de datos productiva configurada.
-- [ ] `FFmpeg:BinaryFolder` configurado en producción.
 - [ ] Dominio configurado.
 - [ ] HTTPS validado.
 - [ ] SMTP productivo configurado.
