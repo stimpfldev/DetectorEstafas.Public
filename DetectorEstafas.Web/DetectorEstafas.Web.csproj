@@ -16,17 +16,10 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FFMpegCore" Version="5.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
 		<PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
 
 		<PackageReference Include="Tesseract" Version="5.2.0" />
-
-		<PackageReference Include="NAudio" Version="2.3.0" />
-
-		<PackageReference Include="Whisper.net" Version="1.9.1" />
-
-		<PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
 
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
 			<PrivateAssets>all</PrivateAssets>
@@ -52,7 +45,6 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
-
 
 		<None Update="Legal\CHECKLIST-SEGURIDAD-ETAPA2.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
