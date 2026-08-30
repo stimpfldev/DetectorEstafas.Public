@@ -10,7 +10,7 @@
     "Usuario": "",
     "Password": "",
     "RemitenteEmail": "",
-    "RemitenteNombre": "Detector de Estafas"
+    "RemitenteNombre": "AlertaEstafa"
   },
   "InteligenciaArtificial": {
     "Enabled": false,
