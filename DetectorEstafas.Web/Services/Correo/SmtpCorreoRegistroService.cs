@@ -37,7 +37,7 @@ public sealed class SmtpCorreoRegistroService : ICorreoRegistroService
             From = new MailAddress(
                 _options.RemitenteEmail,
                 _options.RemitenteNombre),
-            Subject = "Confirmá tu correo - Detector de Estafas",
+            Subject = "Confirmá tu correo - AlertaEstafa",
             Body =
                 "Confirmá tu correo ingresando al siguiente enlace:\n\n" +
                 enlaceConfirmacion +
