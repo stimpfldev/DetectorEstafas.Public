@@ -2,3 +2,51 @@
 .audio-card {
     display: none !important;
 }
+
+/* Captura integrada como un tipo más dentro del analizador principal. */
+.content-type-tabs {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.capture-card--integrated {
+    margin: 0;
+    padding: 2px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.capture-card--integrated[hidden] {
+    display: none !important;
+}
+
+.capture-card--integrated .capture-card-header {
+    display: none;
+}
+
+.capture-card--integrated form {
+    padding-top: 2px;
+}
+
+.capture-mode-active > .validation-summary,
+.capture-mode-active > .form-section:not(:first-of-type),
+.capture-mode-active > .ia-consent,
+.capture-mode-active > .btn-analyze,
+.capture-mode-active > .form-warning {
+    display: none !important;
+}
+
+.capture-card--integrated input[type="file"].form-control-custom {
+    min-height: 42px;
+}
+
+@media (max-width: 767px) {
+    .content-type-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .content-type-tab:last-child {
+        grid-column: 1 / -1;
+    }
+}
