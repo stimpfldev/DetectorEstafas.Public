@@ -1,6 +1,6 @@
 # Detector de Estafas
 
-Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
+Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, descripciones de llamadas y capturas.
 
 **Versión estable actual: 2.3.0.**
 
@@ -12,7 +12,6 @@ El repositorio publica código fuente para revisión técnica bajo una licencia 
 - Análisis de mensajes, enlaces, teléfonos y descripciones de llamadas.
 - Análisis técnico de enlaces y consulta RDAP para dominios `.ar`.
 - Carga segura de capturas, OCR local y análisis del texto extraído.
-- Carga y grabación de audio, transcripción local y análisis.
 - Evaluación opcional y separada mediante proveedor de IA externo.
 - Registro de cuentas y confirmación de correo.
 - Confirmación de correo preparada para desarrollo y SMTP.
@@ -44,14 +43,17 @@ Interfaz web/PWA responsive con análisis explicable para distintos tipos de con
 | <img src="docs/images/02-resultado.png" alt="Resultado de análisis de riesgo"> | <img src="docs/images/03-ocr.png" alt="Análisis mediante OCR"> |
 | **Detección explicable de señales de fraude.** | **Extracción local de texto y análisis posterior.** |
 
-| Audio y transcripción | API comercial |
-|---|---|
-| <img src="docs/images/04-audio.png" alt="Análisis de audio transcripto"> | <img src="docs/images/05-api-admin.png" alt="Dashboard de API comercial"> |
-| **Transcripción local seguida del motor de análisis.** | **Gestión de clientes, planes, cuotas y API keys.** |
+### API comercial
+
+<p align="center">
+  <img src="docs/images/05-api-admin.png" alt="Dashboard de API comercial" width="900">
+</p>
+
+Gestión de clientes, planes, cuotas y API keys.
 
 ## Privacidad por diseño
 
-Por defecto no se almacenan mensajes, enlaces completos, teléfonos, imágenes, audios ni transcripciones. Los archivos se procesan temporalmente y se eliminan al finalizar. La evaluación con IA externa es opcional y requiere consentimiento explícito.
+Por defecto no se almacenan mensajes, enlaces completos, teléfonos ni imágenes. Las capturas se procesan temporalmente y se eliminan al finalizar. La evaluación con IA externa es opcional y requiere consentimiento explícito.
 
 No ingreses contraseñas, códigos de autenticación, datos bancarios, documentos ni información personal innecesaria.
 
@@ -68,7 +70,7 @@ Flujo principal:
 ```text
 Entrada del usuario
 → validación y normalización
-→ OCR o transcripción cuando corresponde
+→ OCR cuando corresponde
 → motor local determinista
 → evaluación opcional de IA
 → resultado separado y explicable
@@ -91,8 +93,7 @@ Solicitud Starter/Growth
 - .NET 10 SDK.
 - SQL Server LocalDB o SQL Server.
 - Visual Studio compatible con .NET 10 o CLI de .NET.
-- PowerShell para preparar los modelos locales.
-- FFmpeg y ffprobe instalados localmente para validación y normalización de audio.
+- PowerShell para preparar los datos locales de OCR.
 
 ## Puesta en marcha local
 
@@ -102,28 +103,13 @@ Solicitud Starter/Growth
 dotnet restore .\DetectorEstafas.slnx
 ```
 
-2. Preparar OCR y Whisper desde `DetectorEstafas.Web`:
+2. Preparar OCR desde `DetectorEstafas.Web`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\Scripts\Preparar-OCR.ps1
-powershell -ExecutionPolicy Bypass -File .\Scripts\Preparar-Whisper.ps1
 ```
 
-Los modelos no se incluyen en el repositorio público por tamaño y licencia de distribución. Deben descargarse desde sus fuentes oficiales mediante los scripts.
-
-### Configuración de FFmpeg
-
-La aplicación requiere `ffmpeg` y `ffprobe` para validar y normalizar los audios antes de la transcripción.
-
-La ubicación de los ejecutables no debe guardarse en el repositorio. Durante desarrollo puede configurarse mediante User Secrets:
-
-```powershell
-dotnet user-secrets set "FFmpeg:BinaryFolder" "C:\RUTA\FFmpeg" --project .\DetectorEstafas.Web\DetectorEstafas.Web.csproj
-```
-
-La carpeta configurada debe contener `ffmpeg.exe` y `ffprobe.exe`.
-
-En producción, `FFmpeg:BinaryFolder` debe configurarse mediante la configuración segura del hosting.
+Los datos de OCR no se incluyen en el repositorio público cuando su distribución no corresponde. Deben prepararse desde su fuente mediante el script provisto.
 
 3. Configurar la cadena de conexión en un archivo local no versionado o mediante variables de entorno.
 
