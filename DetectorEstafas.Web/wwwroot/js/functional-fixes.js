@@ -2,6 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     normalizarHistorialDeFormularios();
+    integrarCapturaEnAnalizador();
     configurarSelectorTipoContenido();
     configurarCambioTipoContenido();
     mostrarErrorDeCarga();
@@ -31,19 +32,56 @@ function normalizarHistorialDeFormularios() {
         `${url.pathname}${url.search}${url.hash}`);
 }
 
+function integrarCapturaEnAnalizador() {
+    const captureCard = Array.from(
+        document.querySelectorAll(".capture-card")
+    ).find(card => !card.classList.contains("audio-card"));
+
+    const analyzerCard = document.querySelector(".analyzer-card");
+    const tabsContainer = document.getElementById("contentTypeTabs");
+
+    if (!captureCard || !analyzerCard || !tabsContainer) {
+        return;
+    }
+
+    captureCard.classList.add("capture-card--integrated");
+    captureCard.hidden = true;
+    analyzerCard.appendChild(captureCard);
+
+    if (tabsContainer.querySelector('[data-capture-tab="true"]')) {
+        return;
+    }
+
+    const captureTab = document.createElement("button");
+    captureTab.type = "button";
+    captureTab.className = "content-type-tab";
+    captureTab.dataset.captureTab = "true";
+    captureTab.setAttribute("role", "tab");
+    captureTab.setAttribute("aria-selected", "false");
+    captureTab.textContent = "Captura";
+
+    tabsContainer.appendChild(captureTab);
+}
+
 function configurarSelectorTipoContenido() {
     const tipoSelect = document.getElementById("Tipo");
     const contenido = document.getElementById("Contenido");
     const tabsContainer = document.getElementById("contentTypeTabs");
     const label = document.getElementById("contentInputLabel");
     const helpText = document.getElementById("contentHelpText");
+    const analyzerForm = tabsContainer?.closest("form");
+    const captureCard = document.querySelector(".capture-card--integrated");
 
-    if (!tipoSelect || !contenido || !tabsContainer || !label) {
+    if (!tipoSelect || !contenido || !tabsContainer || !label || !analyzerForm) {
         return;
     }
 
     const tabs = Array.from(
         tabsContainer.querySelectorAll(".content-type-tab")
+    );
+
+    const captureTabIndex = tabs.findIndex(
+        tab => tab.dataset.captureTab === "true"
     );
 
     function aplicarModoVisual(mode) {
@@ -55,12 +93,26 @@ function configurarSelectorTipoContenido() {
         contenido.rows = mode === "singleline" ? 2 : 4;
     }
 
+    function limpiarValidacionContenido() {
+        const validation = document.querySelector(
+            '[data-valmsg-for="Contenido"]'
+        );
+
+        if (validation) {
+            validation.textContent = "";
+            validation.classList.remove("field-validation-error");
+            validation.classList.add("field-validation-valid");
+        }
+    }
+
     function activarTab(index, clearContent) {
         const tab = tabs[index];
 
         if (!tab) {
             return;
         }
+
+        const isCapture = tab.dataset.captureTab === "true";
 
         tabs.forEach((item, itemIndex) => {
             const isActive = itemIndex === index;
@@ -69,7 +121,20 @@ function configurarSelectorTipoContenido() {
             item.setAttribute("aria-selected", isActive ? "true" : "false");
         });
 
-        tipoSelect.selectedIndex = index;
+        analyzerForm.classList.toggle("capture-mode-active", isCapture);
+
+        if (captureCard) {
+            captureCard.hidden = !isCapture;
+        }
+
+        if (isCapture) {
+            limpiarValidacionContenido();
+            document.getElementById("captura")?.focus();
+            return;
+        }
+
+        const selectIndex = Number(tab.dataset.tabIndex ?? index);
+        tipoSelect.selectedIndex = selectIndex;
 
         label.textContent = tab.dataset.label ?? "Contenido sospechoso";
         contenido.placeholder =
@@ -79,27 +144,18 @@ function configurarSelectorTipoContenido() {
 
         if (helpText) {
             helpText.textContent =
-                index === 1
+                selectIndex === 1
                     ? "Pegá una URL completa para evaluar señales técnicas y de riesgo."
-                    : index === 2
+                    : selectIndex === 2
                         ? "Ingresá el número principal que querés revisar."
-                        : index === 3
+                        : selectIndex === 3
                             ? "Describí la llamada con el mayor detalle posible."
                             : "Analizá primero el contenido principal y luego revisá el resultado.";
         }
 
         if (clearContent) {
             contenido.value = "";
-
-            const validation = document.querySelector(
-                '[data-valmsg-for="Contenido"]'
-            );
-
-            if (validation) {
-                validation.textContent = "";
-                validation.classList.remove("field-validation-error");
-                validation.classList.add("field-validation-valid");
-            }
+            limpiarValidacionContenido();
         }
 
         contenido.focus();
@@ -110,6 +166,14 @@ function configurarSelectorTipoContenido() {
             activarTab(index, true);
         });
     });
+
+    const hayRespuestaCaptura =
+        captureCard?.querySelector(".capture-error, .capture-result") != null;
+
+    if (hayRespuestaCaptura && captureTabIndex >= 0) {
+        activarTab(captureTabIndex, false);
+        return;
+    }
 
     activarTab(tipoSelect.selectedIndex >= 0 ? tipoSelect.selectedIndex : 0, false);
 }
