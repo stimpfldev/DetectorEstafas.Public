@@ -1,0 +1,4 @@
+/* La variante de hosting compartido no ofrece procesamiento de audio. */
+.audio-card {
+    display: none !important;
+}
