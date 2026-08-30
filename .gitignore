@@ -411,3 +411,5 @@ LEEME-*.txt
 **/WhisperModels/
 
 publish-shark/
+# FFmpeg local binaries
+DetectorEstafas.Web/FFmpeg/*.exe

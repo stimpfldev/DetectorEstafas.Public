@@ -68,6 +68,13 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<None Update="FFmpeg\ffmpeg.exe">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
+
+		<None Update="FFmpeg\ffprobe.exe">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
 
 		<None Update="WhisperModels\ggml-base.bin">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
