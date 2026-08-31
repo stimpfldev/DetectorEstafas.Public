@@ -29,6 +29,14 @@
         googleAnalyticsEnabled
         && !string.IsNullOrWhiteSpace(googleAnalyticsMeasurementId)
         && !disableGoogleAnalytics;
+
+    var secondaryPublicPage =
+        currentPath.StartsWith("/Planes", StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith("/Contacto", StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith("/Cuenta", StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith("/Legal", StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith("/AccesoApi", StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith("/ResultadosCompartidos", StringComparison.OrdinalIgnoreCase);
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -141,7 +149,7 @@
         </nav>
     </header>
 
-    <main class="flex-grow-1">
+    <main class="flex-grow-1 @(secondaryPublicPage ? "secondary-public-page" : string.Empty)">
         @RenderBody()
     </main>
 
