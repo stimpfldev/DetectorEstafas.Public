@@ -11,6 +11,119 @@
     border-radius: 10px;
     font-weight: 700;
     white-space: nowrap;
+    transform: none !important;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* El hover/focus no cambia el volumen visual del botón ni produce sensación de salto. */
+.header-nav-link.btn-outline-light:hover,
+.header-nav-link.btn-outline-light:focus,
+.header-nav-link.btn-outline-light:active {
+    border-color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    box-shadow: none;
+    transform: none !important;
+}
+
+/* Páginas públicas secundarias: escala común, más compacta que el analizador principal. */
+.secondary-public-page {
+    font-size: 0.95rem;
+}
+
+.secondary-public-page > .container.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2.5rem !important;
+}
+
+.secondary-public-page h1 {
+    font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+}
+
+.secondary-public-page .lead {
+    font-size: 1.02rem;
+    line-height: 1.55;
+}
+
+.secondary-public-page .display-6 {
+    font-size: clamp(1.9rem, 2.8vw, 2.35rem);
+    line-height: 1.1;
+}
+
+.secondary-public-page .card {
+    border-radius: 14px;
+}
+
+.secondary-public-page .card-body ul {
+    line-height: 1.5;
+}
+
+.secondary-public-page .btn {
+    min-height: 40px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.92rem;
+}
+
+.secondary-public-page .form-control,
+.secondary-public-page .form-select {
+    min-height: 42px;
+    font-size: 0.95rem;
+}
+
+.secondary-public-page .contact-page,
+.secondary-public-page .legal-page {
+    padding-top: 2.25rem;
+    padding-bottom: 3rem;
+}
+
+.secondary-public-page .contact-card {
+    max-width: 720px;
+    border-radius: 18px;
+}
+
+.secondary-public-page .contact-header {
+    padding: 28px 34px 24px;
+}
+
+.secondary-public-page .contact-content {
+    padding: 26px 34px 32px;
+}
+
+.secondary-public-page .contact-header h1 {
+    font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+}
+
+.secondary-public-page .contact-email-box {
+    margin-top: 18px;
+    padding: 16px;
+}
+
+.secondary-public-page .contact-email-link {
+    min-height: 44px;
+    padding: 9px 14px;
+}
+
+.secondary-public-page .contact-back {
+    margin-top: 20px;
+}
+
+.secondary-public-page .legal-card {
+    max-width: 900px;
+    border-radius: 18px;
+}
+
+.secondary-public-page .legal-header {
+    padding: 28px 34px 24px;
+}
+
+.secondary-public-page .legal-content {
+    padding: 12px 34px 32px;
+}
+
+.secondary-public-page .legal-header h1 {
+    font-size: clamp(1.7rem, 2.6vw, 2.1rem);
 }
 
 /* Captura integrada como un tipo más dentro del analizador principal. */
@@ -98,6 +211,25 @@
 
     .btn-install-app {
         grid-column: 1 / -1;
+    }
+
+    .secondary-public-page > .container.py-5 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .secondary-public-page .contact-page,
+    .secondary-public-page .legal-page {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+    }
+
+    .secondary-public-page .contact-header,
+    .secondary-public-page .contact-content,
+    .secondary-public-page .legal-header,
+    .secondary-public-page .legal-content {
+        padding-left: 20px;
+        padding-right: 20px;
     }
 }
 
