@@ -10,20 +10,20 @@
     var googleAnalyticsMeasurementId =
         Configuration["GoogleAnalytics:MeasurementId"];
 
-var currentPath =
-    Context.Request.Path.Value ?? string.Empty;
+    var currentPath =
+        Context.Request.Path.Value ?? string.Empty;
 
-var sensitiveGoogleAnalyticsPath =
-    currentPath.StartsWith(
-        "/Cuenta",
-        StringComparison.OrdinalIgnoreCase)
-    || currentPath.StartsWith(
-        "/AdministracionApi",
-        StringComparison.OrdinalIgnoreCase);
+    var sensitiveGoogleAnalyticsPath =
+        currentPath.StartsWith(
+            "/Cuenta",
+            StringComparison.OrdinalIgnoreCase)
+        || currentPath.StartsWith(
+            "/AdministracionApi",
+            StringComparison.OrdinalIgnoreCase);
 
-var disableGoogleAnalytics =
-    (ViewData["DisableGoogleAnalytics"] as bool? ?? false)
-    || sensitiveGoogleAnalyticsPath;
+    var disableGoogleAnalytics =
+        (ViewData["DisableGoogleAnalytics"] as bool? ?? false)
+        || sensitiveGoogleAnalyticsPath;
 
     var loadGoogleAnalytics =
         googleAnalyticsEnabled
@@ -106,6 +106,18 @@ var disableGoogleAnalytics =
                 </a>
 
                 <div class="header-actions">
+                    <a asp-controller="Planes"
+                       asp-action="Index"
+                       class="btn btn-outline-light header-plans">
+                        Planes
+                    </a>
+
+                    <a asp-controller="Cuenta"
+                       asp-action="Registrarse"
+                       class="btn-header header-create-account">
+                        Crear cuenta
+                    </a>
+
                     <button id="installAppButton"
                             type="button"
                             class="btn btn-install-app"
@@ -145,6 +157,16 @@ var disableGoogleAnalytics =
 
             <nav class="footer-legal-links"
                  aria-label="Información del sitio">
+
+                <a asp-controller="Planes"
+                   asp-action="Index">
+                    Planes
+                </a>
+
+                <a asp-controller="Cuenta"
+                   asp-action="Registrarse">
+                    Crear cuenta
+                </a>
 
                 <a asp-controller="Contacto"
                    asp-action="Index">
