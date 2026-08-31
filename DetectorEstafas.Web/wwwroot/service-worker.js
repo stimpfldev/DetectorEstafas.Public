@@ -1,4 +1,4 @@
-const CACHE_NAME = "alerta-estafa-v9";
+const CACHE_NAME = "alerta-estafa-v10";
 
 const STATIC_ASSETS = [
     "/offline.html",
@@ -58,6 +58,31 @@ self.addEventListener("fetch", event => {
     if (request.mode === "navigate") {
         event.respondWith(
             fetch(request).catch(() => caches.match("/offline.html"))
+        );
+
+        return;
+    }
+
+    const isLiveAsset =
+        requestUrl.pathname.startsWith("/css/") ||
+        requestUrl.pathname.startsWith("/js/");
+
+    if (isLiveAsset) {
+        event.respondWith(
+            fetch(request)
+                .then(networkResponse => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseCopy = networkResponse.clone();
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(request, responseCopy);
+                        });
+                    }
+
+                    return networkResponse;
+                })
+                .catch(async () =>
+                    (await caches.match(request)) ||
+                    (await caches.match(requestUrl.pathname)))
         );
 
         return;
