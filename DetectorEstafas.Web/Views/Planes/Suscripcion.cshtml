@@ -60,9 +60,17 @@
             <span asp-validation-for="AceptaCondiciones" class="text-danger d-block"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            Continuar a Mercado Pago
-        </button>
+        <div class="d-flex flex-column flex-sm-row gap-2">
+            <button type="submit" class="btn btn-primary flex-grow-1">
+                Continuar a Mercado Pago
+            </button>
+
+            <a asp-controller="Planes"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Cancelar y volver a Planes
+            </a>
+        </div>
     </form>
 
     <p class="small text-muted mt-3">
