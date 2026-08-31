@@ -3,6 +3,17 @@
     display: none !important;
 }
 
+/* Navegación pública: cuenta, planes e instalación visibles. */
+.header-actions .header-create-account {
+    margin-left: 0;
+}
+
+.header-plans,
+.header-create-account,
+.btn-install-app {
+    white-space: nowrap;
+}
+
 /* Captura integrada como un tipo más dentro del analizador principal. */
 .content-type-tabs {
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -48,5 +59,35 @@
 
     .content-type-tab:last-child {
         grid-column: 1 / -1;
+    }
+
+    .header-actions {
+        gap: 0.45rem;
+    }
+
+    .header-plans,
+    .header-create-account,
+    .btn-install-app {
+        min-height: 40px;
+        padding: 0.45rem 0.65rem;
+        font-size: 0.82rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .brand-text {
+        display: none;
+    }
+
+    .header-actions {
+        gap: 0.35rem;
+    }
+
+    .header-plans,
+    .header-create-account,
+    .btn-install-app {
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+        font-size: 0.76rem;
     }
 }
