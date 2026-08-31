@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using DetectorEstafas.Web.Models.ApiComercial;
 using DetectorEstafas.Web.Options;
 using Microsoft.Extensions.Options;
 
@@ -16,7 +17,7 @@ public sealed class SmtpCorreoComercialService :
         _options = options.Value;
     }
 
-    public Task EnviarAccesoListoAsync(
+    public async Task EnviarAccesoListoAsync(
         string destinatario,
         string plan,
         string? enlaceEntregaClave,
@@ -38,11 +39,39 @@ public sealed class SmtpCorreoComercialService :
             "Header: X-Api-Key\n\n" +
             "No compartas tu API key ni la incluyas en código público.";
 
-        return EnviarAsync(
+        await EnviarAsync(
             destinatario,
             "Tu acceso API está listo - Detector de Estafas",
             body,
             cancellationToken);
+
+        if (!ApiPlanes.EsPrueba(plan) &&
+            !string.IsNullOrWhiteSpace(_options.RemitenteEmail) &&
+            !string.Equals(
+                destinatario,
+                _options.RemitenteEmail,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            string avisoInterno =
+                "Se activó automáticamente una nueva suscripción paga en AlertaEstafa.\n\n" +
+                $"Cliente: {destinatario}\n" +
+                $"Plan: {plan}\n\n" +
+                "El acceso API ya fue provisionado automáticamente. " +
+                "No requiere alta manual.";
+
+            try
+            {
+                await EnviarAsync(
+                    _options.RemitenteEmail,
+                    "Nueva suscripción paga activada - AlertaEstafa",
+                    avisoInterno,
+                    cancellationToken);
+            }
+            catch
+            {
+                // La alerta interna no debe bloquear la activación ya confirmada.
+            }
+        }
     }
 
     public Task EnviarProblemaPagoAsync(
