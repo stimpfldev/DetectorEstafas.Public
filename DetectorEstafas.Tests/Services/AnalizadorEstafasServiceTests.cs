@@ -115,6 +115,20 @@ public class AnalizadorEstafasServiceTests
     }
 
     [TestMethod]
+    public void Analizar_MensajeMultilineaBancoSolicitaClave_RetornaRiesgoAlto()
+    {
+        const string contenido =
+            "Somos del banco.\nNecesitamos que nos envíes\ntu clave personal para verificar tu cuenta.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(NivelRiesgo.Alto, resultado.Nivel);
+        Assert.AreEqual(80, resultado.Puntaje);
+    }
+
+    [TestMethod]
     public void Analizar_BancoAdvierteNoCompartirClave_NoEscalaAAlto()
     {
         ResultadoAnalisis resultado = _service.Analizar(
