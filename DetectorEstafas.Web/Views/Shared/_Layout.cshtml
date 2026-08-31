@@ -13,6 +13,14 @@
     var currentPath =
         Context.Request.Path.Value ?? string.Empty;
 
+    var canonicalPath =
+        string.IsNullOrWhiteSpace(currentPath)
+            ? "/"
+            : currentPath;
+
+    var canonicalUrl =
+        $"https://alertaestafa.com.ar{canonicalPath}";
+
     var sensitiveGoogleAnalyticsPath =
         currentPath.StartsWith(
             "/Cuenta",
@@ -48,6 +56,9 @@
 
     <meta name="description"
           content="AlertaEstafa analiza mensajes, enlaces, teléfonos y llamadas sospechosas antes de actuar." />
+
+    <link rel="canonical"
+          href="@canonicalUrl" />
 
     <meta name="theme-color"
           content="#0f172a" />
