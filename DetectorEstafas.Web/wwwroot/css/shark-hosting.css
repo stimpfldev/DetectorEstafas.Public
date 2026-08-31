@@ -3,14 +3,13 @@
     display: none !important;
 }
 
-/* Navegación pública: cuenta, planes e instalación visibles. */
-.header-actions .header-create-account {
-    margin-left: 0;
-}
-
-.header-plans,
-.header-create-account,
+/* Navegación pública: todos los accesos principales comparten el mismo estilo. */
+.header-nav-link,
 .btn-install-app {
+    min-height: 40px;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
+    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -63,14 +62,15 @@
 
     .header-actions {
         gap: 0.45rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
-    .header-plans,
-    .header-create-account,
+    .header-nav-link,
     .btn-install-app {
-        min-height: 40px;
-        padding: 0.45rem 0.65rem;
-        font-size: 0.82rem;
+        min-height: 38px;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
     }
 }
 
@@ -83,11 +83,10 @@
         gap: 0.35rem;
     }
 
-    .header-plans,
-    .header-create-account,
+    .header-nav-link,
     .btn-install-app {
-        padding-right: 0.5rem;
-        padding-left: 0.5rem;
-        font-size: 0.76rem;
+        padding-right: 0.45rem;
+        padding-left: 0.45rem;
+        font-size: 0.74rem;
     }
 }
