@@ -3,26 +3,50 @@
     display: none !important;
 }
 
-/* Navegación pública: todos los accesos principales comparten el mismo estilo. */
+/* Navegación pública: todos los accesos principales comparten exactamente el mismo volumen visual. */
+.header-actions {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 740px;
+    gap: 0.45rem;
+    align-items: center;
+}
+
 .header-nav-link,
 .btn-install-app {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
     min-height: 40px;
-    padding: 0.5rem 0.85rem;
+    padding: 0.45rem 0.6rem;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
     border-radius: 10px;
+    background: transparent;
+    color: #ffffff;
+    font-size: 0.84rem;
     font-weight: 700;
+    line-height: 1;
+    text-align: center;
     white-space: nowrap;
+    box-shadow: none;
     transform: none !important;
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-/* El hover/focus no cambia el volumen visual del botón ni produce sensación de salto. */
-.header-nav-link.btn-outline-light:hover,
-.header-nav-link.btn-outline-light:focus,
-.header-nav-link.btn-outline-light:active {
-    border-color: rgba(255, 255, 255, 0.8);
+/* Hover/focus/active no altera ancho, alto, borde ni posición. */
+.header-actions .header-nav-link:hover,
+.header-actions .header-nav-link:focus,
+.header-actions .header-nav-link:active,
+.header-actions .btn-install-app:hover,
+.header-actions .btn-install-app:focus,
+.header-actions .btn-install-app:active {
+    border-color: rgba(255, 255, 255, 0.8) !important;
     background: rgba(255, 255, 255, 0.12);
     color: #ffffff;
-    box-shadow: none;
+    box-shadow: none !important;
     transform: none !important;
 }
 
@@ -164,16 +188,8 @@
     min-height: 42px;
 }
 
-@media (max-width: 767px) {
-    .content-type-tabs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .content-type-tab:last-child {
-        grid-column: 1 / -1;
-    }
-
-    /* En responsive el logo conserva su propia fila y la navegación baja debajo. */
+@media (max-width: 991px) {
+    /* Desde tablet el logo ocupa su propia fila y los cinco botones conservan igual ancho. */
     .site-header .navbar .container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -194,9 +210,29 @@
     }
 
     .header-actions {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
         width: 100%;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .header-nav-link,
+    .btn-install-app {
+        min-width: 0;
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .content-type-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .content-type-tab:last-child {
+        grid-column: 1 / -1;
+    }
+
+    /* En móvil todos los botones mantienen el mismo ancho; se distribuyen en dos columnas. */
+    .header-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.45rem;
     }
 
@@ -204,13 +240,9 @@
     .btn-install-app {
         width: 100%;
         min-height: 38px;
+        height: 38px;
         padding: 0.4rem 0.55rem;
         font-size: 0.8rem;
-        text-align: center;
-    }
-
-    .btn-install-app {
-        grid-column: 1 / -1;
     }
 
     .secondary-public-page > .container.py-5 {
@@ -243,19 +275,14 @@
     }
 
     .header-actions {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.35rem;
     }
 
-    .header-nav-link {
-        padding-right: 0.25rem;
-        padding-left: 0.25rem;
-        font-size: 0.7rem;
-    }
-
+    .header-nav-link,
     .btn-install-app {
-        padding-right: 0.45rem;
-        padding-left: 0.45rem;
-        font-size: 0.74rem;
+        padding-right: 0.35rem;
+        padding-left: 0.35rem;
+        font-size: 0.72rem;
     }
 }
