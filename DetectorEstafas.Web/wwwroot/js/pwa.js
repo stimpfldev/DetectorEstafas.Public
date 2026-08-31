@@ -37,11 +37,14 @@ function showInstallButton() {
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
         try {
-            await navigator.serviceWorker.register(
+            const registration = await navigator.serviceWorker.register(
                 "/service-worker.js",
                 {
-                    scope: "/"
+                    scope: "/",
+                    updateViaCache: "none"
                 });
+
+            await registration.update();
         }
         catch (error) {
             console.error(
@@ -57,17 +60,9 @@ window.addEventListener(
         event.preventDefault();
 
         deferredInstallPrompt = event;
-
-        if (!estaInstalada()) {
-            showInstallButton();
-        }
     });
 
 if (installButton) {
-
-    if (esIos() && !estaInstalada()) {
-        showInstallButton();
-    }
 
     installButton.addEventListener(
         "click",
@@ -85,17 +80,21 @@ if (installButton) {
 
                 deferredInstallPrompt = null;
 
-                hideInstallButton();
-
                 return;
             }
 
             if (esIos()) {
                 alert(
-                    "Para instalar Detector de Estafas en iPhone o iPad: " +
+                    "Para instalar AlertaEstafa en iPhone o iPad: " +
                     "tocá Compartir y luego «Añadir a pantalla de inicio»."
                 );
+                return;
             }
+
+            alert(
+                "Para instalar AlertaEstafa, usá la opción de instalación " +
+                "del navegador cuando esté disponible."
+            );
         });
 }
 
@@ -115,6 +114,9 @@ function actualizarModoInstalado() {
 
     if (instalada) {
         hideInstallButton();
+    }
+    else {
+        showInstallButton();
     }
 }
 
