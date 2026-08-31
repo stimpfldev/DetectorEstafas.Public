@@ -40,7 +40,7 @@ public sealed class MercadoPagoSuscripcionService :
         // al pagador cuando inicia sesión en su checkout.
         object payload = new
         {
-            reason = $"Detector de Estafas - Plan {plan}",
+            reason = $"AlertaEstafa - Plan {plan}",
             auto_recurring = new
             {
                 frequency = 1,
