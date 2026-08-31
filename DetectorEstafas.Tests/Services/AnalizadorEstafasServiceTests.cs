@@ -96,6 +96,41 @@ public class AnalizadorEstafasServiceTests
     }
 
     [TestMethod]
+    public void Analizar_MensajeBancoSolicitaEnviesClave_Retorna80RiesgoAlto()
+    {
+        const string contenido =
+            "Somos del banco. Necesitamos que nos envíes tu clave personal para verificar tu cuenta.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(NivelRiesgo.Alto, resultado.Nivel);
+        Assert.AreEqual(80, resultado.Puntaje);
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "entidad financiera",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_BancoAdvierteNoCompartirClave_NoEscalaAAlto()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "Banco: nunca compartas tu clave con nadie.",
+            TipoContenido.Mensaje);
+
+        Assert.AreEqual(NivelRiesgo.Medio, resultado.Nivel);
+        Assert.AreEqual(35, resultado.Puntaje);
+        Assert.IsFalse(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "entidad financiera solicita",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
     public void Analizar_TransferenciaUrgente_RetornaRiesgoAlto()
     {
         ResultadoAnalisis resultado = _service.Analizar(
@@ -190,6 +225,22 @@ public class AnalizadorEstafasServiceTests
     }
 
     [TestMethod]
+    public void Analizar_EnlaceConUsuarioEIp_RetornaRiesgoAlto()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "https://banco.com@192.168.1.50/ingreso",
+            TipoContenido.Enlace);
+
+        Assert.AreEqual(NivelRiesgo.Alto, resultado.Nivel);
+        Assert.IsTrue(resultado.Puntaje >= 70);
+        Assert.IsTrue(
+            resultado.EnlacesAnalizados[0].Senales.Any(
+                senal => senal.Contains(
+                    "información antes del dominio",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
     public void Analizar_MensajeConEnlace_ExtraeYAnalizaElEnlace()
     {
         const string contenido =
@@ -213,12 +264,57 @@ public class AnalizadorEstafasServiceTests
     }
 
     [TestMethod]
+    public void Analizar_TelefonoCodigoCorto_NoMarcaFormatoInusual()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "911",
+            TipoContenido.Telefono);
+
+        Assert.AreEqual(NivelRiesgo.Bajo, resultado.Nivel);
+        Assert.AreEqual(0, resultado.Puntaje);
+    }
+
+    [TestMethod]
+    public void Analizar_TelefonoDemasiadoCorto_MarcaFormatoInusual()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "123456",
+            TipoContenido.Telefono);
+
+        Assert.AreEqual(NivelRiesgo.Medio, resultado.Nivel);
+        Assert.AreEqual(20, resultado.Puntaje);
+    }
+
+    [TestMethod]
     public void Analizar_LlamadaConEmergenciaFamiliar_RetornaRiesgoAlto()
     {
         const string contenido =
             "Mi hijo tuvo un accidente. " +
             "Necesito que hagas una transferencia urgente " +
             "y no le digas a nadie.";
+
+        ResultadoAnalisis resultado = _service.Analizar(
+            contenido,
+            TipoContenido.Llamada);
+
+        Assert.AreEqual(NivelRiesgo.Alto, resultado.Nivel);
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "emergencia familiar",
+                    StringComparison.OrdinalIgnoreCase)));
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "terceros",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_LlamadaEmergenciaAntesDeFamiliar_DetectaEstafa()
+    {
+        const string contenido =
+            "Hubo un accidente con tu hijo. Hacé una transferencia urgente y no cortes la llamada.";
 
         ResultadoAnalisis resultado = _service.Analizar(
             contenido,
@@ -261,6 +357,22 @@ public class AnalizadorEstafasServiceTests
                 senal => senal.Contains(
                     "bloquear",
                     StringComparison.OrdinalIgnoreCase)));
+        Assert.IsTrue(
+            resultado.SenalesDetectadas.Any(
+                senal => senal.Contains(
+                    "llamada solicita",
+                    StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public void Analizar_LlamadaSolicitaEnviesCodigo_RetornaRiesgoAlto()
+    {
+        ResultadoAnalisis resultado = _service.Analizar(
+            "Necesito que me envíes tu código de seguridad para continuar.",
+            TipoContenido.Llamada);
+
+        Assert.AreEqual(NivelRiesgo.Alto, resultado.Nivel);
+        Assert.IsTrue(resultado.Puntaje >= 75);
         Assert.IsTrue(
             resultado.SenalesDetectadas.Any(
                 senal => senal.Contains(
