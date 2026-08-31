@@ -19,13 +19,14 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         RegexOptions.Compiled);
 
     private static readonly Regex SolicitudCredencialRegex = new(
-        @"\b(ingres(?:á|a|e|ar|ás|as|es|en)|indic(?:á|a|e|ar)|indiqu(?:e|es|en)|inform(?:á|a|e|ar|ás|as|es|en)|envi(?:á|a|e|ar|ás|as|e|es|en)|enví(?:a|e|es|en|as)|compart(?:í|i|a|ir|ís|is|as|an|e|es)|confirm(?:á|a|e|ar|ás|as|es|en)|dict(?:á|a|e|ar|ás|as|es|en)|decime|decinos|proporcion(?:á|a|e|ar|ás|as|es|en)|solicit(?:amos|an|a|ar|á|e|es|en)|pedimos|piden|pedirte|pedir|pedime|pedinos|pide|pidas|pidan|mand(?:á|a|e|ar|ás|as|es|en)|pas(?:á|a|e|ar|ás|as|es|en))\b.{0,120}\b(pin|clave|contraseña|contrasena|token|código de seguridad|codigo de seguridad|código de verificación|codigo de verificacion|datos de acceso|credenciales)\b",
+        @"\b(ingres(?:á|a|e|ar|ás|as|es|en)|indic(?:á|a|e|ar)|indiqu(?:e|es|en)|indicame|inform(?:á|a|e|ar|ás|as|es|en)|informame|envi(?:á|a|e|ar|ás|as|e|es|en)|enví(?:a|e|es|en|as)|enviame|envíame|compart(?:í|i|a|ir|ís|is|as|an|e|es)|compartime|confirm(?:á|a|e|ar|ás|as|es|en)|confirmame|dict(?:á|a|e|ar|ás|as|es|en)|dictame|decime|decinos|proporcion(?:á|a|e|ar|ás|as|es|en)|solicit(?:amos|an|a|ar|á|e|es|en)|pedimos|piden|pedirte|pedir|pedime|pedinos|pide|pidas|pidan|mand(?:á|a|e|ar|ás|as|es|en)|mandame|pas(?:á|a|e|ar|ás|as|es|en)|pasame)\b.{0,120}\b(pin|clave|contraseña|contrasena|token|código de seguridad|codigo de seguridad|código de verificación|codigo de verificacion|datos de acceso|credenciales)\b",
         RegexOptions.IgnoreCase |
         RegexOptions.CultureInvariant |
+        RegexOptions.Singleline |
         RegexOptions.Compiled);
 
-    private static readonly Regex SolicitudCredencialNegadaRegex = new(
-        @"\b(no|nunca|jamás|jamas)\s+(?:(?:me|nos|te|le|les|lo|la|los|las|se)\s+)?(?:ingres|indic|indiqu|inform|envi|enví|compart|confirm|dict|dec|proporcion|solicit|ped|pid|mand|pas)",
+    private static readonly Regex NegacionInmediataRegex = new(
+        @"\b(no|nunca|jamás|jamas)\s+(?:(?:me|nos|te|le|les|lo|la|los|las|se)\s+)?$",
         RegexOptions.IgnoreCase |
         RegexOptions.CultureInvariant |
         RegexOptions.Compiled);
@@ -95,7 +96,8 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                     contenidoNormalizado,
                     regla.Patron,
                     RegexOptions.IgnoreCase |
-                    RegexOptions.CultureInvariant))
+                    RegexOptions.CultureInvariant |
+                    RegexOptions.Singleline))
             {
                 continue;
             }
@@ -172,8 +174,22 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
     private static bool ContieneSolicitudCredencial(string contenido)
     {
-        return SolicitudCredencialRegex.IsMatch(contenido) &&
-               !SolicitudCredencialNegadaRegex.IsMatch(contenido);
+        MatchCollection solicitudes =
+            SolicitudCredencialRegex.Matches(contenido);
+
+        foreach (Match solicitud in solicitudes)
+        {
+            int inicioContexto = Math.Max(0, solicitud.Index - 32);
+            string contextoPrevio = contenido[
+                inicioContexto..solicitud.Index];
+
+            if (!NegacionInmediataRegex.IsMatch(contextoPrevio))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static List<EnlaceAnalizado> ObtenerEnlacesAnalizados(
@@ -431,7 +447,8 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             contenido,
             @"(?:\b(familiar|hijo|hija|nieto|nieta)\b.{0,100}\b(accidente|detenido|detenida|emergencia|hospital|secuestrado|secuestrada)\b|\b(accidente|detenido|detenida|emergencia|hospital|secuestrado|secuestrada)\b.{0,100}\b(familiar|hijo|hija|nieto|nieta)\b)",
             RegexOptions.IgnoreCase |
-            RegexOptions.CultureInvariant);
+            RegexOptions.CultureInvariant |
+            RegexOptions.Singleline);
 
         if (emergenciaFamiliar)
         {
