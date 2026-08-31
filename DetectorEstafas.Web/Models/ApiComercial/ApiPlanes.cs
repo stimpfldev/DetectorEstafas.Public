@@ -30,8 +30,8 @@ public static class ApiPlanes
     public const int CuotaMensualGrowth = 25_000;
     public const int CuotaMensualMaximaPersonalizada = 10_000_000;
 
-    public const decimal PrecioReferenciaUsdStarter = 29m;
-    public const decimal PrecioReferenciaUsdGrowth = 79m;
+    public const decimal PrecioReferenciaUsdStarter = 49m;
+    public const decimal PrecioReferenciaUsdGrowth = 119m;
 
     public static IReadOnlyList<string> Todos { get; } =
         [Prueba, Starter, Growth, AMedida];
