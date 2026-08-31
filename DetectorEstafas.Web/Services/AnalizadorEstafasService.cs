@@ -19,7 +19,13 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         RegexOptions.Compiled);
 
     private static readonly Regex SolicitudCredencialRegex = new(
-        @"\b(ingres(?:á|a|e|ar)|indic(?:á|a|e|ar)|inform(?:á|a|e|ar)|envi(?:á|a|e|ar)|compart(?:í|i|a|ir)|confirm(?:á|a|e|ar)|dict(?:á|a|e|ar)|decime|proporcion(?:á|a|e|ar)|solicit(?:amos|an|a|ar)|pedimos|piden|pedirte)\b.{0,100}\b(pin|clave|contraseña|contrasena|token|código de seguridad|codigo de seguridad|código de verificación|codigo de verificacion|datos de acceso|credenciales)\b",
+        @"\b(ingres(?:á|a|e|ar|ás|as|es|en)|indic(?:á|a|e|ar)|indiqu(?:e|es|en)|inform(?:á|a|e|ar|ás|as|es|en)|envi(?:á|a|e|ar|ás|as|e|es|en)|enví(?:a|e|es|en|as)|compart(?:í|i|a|ir|ís|is|as|an|e|es)|confirm(?:á|a|e|ar|ás|as|es|en)|dict(?:á|a|e|ar|ás|as|es|en)|decime|decinos|proporcion(?:á|a|e|ar|ás|as|es|en)|solicit(?:amos|an|a|ar|á|e|es|en)|pedimos|piden|pedirte|pedir|pedime|pedinos|pide|pidas|pidan|mand(?:á|a|e|ar|ás|as|es|en)|pas(?:á|a|e|ar|ás|as|es|en))\b.{0,120}\b(pin|clave|contraseña|contrasena|token|código de seguridad|codigo de seguridad|código de verificación|codigo de verificacion|datos de acceso|credenciales)\b",
+        RegexOptions.IgnoreCase |
+        RegexOptions.CultureInvariant |
+        RegexOptions.Compiled);
+
+    private static readonly Regex SolicitudCredencialNegadaRegex = new(
+        @"\b(no|nunca|jamás|jamas)\s+(?:(?:me|nos|te|le|les|lo|la|los|las|se)\s+)?(?:ingres|indic|indiqu|inform|envi|enví|compart|confirm|dict|dec|proporcion|solicit|ped|pid|mand|pas)",
         RegexOptions.IgnoreCase |
         RegexOptions.CultureInvariant |
         RegexOptions.Compiled);
@@ -154,7 +160,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         List<string> senales)
     {
         if (!EntidadFinancieraRegex.IsMatch(contenido) ||
-            !SolicitudCredencialRegex.IsMatch(contenido))
+            !ContieneSolicitudCredencial(contenido))
         {
             return;
         }
@@ -162,6 +168,12 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
         puntaje += 45;
         senales.Add(
             "Una entidad financiera solicita una credencial que nunca debería compartirse por este medio.");
+    }
+
+    private static bool ContieneSolicitudCredencial(string contenido)
+    {
+        return SolicitudCredencialRegex.IsMatch(contenido) &&
+               !SolicitudCredencialNegadaRegex.IsMatch(contenido);
     }
 
     private static List<EnlaceAnalizado> ObtenerEnlacesAnalizados(
@@ -374,7 +386,10 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
             @"\D",
             string.Empty);
 
-        if (soloDigitos.Length < 8 || soloDigitos.Length > 15)
+        bool esCodigoCorto = soloDigitos.Length == 3;
+
+        if (!esCodigoCorto &&
+            (soloDigitos.Length < 8 || soloDigitos.Length > 15))
         {
             puntaje += 20;
             senales.Add(
@@ -401,7 +416,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
     {
         bool intentaAislar = Regex.IsMatch(
             contenido,
-            @"\b(cortar la llamada|no le digas a nadie|no informar|mantener en secreto)\b",
+            @"\b(no\s+(?:cortes|corte|cuelgues|cuelgue)(?:\s+la\s+llamada)?|no\s+(?:le\s+|se\s+lo\s+)?(?:digas|diga|cuentes|cuente)\s+a\s+nadie|no\s+hables\s+con\s+nadie|no\s+informar|mantener\s+en\s+secreto|manten(?:é|e)\s+(?:esto\s+)?en\s+secreto|cortar\s+la\s+llamada)\b",
             RegexOptions.IgnoreCase |
             RegexOptions.CultureInvariant);
 
@@ -414,7 +429,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
 
         bool emergenciaFamiliar = Regex.IsMatch(
             contenido,
-            @"\b(familiar|hijo|hija|nieto|nieta).*(accidente|detenido|detenida|emergencia)\b",
+            @"(?:\b(familiar|hijo|hija|nieto|nieta)\b.{0,100}\b(accidente|detenido|detenida|emergencia|hospital|secuestrado|secuestrada)\b|\b(accidente|detenido|detenida|emergencia|hospital|secuestrado|secuestrada)\b.{0,100}\b(familiar|hijo|hija|nieto|nieta)\b)",
             RegexOptions.IgnoreCase |
             RegexOptions.CultureInvariant);
 
@@ -425,13 +440,7 @@ public class AnalizadorEstafasService : IAnalizadorEstafasService
                 "Describe una posible falsa emergencia familiar.");
         }
 
-        bool solicitaCredenciales = Regex.IsMatch(
-            contenido,
-            @"\b(inform(?:es|e|ar)|compart(?:as|a|ir)|dict(?:es|e|ar)|confirm(?:es|e|ar)|indiqu(?:es|e|ar)|dec(?:ime|ir)).{0,80}\b(código|codigo|clave|token|contraseña|contrasena|datos de acceso|credenciales)\b",
-            RegexOptions.IgnoreCase |
-            RegexOptions.CultureInvariant);
-
-        if (solicitaCredenciales)
+        if (ContieneSolicitudCredencial(contenido))
         {
             puntaje += 40;
             senales.Add(
