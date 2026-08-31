@@ -75,16 +75,33 @@
 }
 
 @media (max-width: 420px) {
-    .brand-text {
+    /* En móvil el botón Inicio reemplaza al logo como acceso al home y evita solapamientos. */
+    .navbar-brand {
         display: none;
     }
 
+    .site-header .navbar .container {
+        justify-content: center;
+    }
+
     .header-actions {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        width: 100%;
         gap: 0.35rem;
     }
 
-    .header-nav-link,
+    .header-nav-link {
+        width: 100%;
+        padding-right: 0.35rem;
+        padding-left: 0.35rem;
+        font-size: 0.72rem;
+        text-align: center;
+    }
+
     .btn-install-app {
+        grid-column: 1 / -1;
+        width: 100%;
         padding-right: 0.45rem;
         padding-left: 0.45rem;
         font-size: 0.74rem;
