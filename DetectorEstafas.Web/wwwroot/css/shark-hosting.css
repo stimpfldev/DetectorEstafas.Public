@@ -188,8 +188,8 @@
     min-height: 42px;
 }
 
-@media (max-width: 991px) {
-    /* Desde tablet el logo ocupa su propia fila y los seis botones conservan igual ancho. */
+@media (max-width: 1199px) {
+    /* En pantallas medianas el logo ocupa su propia fila y los seis botones conservan igual ancho. */
     .site-header .navbar .container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
