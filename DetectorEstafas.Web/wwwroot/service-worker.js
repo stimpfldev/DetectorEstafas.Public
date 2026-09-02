@@ -1,4 +1,4 @@
-const CACHE_NAME = "alerta-estafa-v11";
+const CACHE_NAME = "alerta-estafa-v12";
 
 const STATIC_ASSETS = [
     "/offline.html",
@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
     "/js/site.js",
     "/js/functional-fixes.js",
     "/js/pwa.js",
+    "/js/i18n.js",
     "/lib/bootstrap/dist/css/bootstrap.min.css",
     "/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
     "/lib/jquery/dist/jquery.min.js",
