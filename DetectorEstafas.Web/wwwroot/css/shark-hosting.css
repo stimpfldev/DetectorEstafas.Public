@@ -6,8 +6,8 @@
 /* Navegación pública: todos los accesos principales comparten exactamente el mismo volumen visual. */
 .header-actions {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    width: 740px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    width: 840px;
     gap: 0.45rem;
     align-items: center;
 }
@@ -189,7 +189,7 @@
 }
 
 @media (max-width: 991px) {
-    /* Desde tablet el logo ocupa su propia fila y los cinco botones conservan igual ancho. */
+    /* Desde tablet el logo ocupa su propia fila y los seis botones conservan igual ancho. */
     .site-header .navbar .container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -211,7 +211,7 @@
 
     .header-actions {
         width: 100%;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
     }
 
     .header-nav-link,
