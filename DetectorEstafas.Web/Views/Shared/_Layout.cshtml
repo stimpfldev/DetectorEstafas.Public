@@ -21,6 +21,21 @@
     var canonicalUrl =
         $"https://alertaestafa.com.ar{canonicalPath}";
 
+    var selectedLanguage =
+        Context.Request.Cookies["AlertaEstafa.Language"];
+
+    var isEnglish =
+        string.Equals(
+            selectedLanguage,
+            "en",
+            StringComparison.OrdinalIgnoreCase);
+
+    var language = isEnglish ? "en" : "es";
+    var alternateLanguage = isEnglish ? "es" : "en";
+
+    var returnUrl =
+        $"{Context.Request.PathBase}{Context.Request.Path}{Context.Request.QueryString}";
+
     var sensitiveGoogleAnalyticsPath =
         currentPath.StartsWith(
             "/Cuenta",
@@ -47,7 +62,7 @@
         || currentPath.StartsWith("/ResultadosCompartidos", StringComparison.OrdinalIgnoreCase);
 }
 <!DOCTYPE html>
-<html lang="es">
+<html lang="@language">
 <head>
     <meta charset="utf-8" />
 
@@ -55,7 +70,9 @@
           content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <meta name="description"
-          content="AlertaEstafa analiza mensajes, enlaces, teléfonos y llamadas sospechosas antes de actuar." />
+          content="@(isEnglish
+              ? "AlertaEstafa analyzes suspicious messages, links, phone numbers, and calls before you act."
+              : "AlertaEstafa analiza mensajes, enlaces, teléfonos y llamadas sospechosas antes de actuar.")" />
 
     <link rel="canonical"
           href="@canonicalUrl" />
@@ -128,32 +145,44 @@
                     <a asp-controller="Analisis"
                        asp-action="Index"
                        class="btn btn-outline-light header-nav-link">
-                        Inicio
+                        @(isEnglish ? "Home" : "Inicio")
                     </a>
 
                     <a asp-controller="Planes"
                        asp-action="Index"
                        class="btn btn-outline-light header-nav-link">
-                        Planes
+                        @(isEnglish ? "Plans" : "Planes")
                     </a>
 
                     <a asp-controller="Contacto"
                        asp-action="Index"
                        class="btn btn-outline-light header-nav-link">
-                        Contacto
+                        @(isEnglish ? "Contact" : "Contacto")
                     </a>
 
                     <a asp-controller="Cuenta"
                        asp-action="Registrarse"
                        class="btn btn-outline-light header-nav-link">
-                        Crear cuenta
+                        @(isEnglish ? "Create account" : "Crear cuenta")
                     </a>
 
                     <button id="installAppButton"
                             type="button"
                             class="btn btn-outline-light header-nav-link btn-install-app">
-                        Instalar aplicación
+                        @(isEnglish ? "Install app" : "Instalar aplicación")
                     </button>
+
+                    <a asp-controller="Idioma"
+                       asp-action="Cambiar"
+                       asp-route-culture="@alternateLanguage"
+                       asp-route-returnUrl="@returnUrl"
+                       class="btn btn-outline-light header-nav-link language-switch"
+                       lang="@alternateLanguage"
+                       hreflang="@alternateLanguage"
+                       aria-label="@(isEnglish ? "Cambiar a español" : "Switch to English")"
+                       title="@(isEnglish ? "Cambiar a español" : "Switch to English")">
+                        @(isEnglish ? "ES" : "EN")
+                    </a>
                 </div>
             </div>
         </nav>
@@ -170,14 +199,16 @@
                     <strong>AlertaEstafa</strong>
 
                     <p>
-                        Herramienta preventiva para identificar señales de riesgo
-                        antes de responder, abrir un enlace o transferir dinero.
+                        @(isEnglish
+                            ? "A preventive tool to identify warning signs before replying, opening a link, or transferring money."
+                            : "Herramienta preventiva para identificar señales de riesgo antes de responder, abrir un enlace o transferir dinero.")
                     </p>
                 </div>
 
                 <div class="footer-disclaimer">
-                    El resultado es orientativo y no garantiza que una comunicación
-                    sea segura o fraudulenta.
+                    @(isEnglish
+                        ? "Results are for guidance only and do not guarantee that a communication is safe or fraudulent."
+                        : "El resultado es orientativo y no garantiza que una comunicación sea segura o fraudulenta.")
                 </div>
             </div>
 
@@ -186,41 +217,41 @@
             </div>
 
             <nav class="footer-legal-links"
-                 aria-label="Información del sitio">
+                 aria-label="@(isEnglish ? "Site information" : "Información del sitio")">
 
                 <a asp-controller="Analisis"
                    asp-action="Index">
-                    Inicio
+                    @(isEnglish ? "Home" : "Inicio")
                 </a>
 
                 <a asp-controller="Planes"
                    asp-action="Index">
-                    Planes
+                    @(isEnglish ? "Plans" : "Planes")
                 </a>
 
                 <a asp-controller="Cuenta"
                    asp-action="Registrarse">
-                    Crear cuenta
+                    @(isEnglish ? "Create account" : "Crear cuenta")
                 </a>
 
                 <a asp-controller="Contacto"
                    asp-action="Index">
-                    Contacto
+                    @(isEnglish ? "Contact" : "Contacto")
                 </a>
 
                 <a asp-controller="Legal"
                    asp-action="Privacidad">
-                    Privacidad
+                    @(isEnglish ? "Privacy" : "Privacidad")
                 </a>
 
                 <a asp-controller="Legal"
                    asp-action="Condiciones">
-                    Condiciones de uso
+                    @(isEnglish ? "Terms of use" : "Condiciones de uso")
                 </a>
 
                 <a asp-controller="Legal"
                    asp-action="Terceros">
-                    Licencias y terceros
+                    @(isEnglish ? "Licenses and third parties" : "Licencias y terceros")
                 </a>
             </nav>
         </div>
@@ -237,6 +268,9 @@
             asp-append-version="true"></script>
 
     <script src="~/js/pwa.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/i18n.js"
             asp-append-version="true"></script>
 
     <script src="~/js/google-analytics.js"
