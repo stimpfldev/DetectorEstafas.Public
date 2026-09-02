@@ -5,6 +5,9 @@ let deferredInstallPrompt = null;
 const installButton =
     document.getElementById("installAppButton");
 
+const pwaEnglish =
+    document.documentElement.lang === "en";
+
 function estaInstalada() {
     return (
         window.matchMedia("(display-mode: standalone)").matches ||
@@ -48,7 +51,9 @@ if ("serviceWorker" in navigator) {
         }
         catch (error) {
             console.error(
-                "No se pudo configurar la PWA.",
+                pwaEnglish
+                    ? "The PWA could not be configured."
+                    : "No se pudo configurar la PWA.",
                 error);
         }
     });
@@ -85,15 +90,17 @@ if (installButton) {
 
             if (esIos()) {
                 alert(
-                    "Para instalar AlertaEstafa en iPhone o iPad: " +
-                    "tocá Compartir y luego «Añadir a pantalla de inicio»."
+                    pwaEnglish
+                        ? "To install AlertaEstafa on iPhone or iPad, tap Share and then “Add to Home Screen”."
+                        : "Para instalar AlertaEstafa en iPhone o iPad: tocá Compartir y luego «Añadir a pantalla de inicio»."
                 );
                 return;
             }
 
             alert(
-                "Para instalar AlertaEstafa, usá la opción de instalación " +
-                "del navegador cuando esté disponible."
+                pwaEnglish
+                    ? "To install AlertaEstafa, use your browser's install option when available."
+                    : "Para instalar AlertaEstafa, usá la opción de instalación del navegador cuando esté disponible."
             );
         });
 }
