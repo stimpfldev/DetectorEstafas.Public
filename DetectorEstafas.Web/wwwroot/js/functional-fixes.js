@@ -3,11 +3,20 @@
 document.addEventListener("DOMContentLoaded", () => {
     normalizarHistorialDeFormularios();
     integrarCapturaEnAnalizador();
+    configurarSelectorArchivoCaptura();
     configurarSelectorTipoContenido();
     configurarCambioTipoContenido();
     mostrarErrorDeCarga();
     configurarCompartirResultadoCorregido();
 });
+
+function textoInterfaz(espanol, ingles) {
+    return (document.documentElement.lang || "es")
+        .toLowerCase()
+        .startsWith("en")
+            ? ingles
+            : espanol;
+}
 
 function normalizarHistorialDeFormularios() {
     if (!window.history || !window.history.replaceState) {
@@ -58,9 +67,60 @@ function integrarCapturaEnAnalizador() {
     captureTab.dataset.captureTab = "true";
     captureTab.setAttribute("role", "tab");
     captureTab.setAttribute("aria-selected", "false");
-    captureTab.textContent = "Captura";
+    captureTab.textContent = textoInterfaz("Captura", "Screenshot");
 
     tabsContainer.appendChild(captureTab);
+}
+
+function configurarSelectorArchivoCaptura() {
+    const input = document.getElementById("captura");
+
+    if (!input || input.dataset.customFilePicker === "true") {
+        return;
+    }
+
+    input.dataset.customFilePicker = "true";
+    input.classList.add("visually-hidden");
+    input.tabIndex = -1;
+
+    const picker = document.createElement("div");
+    picker.className = "input-group capture-file-picker";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "capturaElegirArchivo";
+    button.className = "btn btn-outline-secondary";
+    button.textContent = textoInterfaz(
+        "Elegir archivo",
+        "Choose file");
+
+    const fileName = document.createElement("span");
+    fileName.id = "capturaNombreArchivo";
+    fileName.className = "form-control text-secondary";
+    fileName.setAttribute("role", "status");
+    fileName.setAttribute("aria-live", "polite");
+    fileName.textContent = textoInterfaz(
+        "No se eligió ningún archivo",
+        "No file selected");
+
+    button.setAttribute(
+        "aria-describedby",
+        fileName.id);
+
+    button.addEventListener("click", () => {
+        input.click();
+    });
+
+    input.addEventListener("change", () => {
+        const selectedFile = input.files?.[0];
+
+        fileName.textContent = selectedFile?.name ?? textoInterfaz(
+            "No se eligió ningún archivo",
+            "No file selected");
+    });
+
+    picker.append(button, fileName);
+    input.insertAdjacentElement("afterend", picker);
 }
 
 function configurarSelectorTipoContenido() {
@@ -129,28 +189,44 @@ function configurarSelectorTipoContenido() {
 
         if (isCapture) {
             limpiarValidacionContenido();
-            document.getElementById("captura")?.focus();
+            (
+                document.getElementById("capturaElegirArchivo") ??
+                document.getElementById("captura")
+            )?.focus();
             return;
         }
 
         const selectIndex = Number(tab.dataset.tabIndex ?? index);
         tipoSelect.selectedIndex = selectIndex;
 
-        label.textContent = tab.dataset.label ?? "Contenido sospechoso";
+        label.textContent = tab.dataset.label ?? textoInterfaz(
+            "Contenido sospechoso",
+            "Suspicious content");
+
         contenido.placeholder =
-            tab.dataset.placeholder ?? "Ingresá el contenido a analizar.";
+            tab.dataset.placeholder ?? textoInterfaz(
+                "Ingresá el contenido a analizar.",
+                "Enter the content you want to analyze.");
 
         aplicarModoVisual(tab.dataset.mode ?? "multiline");
 
         if (helpText) {
             helpText.textContent =
                 selectIndex === 1
-                    ? "Pegá una URL completa para evaluar señales técnicas y de riesgo."
+                    ? textoInterfaz(
+                        "Pegá una URL completa para evaluar señales técnicas y de riesgo.",
+                        "Paste a full URL to evaluate technical and risk signals.")
                     : selectIndex === 2
-                        ? "Ingresá el número principal que querés revisar."
+                        ? textoInterfaz(
+                            "Ingresá el número principal que querés revisar.",
+                            "Enter the main phone number you want to review.")
                         : selectIndex === 3
-                            ? "Describí la llamada con el mayor detalle posible."
-                            : "Analizá primero el contenido principal y luego revisá el resultado.";
+                            ? textoInterfaz(
+                                "Describí la llamada con el mayor detalle posible.",
+                                "Describe the call in as much detail as possible.")
+                            : textoInterfaz(
+                                "Analizá primero el contenido principal y luego revisá el resultado.",
+                                "Analyze the main content first, then review the result.");
         }
 
         if (clearContent) {
