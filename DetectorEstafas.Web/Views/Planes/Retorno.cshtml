@@ -1,6 +1,11 @@
 @model DetectorEstafas.Web.ViewModels.Planes.RetornoSuscripcionViewModel
 @{
     ViewData["Title"] = "Estado de suscripción";
+
+    if (!Model.AccesoActivo && Model.Estado == DetectorEstafas.Web.Models.ApiComercial.EstadosSuscripcionComercial.Pendiente)
+    {
+        <meta http-equiv="refresh" content="3" />
+    }
 }
 
 <section class="container py-5" style="max-width: 720px;">
