@@ -1,5 +1,7 @@
 # Detector de Estafas
 
+**Accedé a AlertaEstafa:** https://alertaestafa.com.ar/
+
 Aplicación preventiva desarrollada con ASP.NET Core MVC y SQL Server para detectar señales habituales de fraude en mensajes, enlaces, teléfonos, llamadas, capturas y audios.
 
 **Versión estable actual: 2.3.0.**
